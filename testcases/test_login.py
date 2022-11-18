@@ -6,18 +6,22 @@ from pages.loginPage import LoginPage
 import time
 from selenium.webdriver import ActionChains
 import pytest
+from util.common import get_logger
+
+logger = get_logger()
 
 
 class TestLogin:
     def setup(self):
         self.driver = webdriver.Chrome()
         self.loginPage = LoginPage(self.driver)
+        logger.info("测试用户登陆！！")
 
     def setup_class(self):
         pass
 
     def teardown(self):
-        pass
+        self.loginPage.quit()
 
     def teardown_class(self):
         pass
@@ -28,9 +32,13 @@ class TestLogin:
     def test_login(self, phone, pwd):
         self.loginPage.get_url()
         self.loginPage.input_phone(phone)
+        logger.debug("输入手机号")
         self.loginPage.input_pwd(pwd)
+        logger.debug("输入密码")
         self.loginPage.agreement()
+        logger.debug("同意协议")
         self.loginPage.login()
+        logger.debug("登陆")
         time.sleep(10)
         user_name = self.loginPage.get_userName()
         assert user_name == 'Geek_cd8e8c'

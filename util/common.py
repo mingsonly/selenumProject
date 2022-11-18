@@ -6,18 +6,27 @@ import string
 import pickle
 import ddddocr
 import logging
-import datetime
 import logging.handlers
+import os
+
+cur_path = os.path.dirname(os.path.abspath(__file__))
+log_path = os.path.join(os.path.dirname(cur_path), "logs")
+if not os.path.exists(log_path):
+    os.mkdir(log_path)
+
 
 
 def get_logger():
+    all_log_path = os.path.join(log_path, "all.log")
+    err_log_path = os.path.join(log_path, "error.log")
+
     logger = logging.getLogger('mylogger')
     logger.setLevel(logging.DEBUG)
 
-    rf_handler = logging.handlers.TimedRotatingFileHandler('all.log', when='midnight', interval=1, backupCount=7)
+    rf_handler = logging.handlers.TimedRotatingFileHandler(all_log_path, when='midnight', interval=1, backupCount=7)
     rf_handler.setFormatter(logging.Formatter("%(asctime)s - %(levelname)s - %(message)s"))
 
-    f_handler = logging.FileHandler('error.log')
+    f_handler = logging.FileHandler(err_log_path)
     f_handler.setLevel(logging.ERROR)
     f_handler.setFormatter(logging.Formatter("%(asctime)s - %(levelname)s - [%(filename)s:%(lineno)d] - %(message)s"))
 
