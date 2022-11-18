@@ -42,6 +42,7 @@ class TestLogin:
         time.sleep(10)
         user_name = self.loginPage.get_userName()
         try:
-            assert user_name == 'Geek_cd8e8c'
+            raise Exception("报错")
+            # assert user_name == 'Geek_cd8e8c'
         except AssertionError as ae:
             logger.error("用户名校验异常", "报错了", exc_info=1)
