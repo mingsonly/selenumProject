@@ -5,6 +5,25 @@ import random
 import string
 import pickle
 import ddddocr
+import logging
+import datetime
+import logging.handlers
+
+
+def get_logger():
+    logger = logging.getLogger('mylogger')
+    logger.setLevel(logging.DEBUG)
+
+    rf_handler = logging.handlers.TimedRotatingFileHandler('all.log', when='midnight', interval=1, backupCount=7)
+    rf_handler.setFormatter(logging.Formatter("%(asctime)s - %(levelname)s - %(message)s"))
+
+    f_handler = logging.FileHandler('error.log')
+    f_handler.setLevel(logging.ERROR)
+    f_handler.setFormatter(logging.Formatter("%(asctime)s - %(levelname)s - [%(filename)s:%(lineno)d] - %(message)s"))
+
+    logger.addHandler(rf_handler)
+    logger.addHandler(f_handler)
+    return logger
 
 
 def get_code(path):
@@ -36,5 +55,8 @@ def load_cookie(drive, path):
 
 
 # if __name__ == '__main__':
+#     logger = get_logger()
+#     logger.warning("werwrw")
+#     logger.error("eeroor")
 #     code = get_code('code.png')
 #     print(code)
