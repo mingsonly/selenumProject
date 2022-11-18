@@ -62,10 +62,3 @@ def load_cookie(drive, path):
         for cookie in cookies:
             drive.add_cookie(cookie)
 
-
-# if __name__ == '__main__':
-#     logger = get_logger()
-#     logger.warning("werwrw")
-#     logger.error("eeroor")
-#     code = get_code('code.png')
-#     print(code)

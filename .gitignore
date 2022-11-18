@@ -1,4 +1,6 @@
 pytest_cache
+__pycache__
+pages/__pycache__
 reports
 */__init__.py
 logs
