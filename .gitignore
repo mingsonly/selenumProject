@@ -1,7 +1,6 @@
 pytest_cache
-__pycache__
-pages/__pycache__
-pages/__pycache__/basepage.cpython-38.pyc
+*__pycache__*
+
 reports
 */__init__.py
 logs
