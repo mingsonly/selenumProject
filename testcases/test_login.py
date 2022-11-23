@@ -12,8 +12,13 @@ logger = get_logger()
 
 
 class TestLogin:
-    def setup(self):
-        self.driver = webdriver.Chrome()
+    @pytest.fixture(autouse=True)
+    def setup(self, browser):
+        browsers = {
+            "chrome": webdriver.Chrome,
+            "firefox": webdriver.Firefox
+        }
+        self.driver = browsers[browser]()
         self.loginPage = LoginPage(self.driver)
         logger.info("测试用户登陆！！")
 
@@ -25,6 +30,14 @@ class TestLogin:
 
     def teardown_class(self):
         pass
+
+    # @pytest.fixture(autouse=True)
+    # def init_driver(self, browser):
+    #     browsers = {
+    #         "chrome": webdriver.Chrome(),
+    #         "firefox": webdriver.Firefox()
+    #     }
+    #     self.driver = browsers[browser]
 
     @pytest.mark.parametrize("phone,pwd", [
         ("17521787146", "taoming123"),
@@ -42,7 +55,6 @@ class TestLogin:
         time.sleep(10)
         user_name = self.loginPage.get_userName()
         try:
-            raise Exception("报错")
-            # assert user_name == 'Geek_cd8e8c'
+            assert user_name == 'Geek_cd8e8c'
         except AssertionError as ae:
             logger.error("用户名校验异常", "报错了", exc_info=1)
