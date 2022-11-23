@@ -6,13 +6,11 @@ from selenium import webdriver
 
 
 class BasePage(object):
-    def __init__(self, driver:webdriver):
+    def __init__(self, driver: webdriver):
         self.driver = driver
 
-    def open_url(self,url):
+    def open_url(self, url):
         self.driver.get(url)
-
-
 
     def get_element(self, *loc):
         # loc=(by=By.ID,value="")
@@ -32,6 +30,10 @@ class BasePage(object):
         return self.driver.title
 
     def screenshot(self, path, *loc):
+        """获取指定元素截图
+        :param path:/dir/x.img or x.png
+        :return None
+        """
         self.get_element(*loc).screenshot(path)
 
     def quit(self):

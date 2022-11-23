@@ -8,17 +8,21 @@ import ddddocr
 import logging
 import logging.handlers
 import os
+import time
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from PIL import Image
 
-cur_path = os.path.dirname(os.path.abspath(__file__))
-log_path = os.path.join(os.path.dirname(cur_path), "logs")
-if not os.path.exists(log_path):
-    os.mkdir(log_path)
-
+cur_dir = os.path.dirname(os.path.abspath(__file__))
+log_dir = os.path.join(os.path.dirname(cur_dir), "logs")
+img_dir = os.path.join(os.path.dirname(cur_dir), "screenshots")
+if not os.path.exists(log_dir):
+    os.mkdir(log_dir)
 
 
 def get_logger():
-    all_log_path = os.path.join(log_path, "all.log")
-    err_log_path = os.path.join(log_path, "error.log")
+    all_log_path = os.path.join(log_dir, "all.log")
+    err_log_path = os.path.join(log_dir, "error.log")
 
     logger = logging.getLogger('mylogger')
     logger.setLevel(logging.DEBUG)
@@ -35,7 +39,30 @@ def get_logger():
     return logger
 
 
+def get_img_code(id, driver):
+    """通过元素位置截取验证码图片"""
+    t = time.time()
+    img_name = img_dir + "\\" + str(t) + ".png"
+    driver.save_screenshot(img_name)
+    ce = driver.find_element(by=By.ID, value=id)
+
+    left = ce.location['x']
+    top = ce.location['y']
+    right = ce.size['width'] + left
+    height = ce.size['height'] + top
+
+    im = Image.open(img_name)
+    img = im.scrop((left, top, right, height))
+    t = time.time()
+    picture_name = img_dir + "\\" + str(t) + ".png"
+    img.save(picture_name)
+
+
 def get_code(path):
+    """通过第三方模块识别图片获取验证码
+    :param path: 图片地址
+    :return code,图片验证码
+    """
     with open(path, 'rb') as f:
         img_bytes = f.read()
     ocr = ddddocr.DdddOcr()
@@ -61,4 +88,3 @@ def load_cookie(drive, path):
         cookies = pickle.load(cookiefile)
         for cookie in cookies:
             drive.add_cookie(cookie)
-

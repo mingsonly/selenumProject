@@ -4,8 +4,9 @@
 import os
 from pages.basepage import BasePage
 from selenium.webdriver.common.by import By
-from selenium import webdriver
 from util.common import get_code
+
+
 class RegisterPage(BasePage):
     url = "http://www.jpress.cn/user/register"
     user_name = (By.NAME, "username")
@@ -22,7 +23,6 @@ class RegisterPage(BasePage):
 
     def get_url(self):
         self.open_url(self.url)
-
 
     def input_name(self, username):
         self.clear(*self.user_name)
@@ -45,5 +45,3 @@ class RegisterPage(BasePage):
         self.screenshot(img_path, *self.captcha_img)
         code = get_code(img_path)
         return code
-
-
