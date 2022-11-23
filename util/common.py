@@ -70,9 +70,10 @@ def get_code(path):
     return code
 
 
-def gen_random_str():
+def gen_random_str(size=8):
+    """生成随机字符串"""
     # ascii_letters 字母+digits数字组合
-    rand_str = ''.join(random.sample(string.ascii_letters + string.digits, 8))
+    rand_str = ''.join(random.sample(string.ascii_letters + string.digits, size))
     return rand_str
 
 
