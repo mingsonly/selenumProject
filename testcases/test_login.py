@@ -1,6 +1,7 @@
 # encoding: utf-8
 # __author:  angel
 # date:  2022/11/18
+import allure
 from selenium import webdriver
 from pages.loginPage import LoginPage
 import time
@@ -11,6 +12,7 @@ from util.common import get_logger
 logger = get_logger()
 
 
+@allure.story("用户登陆模块")
 class TestLogin:
     @pytest.fixture(autouse=True)
     def setup(self, browser):
@@ -39,6 +41,7 @@ class TestLogin:
     #     }
     #     self.driver = browsers[browser]
 
+    @allure.story("正常登陆案例")
     @pytest.mark.parametrize("phone,pwd", [
         ("17521787146", "taoming123"),
     ])
@@ -58,3 +61,7 @@ class TestLogin:
             assert user_name == 'Geek_cd8e8c'
         except AssertionError as ae:
             logger.error("用户名校验异常", "报错了", exc_info=1)
+
+
+if __name__ == '__main__':
+    pytest.main(['--alluredir', './reports', 'test_login.py'])
