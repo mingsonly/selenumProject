@@ -13,8 +13,8 @@ class LoginPage(BasePage):
     login_btn_loc = (By.CLASS_NAME, "Button_button_3onsJ")
     agree_loc = (By.ID, "agree")
     url = "https://account.geekbang.org/login?redirect=https%3A%2F%2Ftime.geekbang.org%2F"
-    pwd_err_loc = (By.CLASS_NAME,"gkui-form-error")
-
+    phone_err_loc = (By.CLASS_NAME, "gkui-form-error")
+    pwd_err_loc = (By.CLASS_NAME, "gkui-form-error")
     userName_loc = (By.CLASS_NAME, "user-name")
 
     def __init__(self, webdiver):
@@ -47,7 +47,12 @@ class LoginPage(BasePage):
         user_name = self.get_element(*self.userName_loc).text
         return user_name
 
-    @allure.step("获取密码错误的提示")
+    @allure.step("错误的密码")
     def get_password_error(self):
         pwd_err_msg = self.get_element(*self.pwd_err_loc).text
         return pwd_err_msg
+
+    @allure.step("错误的手机号")
+    def get_phone_error(self):
+        phone_err_msg = self.get_element(*self.phone_err_loc).text
+        return phone_err_msg

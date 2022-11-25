@@ -64,10 +64,11 @@ class TestLogin:
             logger.error("用户名校验异常", "报错了", exc_info=1)
 
     @allure.story("失败登陆案例")
-    @pytest.mark.parametrize("phone,pwd", [
-        ("17521787146", "taoming1234"),
+    @pytest.mark.parametrize("phone,pwd,expect", [
+        ("17521787146", "taoming1234", "密码错误"),
+        ("1752178714", "taoming123", "请输入正确的手机号"),
     ])
-    def test_login(self, phone, pwd):
+    def test_login(self, phone, pwd,expect):
         self.loginPage.get_url()
         self.loginPage.input_phone(phone)
         logger.debug("输入手机号")
@@ -78,8 +79,11 @@ class TestLogin:
         self.loginPage.login()
         logger.debug("登陆")
         time.sleep(2)
-        pwd_msg = self.loginPage.get_password_error()
-        assert pwd_msg == '密码错误'
+        real_values = {
+            "密码错误": self.loginPage.get_password_error(),
+            "请输入正确的手机号": self.loginPage.get_phone_error()
+        }
+        assert real_values[expect] == expect
 
 # if __name__ == '__main__':
 #     pytest.main(['--alluredir', './reports', 'test_login.py'])
