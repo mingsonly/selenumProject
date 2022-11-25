@@ -10,9 +10,10 @@ import allure
 class LoginPage(BasePage):
     phone_loc = (By.NAME, "cellphone")
     pwd_loc = (By.NAME, "password")
-    login_btn_loc = (By.XPATH, "/html/body/div[1]/div[2]/div[1]/div[1]/div[4]/div")
+    login_btn_loc = (By.CLASS_NAME, "Button_button_3onsJ")
     agree_loc = (By.ID, "agree")
     url = "https://account.geekbang.org/login?redirect=https%3A%2F%2Ftime.geekbang.org%2F"
+    pwd_err_loc = (By.CLASS_NAME,"gkui-form-error")
 
     userName_loc = (By.CLASS_NAME, "user-name")
 
@@ -45,3 +46,8 @@ class LoginPage(BasePage):
     def get_userName(self):
         user_name = self.get_element(*self.userName_loc).text
         return user_name
+
+    @allure.step("获取密码错误的提示")
+    def get_password_error(self):
+        pwd_err_msg = self.get_element(*self.pwd_err_loc).text
+        return pwd_err_msg

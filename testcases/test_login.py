@@ -8,6 +8,7 @@ import time
 from selenium.webdriver import ActionChains
 import pytest
 from util.common import get_logger
+from exec.myexe import *
 
 logger = get_logger()
 
@@ -62,6 +63,23 @@ class TestLogin:
         except AssertionError as ae:
             logger.error("用户名校验异常", "报错了", exc_info=1)
 
+    @allure.story("失败登陆案例")
+    @pytest.mark.parametrize("phone,pwd", [
+        ("17521787146", "taoming1234"),
+    ])
+    def test_login(self, phone, pwd):
+        self.loginPage.get_url()
+        self.loginPage.input_phone(phone)
+        logger.debug("输入手机号")
+        logger.debug("输入密码")
+        self.loginPage.input_pwd(pwd)
+        self.loginPage.agreement()
+        logger.debug("同意协议")
+        self.loginPage.login()
+        logger.debug("登陆")
+        time.sleep(2)
+        pwd_msg = self.loginPage.get_password_error()
+        assert pwd_msg == '密码错误'
 
-if __name__ == '__main__':
-    pytest.main(['--alluredir', './reports', 'test_login.py'])
+# if __name__ == '__main__':
+#     pytest.main(['--alluredir', './reports', 'test_login.py'])
