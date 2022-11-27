@@ -2,9 +2,8 @@
 # __author:  angel
 # date:  2022/11/25
 
-# encoding: utf-8
-# __author:  angel
-# date:  2022/11/25
+class ElementNotFound(Exception):
+    pass
 
 
 class LoginError(Exception):
