@@ -80,10 +80,10 @@ class TestLogin:
         logger.debug("登陆")
         time.sleep(2)
         real_values = {
-            "密码错误": self.loginPage.get_password_error(),
-            "请输入正确的手机号": self.loginPage.get_phone_error()
+            "密码错误": self.loginPage.get_password_error,
+            "请输入正确的手机号": self.loginPage.get_phone_error
         }
-        assert real_values[expect] == expect
+        assert real_values[expect]() == expect
 
 # if __name__ == '__main__':
 #     pytest.main(['--alluredir', './reports', 'test_login.py'])
