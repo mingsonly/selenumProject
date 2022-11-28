@@ -16,8 +16,27 @@ from PIL import Image
 cur_dir = os.path.dirname(os.path.abspath(__file__))
 log_dir = os.path.join(os.path.dirname(cur_dir), "logs")
 img_dir = os.path.join(os.path.dirname(cur_dir), "screenshots")
+data_dir = os.path.join(os.path.dirname(cur_dir), "data")
 if not os.path.exists(log_dir):
     os.mkdir(log_dir)
+
+import json
+
+
+def get_env_data(env="test_env"):
+    """根据环境参数参数决定读取哪个环境的配置文件"""
+    path = os.path.join(data_dir, env + ".json")
+    with open(path, "r") as f:
+        test_data = json.load(f)
+    return test_data
+
+
+def start_webdriver(web="chrome"):
+    browsers = {
+        "chrome": webdriver.Chrome,
+        "firefox": webdriver.Firefox
+    }
+    return browsers[web]()
 
 
 def get_logger():

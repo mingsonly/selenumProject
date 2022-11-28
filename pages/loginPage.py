@@ -26,33 +26,33 @@ class LoginPage(BasePage):
 
     @allure.step("输入手机号")
     def input_phone(self, phone):
-        self.clear(*self.phone_loc)
-        self.input_text(phone, *self.phone_loc)
+        self.clear(self.phone_loc)
+        self.input_text(phone, self.phone_loc)
 
     @allure.step("输入密码")
     def input_pwd(self, pwd):
-        self.clear(*self.pwd_loc)
-        self.input_text(pwd, *self.pwd_loc)
+        self.clear(self.pwd_loc)
+        self.input_text(pwd, self.pwd_loc)
 
     @allure.step("同意协议")
     def agreement(self):
-        self.click(*self.agree_loc)
+        self.click(self.agree_loc)
 
     @allure.step("点击登陆")
     def login(self):
-        self.click(*self.login_btn_loc)
+        self.click(self.login_btn_loc)
 
     @allure.step("获取登陆后用户名")
     def get_userName(self):
-        user_name = self.get_element(*self.userName_loc).text
+        user_name = self.get_element(self.userName_loc).text
         return user_name
 
     @allure.step("错误的密码")
     def get_password_error(self):
-        pwd_err_msg = self.get_element(*self.pwd_err_loc).text
+        pwd_err_msg = self.get_element(self.pwd_err_loc).text
         return pwd_err_msg
 
     @allure.step("错误的手机号")
     def get_phone_error(self):
-        phone_err_msg = self.get_element(*self.phone_err_loc).text
+        phone_err_msg = self.get_element(self.phone_err_loc).text
         return phone_err_msg

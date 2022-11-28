@@ -7,8 +7,14 @@ import pytest
 
 def pytest_addoption(parser):
     parser.addoption("--browser", action="store", default="chrome", help="输入要启动的浏览器")
+    parser.addoption("--env", action="store", default="test_env", help="输入被测环境")
 
 
 @pytest.fixture
 def browser(request):
     return request.config.getoption("--browser")
+
+
+@pytest.fixture
+def env(request):
+    return request.config.getoption("--env")

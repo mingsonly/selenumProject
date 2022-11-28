@@ -7,7 +7,7 @@ from pages.loginPage import LoginPage
 import time
 from selenium.webdriver import ActionChains
 import pytest
-from util.common import get_logger
+from util.common import get_logger,start_webdriver,get_env_data
 from exec.myexe import *
 
 logger = get_logger()
@@ -16,12 +16,9 @@ logger = get_logger()
 @allure.story("用户登陆模块")
 class TestLogin:
     @pytest.fixture(autouse=True)
-    def setup(self, browser):
-        browsers = {
-            "chrome": webdriver.Chrome,
-            "firefox": webdriver.Firefox
-        }
-        self.driver = browsers[browser]()
+    def setup(self, browser, env):
+        self.env_data = get_env_data(env)
+        self.driver = start_webdriver(browser)
         self.loginPage = LoginPage(self.driver)
         logger.info("测试用户登陆！！")
 
@@ -43,10 +40,11 @@ class TestLogin:
     #     self.driver = browsers[browser]
 
     @allure.story("正常登陆案例")
-    @pytest.mark.parametrize("phone,pwd", [
-        ("17521787146", "taoming123"),
-    ])
-    def test_login(self, phone, pwd):
+    # @pytest.mark.parametrize("phone,pwd", [
+    #     ("17521787146", "taoming123"),
+    # ])
+    def test_login_success(self):
+        phone, pwd = self.env_data['phone'],self.env_data['password']
         self.loginPage.get_url()
         self.loginPage.input_phone(phone)
         logger.debug("输入手机号")
@@ -59,7 +57,7 @@ class TestLogin:
         time.sleep(10)
         user_name = self.loginPage.get_userName()
         try:
-            assert user_name == 'Geek_cd8e8c'
+            assert user_name is not None
         except AssertionError as ae:
             logger.error("用户名校验异常", "报错了", exc_info=1)
 
@@ -68,7 +66,7 @@ class TestLogin:
         ("17521787146", "taoming1234", "密码错误"),
         ("1752178714", "taoming123", "请输入正确的手机号"),
     ])
-    def test_login(self, phone, pwd,expect):
+    def test_login_fail(self, phone, pwd,expect):
         self.loginPage.get_url()
         self.loginPage.input_phone(phone)
         logger.debug("输入手机号")
