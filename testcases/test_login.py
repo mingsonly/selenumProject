@@ -9,9 +9,12 @@ from selenium.webdriver import ActionChains
 import pytest
 from util.common import get_logger,start_webdriver,get_env_data
 from exec.myexe import *
+import os
 
 logger = get_logger()
-
+cur_dir = os.path.dirname(os.path.abspath(__file__))
+log_dir = os.path.join(os.path.dirname(cur_dir), "logs")
+img_dir = os.path.join(os.path.dirname(cur_dir), "screenshots")
 
 @allure.story("用户登陆模块")
 class TestLogin:
@@ -81,7 +84,9 @@ class TestLogin:
             "密码错误": self.loginPage.get_password_error,
             "请输入正确的手机号": self.loginPage.get_phone_error
         }
+
         assert real_values[expect]() == expect
+
 
 # if __name__ == '__main__':
 #     pytest.main(['--alluredir', './reports', 'test_login.py'])

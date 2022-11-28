@@ -4,6 +4,7 @@
 from pages.basepage import BasePage
 from selenium.webdriver.common.by import By
 import allure
+import time
 
 
 @allure.feature("登陆页面")
@@ -50,9 +51,13 @@ class LoginPage(BasePage):
     @allure.step("错误的密码")
     def get_password_error(self):
         pwd_err_msg = self.get_element(self.pwd_err_loc).text
+        png_name = "password_err_" + str(time.time()).split('.')[1] + ".png"
+        self.screenshot_and_save(file_name=png_name)
         return pwd_err_msg
 
     @allure.step("错误的手机号")
     def get_phone_error(self):
         phone_err_msg = self.get_element(self.phone_err_loc).text
+        png_name = "phone_err_" + str(time.time()).split('.')[1] + ".png"
+        self.screenshot_and_save(file_name=png_name)
         return phone_err_msg
