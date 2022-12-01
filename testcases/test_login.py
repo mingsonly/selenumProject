@@ -4,6 +4,7 @@
 import allure
 from selenium import webdriver
 from pages.loginPage import LoginPage
+from pages.indexPage import IndexPage
 import time
 from selenium.webdriver import ActionChains
 import pytest
@@ -23,6 +24,7 @@ class TestLogin:
         self.env_data = get_env_data(env)
         self.driver = start_webdriver(browser)
         self.loginPage = LoginPage(self.driver)
+        self.indexPage = IndexPage(self.driver)
         logger.info("测试用户登陆！！")
 
     def setup_class(self):
@@ -47,46 +49,17 @@ class TestLogin:
     #     ("17521787146", "taoming123"),
     # ])
     def test_login_success(self):
-        phone, pwd = self.env_data['phone'],self.env_data['password']
+        username, pwd = self.env_data['username'], self.env_data['password']
         self.loginPage.get_url()
-        self.loginPage.input_phone(phone)
+        self.loginPage.input_username(username)
         logger.debug("输入手机号")
         self.loginPage.input_pwd(pwd)
         logger.debug("输入密码")
-        self.loginPage.agreement()
+        self.loginPage.remember_me()
         logger.debug("同意协议")
         self.loginPage.login()
         logger.debug("登陆")
-        time.sleep(10)
-        user_name = self.loginPage.get_userName()
-        try:
-            assert user_name is not None
-        except AssertionError as ae:
-            logger.error("用户名校验异常", "报错了", exc_info=1)
+        time.sleep(3)
+        index_title = self.indexPage.get_title()
+        assert index_title == '云平台管理系统'
 
-    @allure.story("失败登陆案例")
-    @pytest.mark.parametrize("phone,pwd,expect", [
-        ("17521787146", "taoming1234", "密码错误"),
-        ("1752178714", "taoming123", "请输入正确的手机号"),
-    ])
-    def test_login_fail(self, phone, pwd,expect):
-        self.loginPage.get_url()
-        self.loginPage.input_phone(phone)
-        logger.debug("输入手机号")
-        logger.debug("输入密码")
-        self.loginPage.input_pwd(pwd)
-        self.loginPage.agreement()
-        logger.debug("同意协议")
-        self.loginPage.login()
-        logger.debug("登陆")
-        time.sleep(2)
-        real_values = {
-            "密码错误": self.loginPage.get_password_error,
-            "请输入正确的手机号": self.loginPage.get_phone_error
-        }
-
-        assert real_values[expect]() == expect
-
-
-# if __name__ == '__main__':
-#     pytest.main(['--alluredir', './reports', 'test_login.py'])
