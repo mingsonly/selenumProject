@@ -1,0 +1,28 @@
+1669943163447	geckodriver	INFO	Listening on 127.0.0.1:53349
+1669943186799	geckodriver	INFO	Listening on 127.0.0.1:53370
+1669943513416	geckodriver	INFO	Listening on 127.0.0.1:53639
+1669943523366	geckodriver	INFO	Listening on 127.0.0.1:53654
+1669943762132	geckodriver	INFO	Listening on 127.0.0.1:53980
+1669943950985	geckodriver	INFO	Listening on 127.0.0.1:54340
+1669944276213	geckodriver	INFO	Listening on 127.0.0.1:55258
+1669944623131	geckodriver	INFO	Listening on 127.0.0.1:55750
+1669944626193	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "--remote-debugging-port" "55751" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\rust_mozprofilevjGBKo"
+1669944626482	Marionette	INFO	Marionette enabled
+1669944626487	Marionette	INFO	Listening on port 55762
+Read port: 55762
+WebDriver BiDi listening on ws://127.0.0.1:55751
+1669944626570	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\rust_mozprofilevjGBKo\\search.json.mozlz4", (void 0)))
+DevTools listening on ws://127.0.0.1:55751/devtools/browser/b904b0cf-d98b-4c23-90a8-4c626a950e64
+1669944635999	geckodriver	INFO	Listening on 127.0.0.1:55794
+1669944641121	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "--remote-debugging-port" "55795" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\rust_mozprofileMTaj9n"
+1669944641373	Marionette	INFO	Marionette enabled
+1669944641377	Marionette	INFO	Listening on port 55809
+WebDriver BiDi listening on ws://127.0.0.1:55795
+Read port: 55809
+1669944641553	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\rust_mozprofileMTaj9n\\search.json.mozlz4", (void 0)))
+DevTools listening on ws://127.0.0.1:55795/devtools/browser/c6265483-34d6-4c47-ace6-f11f3e9c6b77
+console.warn: LoginRecipes: "Falling back to a synchronous message for: https://uat-adminsdk.hongwuniu.com."
+1669944658158	Marionette	INFO	Stopped listening on port 55809
+[Parent 20928, IPC I/O Parent] WARNING: file /builds/worker/checkouts/gecko/ipc/chromium/src/base/process_util_win.cc:167

@@ -1,4 +1,3 @@
-# encoding: utf-8
 # __author:  angel
 # date:  2022/11/18
 import allure
@@ -59,7 +58,7 @@ class TestLogin:
         logger.debug("同意协议")
         self.loginPage.login()
         logger.debug("登陆")
-        time.sleep(3)
+        time.sleep(5)
         index_title = self.indexPage.get_title()
         assert index_title == '云平台管理系统'
 
