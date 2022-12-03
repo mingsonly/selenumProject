@@ -120,15 +120,6 @@ def get_session():
 
     s = requests.session()
     timestamp = int(time.time()) * 1000
-    # url2 = f"https://uat-adminsdk.hongwuniu.com/user-web/signauth/v2/MFALogin?app_key=GANGTISE_BMS&nonce=17288&signature=BKsmCfsLrJlbVvzPn4bodgYIAGB0QWmX7qRDZycgwwQ%3D&timestamp={timestamp}"
-    # data = {
-    #     "username": "G221219484343",
-    #     "scope": "openid",
-    #     "grant_type": "password",
-    #     "position": "1",
-    #     "uuid": str(uuid.uuid4()),
-    #     "password": "e6e061838856bf47e1de730719fb2609",
-    # }
     res = s.post(cloud_data['url'] + f"{timestamp}", cloud_data['data'], verify=False)
     s.headers['Authorization'] = "Bearer " + res.json()['access_token']
     # todo 此处如果报未知错误，是因为传输数据得格式因为 json=data
