@@ -12,6 +12,9 @@ import time
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from PIL import Image
+import requests
+import uuid
+import time
 
 cur_dir = os.path.dirname(os.path.abspath(__file__))
 log_dir = os.path.join(os.path.dirname(cur_dir), "logs")
@@ -108,3 +111,26 @@ def load_cookie(drive, path):
         cookies = pickle.load(cookiefile)
         for cookie in cookies:
             drive.add_cookie(cookie)
+
+
+def get_session():
+    uat_cloud_path = os.path.join(data_dir, "uat_cloud.json")
+    with open(uat_cloud_path, "r") as f:
+        cloud_data = json.load(f)
+
+    s = requests.session()
+    timestamp = int(time.time()) * 1000
+    # url2 = f"https://uat-adminsdk.hongwuniu.com/user-web/signauth/v2/MFALogin?app_key=GANGTISE_BMS&nonce=17288&signature=BKsmCfsLrJlbVvzPn4bodgYIAGB0QWmX7qRDZycgwwQ%3D&timestamp={timestamp}"
+    # data = {
+    #     "username": "G221219484343",
+    #     "scope": "openid",
+    #     "grant_type": "password",
+    #     "position": "1",
+    #     "uuid": str(uuid.uuid4()),
+    #     "password": "e6e061838856bf47e1de730719fb2609",
+    # }
+    res = s.post(cloud_data['url'] + f"{timestamp}", cloud_data['data'], verify=False)
+    s.headers['Authorization'] = "Bearer " + res.json()['access_token']
+    # todo 此处如果报未知错误，是因为传输数据得格式因为 json=data
+    return s.headers
+
