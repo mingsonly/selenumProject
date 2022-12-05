@@ -29,6 +29,7 @@ class BasePage(object):
 
     def get_element(self, loc):
         # loc=(by=By.ID,value="")
+        time.sleep(3)
         try:
             element = self.driver.find_element(*loc)
         except ElementNotFound:

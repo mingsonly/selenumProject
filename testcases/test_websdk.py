@@ -1,3 +1,4 @@
+# encoding: utf-8
 import allure
 from selenium import webdriver
 from pages.loginPage import LoginPage
@@ -23,12 +24,14 @@ class TestWebSDK:
         driver = webdriver.Chrome()
         self.webSDK = WebSDKPage(driver)
 
+    def setup_class(self):
+        pass
 
-    def setup_class(self): pass
+    def teardown(self):
+        self.webSDK.close()
 
-    def teardown(self): pass
-
-    def teardown_class(self): pass
+    def teardown_class(self):
+        pass
 
     @staticmethod
     def set_env_config(env):
@@ -91,10 +94,10 @@ class TestWebSDK:
         # execjs.compile(add_env_cmd)
         # execjs.compile(which_env)
 
-
     @pytest.mark.parametrize("user_id,user_token,env, auth_env,appKey,appSecert,other_params,enable_ssl", [
-        ("3423224","12313","uat","dev","5551_PC_42","$2a$10$nf6bHoHaY6GsfvplrQZqde.H.q.IbHR.9msI1Qv5Zi8QerbZxyfC2","","use")]
-    )
+        ("3423224", "12313", "uat", "dev", "5551_PC_42", "$2a$10$nf6bHoHaY6GsfvplrQZqde.H.q.IbHR.9msI1Qv5Zi8QerbZxyfC2",
+         "", "use")]
+                             )
     def test_websdk_login(self, user_id, user_token, env, auth_env, appKey, appSecert, other_params, enable_ssl):
         websdk = self.webSDK
         websdk.open_env()
@@ -112,4 +115,12 @@ class TestWebSDK:
         websdk.enable_ssl(enable_ssl)
         websdk.login()
         time.sleep(5)
-        websdk.close()
+        pageNo, pageSize, keyword = 1, 10, "000"
+        seachKeyWord_cmd = self.webSDK.search_key_js(pageNo, pageSize, keyword)
+        self.webSDK.exec_js_cmd(seachKeyWord_cmd)
+        tbody = self.webSDK.get_search_result()
+        time.sleep(6)
+        stocks = tbody.split("\n")
+        for stock in stocks:
+            assert stock.startswith(keyword)
+        assert len(stocks) == pageSize

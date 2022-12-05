@@ -1,10 +1,12 @@
-
 # encoding: utf-8
 import time
 import allure
 from pages.basepage import BasePage
 from selenium.webdriver.common.by import By
 from selenium import webdriver
+from util.common import get_logger
+
+log = get_logger()
 
 @allure.story("websdk登录")
 class WebSDKPage(BasePage):
@@ -21,6 +23,7 @@ class WebSDKPage(BasePage):
     otherParams_loc = (By.ID, "tenant_params")
     ssl_loc = (By.ID, "sslSelect")
     login_loc = (By.ID, "login")
+    result_loc = (By.XPATH, '//*[@id="showTable"]/tbody')
 
     def __int__(self, webdriver):
         super().__init__(webdriver)
@@ -98,3 +101,29 @@ class WebSDKPage(BasePage):
     def exec_js_cmd(self, cmd):
         self.exex_js(cmd)
 
+
+
+    def search_key_js(self, page_no,page_size,keyword):
+        cmd = """
+            function onCallback (response){
+                GTSEvent.event(DataEvent.ACCEPTDATA,response);
+            }
+            let searchKeyword = NSDK.createRequestItem(SDK_REQUEST_KEYWIZARD);
+            searchKeyword.setDataCallback(onCallback);
+            searchKeyword.setCategory(SDK_KEYWIZARD_CATEGORY_ALL);
+            searchKeyword.setMarket(SDK_KEYWIZARD_MARKET_SHSZHK);
+            searchKeyword.setFields("sufSecuCode,secuAbbr");
+            """ + f"""
+            searchKeyword.setPageNo({page_no});
+            searchKeyword.setPageSize({page_size});
+            searchKeyword.match("{keyword}");
+        """
+        return cmd
+
+    def get_search_result(self):
+        try:
+            keyword_text = self.get_element(self.result_loc).text
+        except ValueError:
+            log.log("查询结果为空，请稍后，正在重新请求！！！")
+            keyword_text = self.get_element(self.result_loc).text
+        return keyword_text
