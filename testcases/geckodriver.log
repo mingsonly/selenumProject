@@ -1,0 +1,45 @@
+1670212053355	geckodriver	INFO	Listening on 127.0.0.1:62538
+1670212056450	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "--remote-debugging-port" "62539" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\rust_mozprofileAyiWK1"
+1670212056783	Marionette	INFO	Marionette enabled
+1670212056787	Marionette	INFO	Listening on port 62553
+WebDriver BiDi listening on ws://127.0.0.1:62539
+Read port: 62553
+1670212057003	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\rust_mozprofileAyiWK1\\search.json.mozlz4", (void 0)))
+DevTools listening on ws://127.0.0.1:62539/devtools/browser/7535b1fb-5a17-4b70-87ef-0e6c91025e29
+JavaScript error: resource://gre/modules/URIFixup.sys.mjs, line 304: NS_ERROR_FAILURE: Should pass a non-null uri
+console.warn: LoginRecipes: "Falling back to a synchronous message for: https://uat-adminsdk.hongwuniu.com."
+JavaScript error: https://uat-adminsdk.hongwuniu.com/static/js/chunk-libs.dfc5537a.js, line 1: Error: Request failed with status code 403
+JavaScript error: https://uat-adminsdk.hongwuniu.com/static/js/chunk-libs.dfc5537a.js, line 1: Error: Request failed with status code 403
+JavaScript error: https://uat-adminsdk.hongwuniu.com/static/js/chunk-libs.dfc5537a.js, line 1: Error: Request failed with status code 403
+1670212065392	Marionette	INFO	Stopped listening on port 62553
+[Parent 1460, IPC I/O Parent] WARNING: file /builds/worker/checkouts/gecko/ipc/chromium/src/base/process_util_win.cc:167
+[Parent 1460, IPC I/O Parent] WARNING: file /builds/worker/checkouts/gecko/ipc/chromium/src/base/process_util_win.cc:167
+1670212228496	geckodriver	INFO	Listening on 127.0.0.1:61611
+1670212231551	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "--remote-debugging-port" "61612" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\rust_mozprofileWmpRwo"
+1670212231787	Marionette	INFO	Marionette enabled
+1670212231790	Marionette	INFO	Listening on port 61622
+WebDriver BiDi listening on ws://127.0.0.1:61612
+Read port: 61622
+1670212231984	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\rust_mozprofileWmpRwo\\search.json.mozlz4", (void 0)))
+DevTools listening on ws://127.0.0.1:61612/devtools/browser/971b4cc6-ae88-4f87-9f2a-11bda758f37f
+JavaScript error: resource://gre/modules/URIFixup.sys.mjs, line 304: NS_ERROR_FAILURE: Should pass a non-null uri
+console.warn: LoginRecipes: "Falling back to a synchronous message for: https://uat-adminsdk.hongwuniu.com."
+JavaScript error: https://uat-adminsdk.hongwuniu.com/static/js/chunk-libs.dfc5537a.js, line 1: Error: Request failed with status code 403
+JavaScript error: https://uat-adminsdk.hongwuniu.com/static/js/chunk-libs.dfc5537a.js, line 1: Error: Request failed with status code 403
+JavaScript error: https://uat-adminsdk.hongwuniu.com/static/js/chunk-libs.dfc5537a.js, line 1: Error: Request failed with status code 403
+1670212241597	Marionette	INFO	Stopped listening on port 61622
+1670218930987	geckodriver	INFO	Listening on 127.0.0.1:54886
+1670218934082	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "--remote-debugging-port" "54887" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\rust_mozprofileGjHP8v"
+1670218934443	Marionette	INFO	Marionette enabled
+1670218934447	Marionette	INFO	Listening on port 54899
+WebDriver BiDi listening on ws://127.0.0.1:54887
+Read port: 54899
+1670218934648	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\rust_mozprofileGjHP8v\\search.json.mozlz4", (void 0)))
+DevTools listening on ws://127.0.0.1:54887/devtools/browser/1e67a895-eaed-437f-b0dc-1030676d06da
+JavaScript error: resource://gre/modules/URIFixup.sys.mjs, line 304: NS_ERROR_FAILURE: Should pass a non-null uri
+1670218950185	Marionette	INFO	Stopped listening on port 54899
+[Parent 28076, IPC I/O Parent] WARNING: file /builds/worker/checkouts/gecko/ipc/chromium/src/base/process_util_win.cc:167
+[Parent 28076, IPC I/O Parent] WARNING: file /builds/worker/checkouts/gecko/ipc/chromium/src/base/process_util_win.cc:167

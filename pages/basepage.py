@@ -7,6 +7,8 @@ from selenium import webdriver
 from exec.myexe import ElementNotFound
 from selenium.webdriver.common.by import By
 import os
+from selenium.webdriver.support.ui import Select
+import time
 
 cur_dir = os.path.dirname(os.path.abspath(__file__))
 img_dir = os.path.join(os.path.dirname(cur_dir), "screenshots")
@@ -20,6 +22,7 @@ class BasePage(object):
 
     def __init__(self, driver: webdriver):
         self.driver = driver
+        self.max_window()
 
     def open_url(self, url):
         self.driver.get(url)
@@ -59,9 +62,15 @@ class BasePage(object):
         path = os.path.join(img_dir, loc[1] + ".png") if path == "" else path
         self.get_element(loc).screenshot(path)
 
+    def select_option(self, loc, value):
+        se = self.get_element(loc)
+        select = Select(se)
+        time.sleep(2)
+        select.select_by_value(value)
+
     def screenshot_and_save(self, file_name):
         import time
-        file_name =file_name if file_name else str(time.time()) + ".png"
+        file_name = file_name if file_name else str(time.time()) + ".png"
         path = os.path.join(img_dir, file_name)
         self.driver.get_screenshot_as_file(path)
 
@@ -70,3 +79,9 @@ class BasePage(object):
 
     def click(self, loc):
         self.get_element(loc).click()
+
+    def max_window(self):
+        self.driver.maximize_window()
+
+    def exex_js(self, js):
+        self.driver.execute_script(js)
