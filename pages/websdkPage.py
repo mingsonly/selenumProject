@@ -8,6 +8,7 @@ from util.common import get_logger
 
 log = get_logger()
 
+
 @allure.story("websdk登录")
 class WebSDKPage(BasePage):
     url = "https://uat-cloud.hongwuniu.com/page/gsdk/demo/index.html?appkey=5551_PC_42&secret=$2a$10$nf6bHoHaY6GsfvplrQZqde.H.q.IbHR.9msI1Qv5Zi8QerbZxyfC2&env=dev"
@@ -23,6 +24,7 @@ class WebSDKPage(BasePage):
     otherParams_loc = (By.ID, "tenant_params")
     ssl_loc = (By.ID, "sslSelect")
     login_loc = (By.ID, "login")
+    title_loc = (By.XPATH, '//*[@id="showTable"]/thead/tr')
     result_loc = (By.XPATH, '//*[@id="showTable"]/tbody')
 
     def __int__(self, webdriver):
@@ -101,9 +103,7 @@ class WebSDKPage(BasePage):
     def exec_js_cmd(self, cmd):
         self.exex_js(cmd)
 
-
-
-    def search_key_js(self, page_no,page_size,keyword):
+    def search_key_js(self, page_no, page_size, keyword):
         cmd = """
             function onCallback (response){
                 GTSEvent.event(DataEvent.ACCEPTDATA,response);
@@ -120,6 +120,20 @@ class WebSDKPage(BasePage):
         """
         return cmd
 
+    def singel_stock_js(self, stocks: str, fields="Code,Name,SectorID,SectorName,MarginTrade,StockConnect"):
+        cmd = """
+            function onCallback (response){
+                //结果集
+                GTSEvent.event(DataEvent.ACCEPTDATA,response);
+            }
+            let stockInformation = NSDK.createRequestItem(SDK_REQUET_NSTOCKINFO);
+            stockInformation.setDataCallback(onCallback);""" + f"""
+            stockInformation.setCodes("{stocks}");
+            stockInformation.setFields("{fields}");
+            stockInformation.request();
+        """
+        return cmd
+
     def get_search_result(self):
         try:
             keyword_text = self.get_element(self.result_loc).text
@@ -127,3 +141,13 @@ class WebSDKPage(BasePage):
             log.log("查询结果为空，请稍后，正在重新请求！！！")
             keyword_text = self.get_element(self.result_loc).text
         return keyword_text
+
+    def get_result_title(self):
+        try:
+            title = self.get_element(self.title_loc).text
+        except ValueError:
+            log.log("结果标题为空，请稍后，正在重新请求！！！")
+            title = self.get_element(self.title_loc).text
+        return title
+
+

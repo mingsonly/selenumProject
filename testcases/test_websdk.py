@@ -23,22 +23,18 @@ class TestWebSDK:
     def setup(self):
         driver = webdriver.Chrome()
         self.webSDK = WebSDKPage(driver)
-        user_id, user_token, env, auth_env ="3423224", "12313", "uat", "dev"
-        appKey, appSecert, other_params, enable_ssl = "5551_PC_42", "$2a$10$nf6bHoHaY6GsfvplrQZqde.H.q.IbHR.9msI1Qv5Zi8QerbZxyfC2","", "use"
+        user_id, user_token, env, auth_env = "3423224", "12313", "uat", "dev"
+        appKey, appSecert, other_params, enable_ssl = "5551_PC_42", "$2a$10$nf6bHoHaY6GsfvplrQZqde.H.q.IbHR.9msI1Qv5Zi8QerbZxyfC2", "", "use"
         self.login(user_id, user_token, env, auth_env, appKey, appSecert, other_params, enable_ssl)
-
 
     def setup_class(self):
         pass
 
-
     def teardown(self):
         self.webSDK.close()
 
-
     def teardown_class(self):
         pass
-
 
     @staticmethod
     def set_env_config(env):
@@ -101,10 +97,8 @@ class TestWebSDK:
         # execjs.compile(add_env_cmd)
         # execjs.compile(which_env)
 
-
-
-    def login(self,user_id, user_token, env, auth_env, appKey, appSecert, other_params, enable_ssl):
-        websdk=self.webSDK
+    def login(self, user_id, user_token, env, auth_env, appKey, appSecert, other_params, enable_ssl):
+        websdk = self.webSDK
         websdk.open_env()
         cmds = self.set_env_config("uat")
         for cmd in cmds:
@@ -121,10 +115,9 @@ class TestWebSDK:
         websdk.login()
         time.sleep(5)
 
-
     @pytest.mark.parametrize("pageNo, pageSize, keyword", [
         (1, 10, "000")]
-    )
+                             )
     def test_keword_search(self, pageNo, pageSize, keyword):
         # pageNo, pageSize, keyword = 1, 10, "000"
         seachKeyWord_cmd = self.webSDK.search_key_js(pageNo, pageSize, keyword)
@@ -135,3 +128,14 @@ class TestWebSDK:
         for stock in stocks:
             assert stock.startswith(keyword)
         assert len(stocks) == pageSize
+
+    @pytest.mark.parametrize("stock,fields", [("600123.SH", "Code,Name,SectorID,SectorName,MarginTrade,StockConnect")])
+    def test_single_stock(self, stock, fields):
+        single_stock_cmd = self.webSDK.singel_stock_js(stocks=stock, fields=fields)
+        self.webSDK.exec_js_cmd(single_stock_cmd)
+        tbody = self.webSDK.get_search_result()
+        time.sleep(6)
+        fields_lower = fields.lower().replace(",", " ")
+        title = self.webSDK.get_result_title()
+        assert fields_lower == title
+        assert tbody.startswith(stock)
