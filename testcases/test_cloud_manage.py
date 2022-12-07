@@ -44,9 +44,6 @@ class TestLogin:
     #     self.driver = browsers[browser]
 
     @allure.story("正常登陆案例")
-    # @pytest.mark.parametrize("phone,pwd", [
-    #     ("17521787146", "taoming123"),
-    # ])
     def test_login_success(self):
         username, pwd = self.env_data['username'], self.env_data['password']
         self.loginPage.get_url()

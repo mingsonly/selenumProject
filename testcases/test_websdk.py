@@ -23,8 +23,8 @@ class TestWebSDK:
     def setup(self):
         driver = webdriver.Chrome()
         self.webSDK = WebSDKPage(driver)
-        user_id, user_token, env, auth_env = "3423224", "12313", "uat", "dev"
-        appKey, appSecert, other_params, enable_ssl = "5551_PC_42", "$2a$10$nf6bHoHaY6GsfvplrQZqde.H.q.IbHR.9msI1Qv5Zi8QerbZxyfC2", "", "use"
+        user_id, user_token, env, auth_env = "3423224", "12313", "", ""
+        appKey, appSecert, other_params, enable_ssl = "", "", "", "use"
         self.login(user_id, user_token, env, auth_env, appKey, appSecert, other_params, enable_ssl)
 
     def setup_class(self):
