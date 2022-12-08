@@ -22,7 +22,6 @@ class BasePage(object):
 
     def __init__(self, driver: webdriver):
         self.driver = driver
-        self.max_window()
 
     def open_url(self, url):
         """打开url"""

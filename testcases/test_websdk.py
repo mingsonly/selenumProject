@@ -27,7 +27,7 @@ class TestWebSDK:
         driver = webdriver.Chrome()
         self.webSDK = WebSDKPage(driver)
         login_params = self.get_websdk_cfg()
-        user_id, user_token, env, auth_env, appKey, appSecert, other_params, enable_ssl = login_params.values()
+        user_id, user_token, env, auth_env, appKey, appSecert, other_params, enable_ssl, self.envs = login_params.values()
         self.login(user_id, user_token, env, auth_env, appKey, appSecert, other_params, enable_ssl)
 
     def setup_class(self):
@@ -45,66 +45,8 @@ class TestWebSDK:
             data = json.load(f)
         return data
 
-    @staticmethod
-    def set_env_config(env):
-        envs = {
-            "szse_dev": {
-                "name": 'szse_dev',
-                "httpHostName": "dev-datasdk.mktdata.cn",
-                "wsHostName": "dev-quotesdk.mktdata.cn",
-                "customWsHostName": "dev-customize-sdk.mktdata.cn",
-                "siteList": [
-                    "dev-shlistsdk.mktdata.cn/application/",
-                    "dev-gzlistsdk.mktdata.cn/application/"
-                ]
-            },
-            "dev": {
 
-                "name": 'dev',
-                "httpHostName": "dev-platform.hongwuniu.com",
-                "wsHostName": "dev-quote.hongwuniu.com",
-                "customWsHostName": "dev-customize-sdk.hongwuniu.com",
-                "siteList": [
-                    "dev-shlistsdk.hongwuniu.com/application/",
-                    "dev-gzlistsdk.hongwuniu.com/application/"
-                ]
-            },
-            "test": {
-                "name": 'test',
-                "httpHostName": "test-platform.hongwuniu.com",
-                "wsHostName": "test-quote.hongwuniu.com",
-                "customWsHostName": "test-customize-sdk.hongwuniu.com",
-                "siteList": [
-                    "test-shlistsdk.hongwuniu.com/application/",
-                    "test-gzlistsdk.hongwuniu.com/application/"
-                ]
-            },
-            "uat": {
-                "name": 'uat',
-                "httpHostName": "uat-platform.hongwuniu.com",
-                "wsHostName": "uat-quote.hongwuniu.com",
-                "customWsHostName": "uat-customize-sdk.hongwuniu.com",
-                "siteList": [
-                    "uat-shlistsdk.hongwuniu.com/application/",
-                    "uat-gzlistsdk.hongwuniu.com/application/"
-                ]
-            },
-            "pro": {
-                "name": 'pro',
-                "httpHostName": "platform.hongwuniu.com",
-                "wsHostName": "quote.hongwuniu.com",
-                "customWsHostName": "customize-sdk.hongwuniu.com",
-                "siteList": [
-                    "shlistsdk.hongwuniu.com/application/",
-                    "gzlistsdk.hongwuniu.com/application/",
-                ]
-            },
-        }
 
-        add_env_cmd = f"NSDK.addEnvType({envs[env]});"
-        return add_env_cmd
-        # execjs.compile(add_env_cmd)
-        # execjs.compile(which_env)
 
     @staticmethod
     def set_env_config_old(env):
@@ -193,9 +135,8 @@ class TestWebSDK:
 
     @pytest.mark.parametrize("pageNo, pageSize, keyword", [
         (1, 10, "000")]
-                             )
+    )
     def test_keword_search(self, pageNo, pageSize, keyword):
-        # pageNo, pageSize, keyword = 1, 10, "000"
         seachKeyWord_cmd = self.webSDK.search_key_js(pageNo, pageSize, keyword)
         self.webSDK.exec_js_cmd(seachKeyWord_cmd)
         tbody = self.webSDK.get_search_result()
