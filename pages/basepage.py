@@ -50,13 +50,10 @@ class BasePage(object):
             if locator in page_source:
                 self.driver.find_element(*locator).click()
 
-    def input_and_click(self, text, loc):
+    def input_text(self, text, loc):
         """输入文本并点击"""
         self.get_element(loc).send_keys(text)
 
-    def input_text(self, loc):
-        """输入文本"""
-        self.get_element(loc).click()
 
     def clear(self, loc):
         """清空动作"""
