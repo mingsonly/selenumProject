@@ -1,4 +1,4 @@
-#coding=utf-8
+# coding=utf-8
 import time
 
 import pytest
@@ -12,11 +12,13 @@ from pages.androidPage import AndBasePage
 from util.common import get_logger
 import os
 import json
+
 logger = get_logger()
 cur_dir = os.path.dirname(os.path.abspath(__file__))
 log_dir = os.path.join(os.path.dirname(cur_dir), "logs")
 img_dir = os.path.join(os.path.dirname(cur_dir), "screenshots")
 data_dir = os.path.join(os.path.dirname(cur_dir), "data")
+
 
 class TestAndroidSDK:
     def setup(self):
@@ -49,7 +51,7 @@ class TestAndroidSDK:
             data = json.load(f)
         return data
 
-    def test_android_login(self):
+    def config_env(self):
         driver = self.androidPage
         driver.envs_import_btn()
         time.sleep(1)
@@ -58,6 +60,19 @@ class TestAndroidSDK:
         driver.envs_btn_accept()
         time.sleep(2)
 
-
-
+    @pytest.mark.parametrize("userid,token,loginAppKey,appSecret,env", [
+        (1231231, 23131, "778_Mobile_34", "$2a$10$PT8Nig9yoNyJAqOBXbsKwuDNTC2HIaoOqQrQhQEcF9eOFWWZR.C8q", "uat"),
+    ])
+    def test_sdk_login(self, userid, token, loginAppKey, appSecret, env):
+        self.config_env()
+        self.androidPage.connect_click()
+        self.androidPage.input_userid(userid=userid)
+        self.androidPage.input_token(token=token)
+        # self.androidPage.switch_ssl()
+        self.androidPage.input_pro_env()
+        self.androidPage.input_login_appKey(loginAppKey=loginAppKey)
+        self.androidPage.input_login_appSecret(appSecret=appSecret)
+        self.androidPage.input_env_editText(env=env)
+        # self.androidPage.connect_cancel()
+        self.androidPage.connect_submit()
 

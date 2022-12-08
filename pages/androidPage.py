@@ -1,4 +1,6 @@
 # coding=utf-8
+import time
+
 from pages.basepage import BasePage
 from selenium.webdriver.common.by import By
 
@@ -95,6 +97,38 @@ class AndBasePage(BasePage):
 
     def __init__(self, webdriver):
         super().__init__(webdriver)
+
+    def connect_click(self):
+        self.click(self.connect_loc)
+
+    def input_userid(self, userid):
+        self.input_text(userid, self.connect_userid_loc)
+
+    def input_token(self, token):
+        self.input_text(token, self.connect_token_loc)
+
+    def switch_ssl(self):
+        self.click(self.ssl_status_loc)
+
+    def input_pro_env(self, env='dev'):
+        self.input_text(env, self.connect_pro_loc)
+
+    def input_login_appKey(self, loginAppKey):
+        self.input_text(loginAppKey, self.loginAppKey_loc)
+
+    def input_login_appSecret(self, appSecret):
+        self.input_text(appSecret, self.loginAppSecret_loc)
+
+    def input_env_editText(self, env='uat'):
+        self.input_text(env, self.env_EditText_loc)
+
+    def connect_cancel(self):
+        time.sleep(1)
+        self.click(self.connect_cancel_loc)
+
+    def connect_submit(self):
+        time.sleep(1)
+        self.click(self.connect_submit_loc)
 
     def envs_import_btn(self):
         """环境导入：点击导入按钮"""
