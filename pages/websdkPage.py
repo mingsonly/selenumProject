@@ -46,37 +46,37 @@ class WebSDKPage(BasePage):
     @allure.step("输入用户id")
     def input_userId(self, userId):
         self.clear(self.userID_loc)
-        self.input_text(userId, self.userID_loc)
+        self.input_and_click(userId, self.userID_loc)
 
     @allure.step("输入token")
     def input_token(self, token):
         self.clear(self.userToken_loc)
-        self.input_text(token, self.userToken_loc)
+        self.input_and_click(token, self.userToken_loc)
 
     @allure.step("输入env")
     def input_env(self, env):
         self.clear(self.userEnv_loc)
-        self.input_text(env, self.userEnv_loc)
+        self.input_and_click(env, self.userEnv_loc)
 
     @allure.step("输入认证环境")
     def input_auth_env(self, env):
         self.clear(self.authEnv_loc)
-        self.input_text(env, self.authEnv_loc)
+        self.input_and_click(env, self.authEnv_loc)
 
     @allure.step("输入appkey")
     def input_appkey(self, appkey):
         self.clear(self.app_key_loc)
-        self.input_text(appkey, self.app_key_loc)
+        self.input_and_click(appkey, self.app_key_loc)
 
     @allure.step("输入appsert")
     def input_appsert(self, appsert):
         self.clear(self.app_cert_loc)
-        self.input_text(appsert, self.app_cert_loc)
+        self.input_and_click(appsert, self.app_cert_loc)
 
     @allure.step("输入其他参数")
     def input_others_params(self, other_params):
         self.clear(self.otherParams_loc)
-        self.input_text(other_params, self.otherParams_loc)
+        self.input_and_click(other_params, self.otherParams_loc)
 
     @allure.step("启用ssl")
     def enable_ssl(self, value="use"):
