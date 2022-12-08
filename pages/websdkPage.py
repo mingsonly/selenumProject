@@ -11,7 +11,7 @@ log = get_logger()
 
 @allure.story("websdk登录")
 class WebSDKPage(BasePage):
-    url = ""
+    url = "https://uat-cloud.hongwuniu.com/page/gsdk/demo/index.html"
     connect_loc = (By.ID, "connect")
     run_loc = (By.ID, "run")
     busyOpt_loc = (By.ID, "funcSelect")
