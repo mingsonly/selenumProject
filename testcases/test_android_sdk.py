@@ -24,7 +24,7 @@ class TestAndroidSDK:
     def setup(self):
         caps = {}
         caps["platformName"] = "android"
-        caps["appium:deviceName"] = "192.168.1.78:9000:9000"
+        caps["appium:deviceName"] = "6EJ7N18609022111"
         caps["appium:appPackage"] = "com.org.test"
         caps["appium:appActivity"] = ".MainActivity"
         caps["appium:autoGrantPermissions"] = "true"
@@ -37,7 +37,7 @@ class TestAndroidSDK:
         self.androidPage = AndBasePage(driver)
         self.envs = self.get_sdk_cfg()['envs']
         time.sleep(1)
-        self.androidPage.impower()
+        # self.androidPage.impower()
 
     def setup_class(self): pass
 
@@ -53,7 +53,7 @@ class TestAndroidSDK:
         return data
 
     @pytest.mark.parametrize("userid,token,loginAppKey,appSecret,env", [
-        (1231231, 23131, "778_Mobile_34", "$2a$10$PT8Nig9yoNyJAqOBXbsKwuDNTC2HIaoOqQrQhQEcF9eOFWWZR.C8q", "uat"),
+        (123121231, 2313121, "778_Mobile_34", "$2a$10$PT8Nig9yoNyJAqOBXbsKwuDNTC2HIaoOqQrQhQEcF9eOFWWZR.C8q", "uat"),
     ])
     def test_sdk_login(self, userid, token, loginAppKey, appSecret, env):
         self.androidPage.envs_import_busy(self.envs, busy='import_accept')
@@ -61,3 +61,5 @@ class TestAndroidSDK:
                                         env=env)
 
     # def test_(self):
+
+

@@ -96,6 +96,102 @@ class AndBasePage(BasePage):
     pricestatic_cancel_loc = (By.ID, "com.org.test:id/pricestatic_cancel")
     pricestatic_submit_loc = (By.ID, "com.org.test:id/pricestatic_submit")
 
+    # 自选股板块操作
+    # 查询板块
+    sector_query_loc = (By.ID, "com.org.test:id/sector_query")
+    # 添加板块
+    sector_add_loc = (By.ID, "com.org.test:id/sector_add")
+    sector_add_name_loc = (By.ID, "com.org.test:id/sector_add_name")
+    sector_add_cancel_loc = (By.ID, "com.org.test:id/sector_add_cancel")
+    sector_add_submit_loc = (By.ID, "com.org.test:id/sector_add_submit")
+
+    # 删除板块
+    sector_delete_loc = (By.ID, "com.org.test:id/sector_delete")
+    sector_delete_id_loc = (By.ID, "com.org.test:id/sector_delete_id")
+    sector_delete_cancel_loc = (By.ID, "com.org.test:id/sector_delete_cancel")
+    sector_delete_submit_loc = (By.ID, "com.org.test:id/sector_delete_submit")
+
+    # 修改板块
+    sector_update_loc = (By.ID, "com.org.test:id/sector_update")
+    sector_update_id_loc = (By.ID, "com.org.test:id/sector_update_id")
+    sector_update_name_loc = (By.ID, "com.org.test:id/sector_update_name")
+    sector_update_cancel_loc = (By.ID, "com.org.test:id/sector_update_cancel")
+    sector_update_submit_loc = (By.ID, "com.org.test:id/sector_update_submit")
+
+    # 移动板块
+    sector_sort_loc = (By.ID, "com.org.test:id/sector_sort")
+    sector_sort_id_loc = (By.ID, "com.org.test:id/sector_sort_id")
+    sector_sort_index_loc = (By.ID, "com.org.test:id/sector_sort_index")
+    sector_sort_cancel_loc = (By.ID, "com.org.test:id/sector_sort_cancel")
+    sector_sort_submit_loc = (By.ID, "com.org.test:id/sector_sort_submit")
+
+    def sector_update(self, sector_id, sector_name, isUp=True):
+        """板块更新"""
+        self.click(self.sector_update_loc)
+        self.input_text(sector_id, self.sector_update_id_loc)
+        self.input_text(sector_name, self.sector_update_name_loc)
+        if isUp:
+            self.click(self.sector_update_submit_loc)
+        else:
+            self.click(self.sector_update_cancel_loc)
+
+    def sector_delete(self, sector_id, isDel=True):
+        # 删除板块
+        self.click(self.sector_delete_loc)
+        self.input_text(sector_id, self.sector_delete_id_loc)
+        if isDel:
+            self.click(self.sector_delete_submit_loc)
+        else:
+            self.click(self.sector_delete_submit_loc)
+
+    def sector_query(self):
+        # 查询板块
+        self.click(self.sector_query_loc)
+
+    def sector_add(self, sector_name, isAdd=True):
+        "添加板块"
+        self.click(self.sector_add_loc)
+        self.input_text(sector_name, self.sector_add_name_loc)
+        if isAdd:
+            self.click(self.sector_add_submit_loc)
+        else:
+            self.click(self.sector_add_cancel_loc)
+
+    #
+
+    # =========================自选股操作===============================
+    # 查询自选股
+    securitys_query_loc = (By.ID, "com.org.test:id/securitys_query")
+    securitys_query_id_loc = (By.ID, "com.org.test:id/securitys_query_id")
+    securitys_query_cancel_loc = (By.ID, "com.org.test:id/securitys_query_cancel")
+    securitys_query_submit_loc = (By.ID, "com.org.test:id/securitys_query_submit")
+    # 添加自选股
+    securitys_add_loc = (By.ID, "com.org.test:id/securitys_add")
+    securitys_add_id_loc = (By.ID, "com.org.test:id/securitys_add_id")
+    securitys_add_code_loc = (By.ID, "com.org.test:id/securitys_add_code")
+    securitys_add_cancel_loc = (By.ID, "com.org.test:id/securitys_add_cancel")
+    securitys_add_submit_loc = (By.ID, "com.org.test:id/securitys_add_submit")
+
+    # 删除自选股
+    securitys_delete_loc = (By.ID, "com.org.test:id/securitys_delete")
+    securitys_delete_id_loc = (By.ID, "com.org.test:id/securitys_delete_id")
+    securitys_delete_code_loc = (By.ID, "com.org.test:id/securitys_delete_code")
+    securitys_delete_cancel_loc = (By.ID, "com.org.test:id/securitys_delete_cancel")
+    securitys_delete_submit_loc = (By.ID, "com.org.test:id/securitys_delete_submit")
+    # 清空自选股
+    securitys_clean_loc = (By.ID, "com.org.test:id/securitys_clean")
+    securitys_clean_id_loc = (By.ID, "com.org.test:id/securitys_clean_id")
+    securitys_clean_cancel_loc = (By.ID, "com.org.test:id/securitys_clean_cancel")
+    securitys_clean_submit_loc = (By.ID, "com.org.test:id/securitys_clean_submit")
+
+    # 自选股调整位置
+    securitys_sort_loc = (By.ID, "com.org.test:id/securitys_sort")
+    securitys_sort_id_loc = (By.ID, "com.org.test:id/securitys_sort_id")
+    securitys_sort_code_loc = (By.ID, "com.org.test:id/securitys_sort_code")
+    securitys_sort_index_loc = (By.ID, "com.org.test:id/securitys_sort_index")
+    securitys_sort_cancel_loc = (By.ID, "com.org.test:id/securitys_sort_cancel")
+    securitys_sort_submit_loc = (By.ID, "com.org.test:id/securitys_sort_submit")
+
     def __init__(self, webdriver):
         super().__init__(webdriver)
 
