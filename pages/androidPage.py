@@ -98,50 +98,32 @@ class AndBasePage(BasePage):
     def __init__(self, webdriver):
         super().__init__(webdriver)
 
-    def connect_click(self):
+    def connect_server(self, userid, token, loginAppKey, appSecret, pro_env='dev', env='uat', isConnect='submit', openSSL=None):
         self.click(self.connect_loc)
-
-    def input_userid(self, userid):
         self.input_text(userid, self.connect_userid_loc)
-
-    def input_token(self, token):
         self.input_text(token, self.connect_token_loc)
-
-    def switch_ssl(self):
-        self.click(self.ssl_status_loc)
-
-    def input_pro_env(self, env='dev'):
-        self.input_text(env, self.connect_pro_loc)
-
-    def input_login_appKey(self, loginAppKey):
+        if openSSL:
+            self.click(self.ssl_status_loc)
+        self.input_text(pro_env, self.connect_pro_loc)
         self.input_text(loginAppKey, self.loginAppKey_loc)
-
-    def input_login_appSecret(self, appSecret):
         self.input_text(appSecret, self.loginAppSecret_loc)
-
-    def input_env_editText(self, env='uat'):
         self.input_text(env, self.env_EditText_loc)
+        connect_status = {
+            "submit": self.connect_submit_loc,
+            "cancel": self.connect_cancel_loc,
+        }
+        self.click(connect_status[isConnect])
 
-    def connect_cancel(self):
-        time.sleep(1)
-        self.click(self.connect_cancel_loc)
 
-    def connect_submit(self):
-        time.sleep(1)
-        self.click(self.connect_submit_loc)
 
-    def envs_import_btn(self):
+    def envs_import_busy(self, envs, busy='import_accept'):
+        busy_type = {
+            "import_accept": self.importaccept_loc,  # 确认按钮
+            "abort_import": self.importaccept_loc,  # 取消按钮
+        }
         """环境导入：点击导入按钮"""
         self.click(loc=self.importenvbtn_loc)
-
-    def envs_info_input(self, envs):
         """环境导入：导入环境配置"""
         self.input_text(text=envs, loc=self.importenvtxt_loc)
-
-    def envs_btn_accept(self):
-        """环境导入：点击确定按钮"""
-        self.click(self.importaccept_loc)
-
-    def envs_btn_cancel(self):
-        """环境导入：点击确定按钮"""
-        self.click(self.importaccept_loc)
+        """环境导入：点击确定 or取消  按钮"""
+        self.click(busy_type[busy])

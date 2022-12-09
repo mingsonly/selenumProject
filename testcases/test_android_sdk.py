@@ -24,7 +24,7 @@ class TestAndroidSDK:
     def setup(self):
         caps = {}
         caps["platformName"] = "android"
-        caps["appium:deviceName"] = "6EJ7N18609022111"
+        caps["appium:deviceName"] = "192.168.1.78:9000:9000"
         caps["appium:appPackage"] = "com.org.test"
         caps["appium:appActivity"] = ".MainActivity"
         caps["appium:autoGrantPermissions"] = "true"
@@ -51,28 +51,10 @@ class TestAndroidSDK:
             data = json.load(f)
         return data
 
-    def config_env(self):
-        driver = self.androidPage
-        driver.envs_import_btn()
-        time.sleep(1)
-        driver.envs_info_input(self.envs)
-        time.sleep(1)
-        driver.envs_btn_accept()
-        time.sleep(2)
-
     @pytest.mark.parametrize("userid,token,loginAppKey,appSecret,env", [
         (1231231, 23131, "778_Mobile_34", "$2a$10$PT8Nig9yoNyJAqOBXbsKwuDNTC2HIaoOqQrQhQEcF9eOFWWZR.C8q", "uat"),
     ])
     def test_sdk_login(self, userid, token, loginAppKey, appSecret, env):
-        self.config_env()
-        self.androidPage.connect_click()
-        self.androidPage.input_userid(userid=userid)
-        self.androidPage.input_token(token=token)
-        # self.androidPage.switch_ssl()
-        self.androidPage.input_pro_env()
-        self.androidPage.input_login_appKey(loginAppKey=loginAppKey)
-        self.androidPage.input_login_appSecret(appSecret=appSecret)
-        self.androidPage.input_env_editText(env=env)
-        # self.androidPage.connect_cancel()
-        self.androidPage.connect_submit()
-
+        self.androidPage.envs_import_busy(self.envs, busy='import_accept')
+        self.androidPage.connect_server(userid=userid, token=token, loginAppKey=loginAppKey, appSecret=appSecret,
+                                        env=env)
