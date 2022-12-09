@@ -98,7 +98,8 @@ class AndBasePage(BasePage):
     def __init__(self, webdriver):
         super().__init__(webdriver)
 
-    def connect_server(self, userid, token, loginAppKey, appSecret, pro_env='dev', env='uat', isConnect='submit', openSSL=None):
+    def connect_server(self, userid, token, loginAppKey, appSecret, pro_env='dev', env='uat', isConnect='submit',
+                       openSSL=None):
         self.click(self.connect_loc)
         self.input_text(userid, self.connect_userid_loc)
         self.input_text(token, self.connect_token_loc)
@@ -114,8 +115,6 @@ class AndBasePage(BasePage):
         }
         self.click(connect_status[isConnect])
 
-
-
     def envs_import_busy(self, envs, busy='import_accept'):
         busy_type = {
             "import_accept": self.importaccept_loc,  # 确认按钮
@@ -125,5 +124,7 @@ class AndBasePage(BasePage):
         self.click(loc=self.importenvbtn_loc)
         """环境导入：导入环境配置"""
         self.input_text(text=envs, loc=self.importenvtxt_loc)
+
         """环境导入：点击确定 or取消  按钮"""
         self.click(busy_type[busy])
+

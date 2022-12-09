@@ -30,7 +30,7 @@ class TestAndroidSDK:
         caps["appium:autoGrantPermissions"] = "true"
         caps["appium:ensureWebviewsHavePages"] = True
         caps["appium:nativeWebScreenshot"] = True
-        caps["appium:newCommandTimeout"] = 3600
+        # caps["appium:newCommandTimeout"] = 3600
         caps["appium:connectHardwareKeyboard"] = True
 
         driver = webdriver.Remote("http://127.0.0.1:4723/wd/hub", caps)
@@ -41,8 +41,8 @@ class TestAndroidSDK:
     def setup_class(self): pass
 
     def teardown(self):
-        self.androidPage.quit()
-
+        # self.androidPage.quit()
+        pass
     def teardown_class(self): pass
 
     def get_sdk_cfg(self):
@@ -58,3 +58,5 @@ class TestAndroidSDK:
         self.androidPage.envs_import_busy(self.envs, busy='import_accept')
         self.androidPage.connect_server(userid=userid, token=token, loginAppKey=loginAppKey, appSecret=appSecret,
                                         env=env)
+
+    # def test_(self):
