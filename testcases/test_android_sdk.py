@@ -44,6 +44,7 @@ class TestAndroidSDK:
     def teardown(self):
         # self.androidPage.quit()
         pass
+
     def teardown_class(self): pass
 
     def get_sdk_cfg(self):
@@ -60,6 +61,22 @@ class TestAndroidSDK:
         self.androidPage.connect_server(userid=userid, token=token, loginAppKey=loginAppKey, appSecret=appSecret,
                                         env=env)
 
-    # def test_(self):
+    def sdk_login(self):
+        userid, token, loginAppKey, appSecret, env = 123121231, 2313121, "778_Mobile_34", "$2a$10$PT8Nig9yoNyJAqOBXbsKwuDNTC2HIaoOqQrQhQEcF9eOFWWZR.C8q", "uat"
+        self.androidPage.envs_import_busy(self.envs, busy='import_accept')
+        time.sleep(1)
+        self.androidPage.connect_server(userid=userid, token=token, loginAppKey=loginAppKey, appSecret=appSecret,
+                                        env=env)
 
-
+    def test_sector_stream(self):
+        """
+        添加板块-->查询板块-->修改板块-->移动板块-->删除板块
+        :return: None
+        """
+        self.sdk_login()
+        sector_name = "我的板块" + str(int(time.time()))[5:]
+        self.androidPage.sector_add(sector_name=sector_name)
+        self.androidPage.sector_query()
+        # todo 需要加入删除
+        result = self.androidPage.get_sector_result()
+        assert result[1] == sector_name

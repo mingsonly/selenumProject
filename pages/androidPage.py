@@ -3,6 +3,7 @@ import time
 
 from pages.basepage import BasePage
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
 
 
 class AndBasePage(BasePage):
@@ -124,6 +125,25 @@ class AndBasePage(BasePage):
     sector_sort_index_loc = (By.ID, "com.org.test:id/sector_sort_index")
     sector_sort_cancel_loc = (By.ID, "com.org.test:id/sector_sort_cancel")
     sector_sort_submit_loc = (By.ID, "com.org.test:id/sector_sort_submit")
+
+    def get_sector_result(self):
+        """获取结果集合"""
+        result = []
+        for i in range(1, 3):
+            ele_loc = (By.ID, f"com.org.test:id/lv_two_{i}")
+            ele_txt = self.get_element(ele_loc).text
+            time.sleep(1)
+            result.append(ele_txt)
+        return result
+
+    def sector_move(self, sector_id, index, isMvoe=True):
+        self.click(self.sector_sort_loc)
+        self.input_text(sector_id, self.sector_sort_id_loc)
+        self.input_text(index, self.sector_sort_index_loc)
+        if isMvoe:
+            self.click(self.sector_sort_submit_loc)
+        else:
+            self.click(self.sector_sort_cancel_loc)
 
     def sector_update(self, sector_id, sector_name, isUp=True):
         """板块更新"""
