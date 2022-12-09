@@ -6,6 +6,7 @@ from selenium.webdriver.common.by import By
 
 
 class AndBasePage(BasePage):
+    _blacklist = [(By.ID, "com.lbe.security.miui:id/permission_allow_foreground_only_button")]
     # connect按钮
     connect_loc = (By.ID, "com.org.test:id/btn_1")
     connect_userid_loc = (By.ID, "com.org.test:id/connect_userid")
@@ -98,6 +99,11 @@ class AndBasePage(BasePage):
     def __init__(self, webdriver):
         super().__init__(webdriver)
 
+    def impower(self):
+        for loc in self._blacklist:
+            if self.get_element(loc):
+                self.click(loc)
+
     def connect_server(self, userid, token, loginAppKey, appSecret, pro_env='dev', env='uat', isConnect='submit',
                        openSSL=None):
         self.click(self.connect_loc)
@@ -127,4 +133,3 @@ class AndBasePage(BasePage):
 
         """环境导入：点击确定 or取消  按钮"""
         self.click(busy_type[busy])
-

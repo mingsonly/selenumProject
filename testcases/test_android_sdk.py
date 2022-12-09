@@ -37,6 +37,7 @@ class TestAndroidSDK:
         self.androidPage = AndBasePage(driver)
         self.envs = self.get_sdk_cfg()['envs']
         time.sleep(1)
+        self.androidPage.impower()
 
     def setup_class(self): pass
 
