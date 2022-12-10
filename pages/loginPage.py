@@ -9,14 +9,12 @@ import time
 
 @allure.feature("登陆页面")
 class LoginPage(BasePage):
-    phone_loc = (By.NAME, "cellphone")
-    pwd_loc = (By.NAME, "password")
-    login_btn_loc = (By.CLASS_NAME, "Button_button_3onsJ")
-    agree_loc = (By.ID, "agree")
-    url = "https://account.geekbang.org/login?redirect=https%3A%2F%2Ftime.geekbang.org%2F"
-    phone_err_loc = (By.CLASS_NAME, "gkui-form-error")
-    pwd_err_loc = (By.CLASS_NAME, "gkui-form-error")
-    userName_loc = (By.CLASS_NAME, "user-name")
+    url = "https://uat-adminsdk.hongwuniu.com/#/login"
+    userName_loc = (By.XPATH, '//*[@id="app"]/div[1]/div/form/div[2]/div[1]/div/div/input')
+    password_loc = (By.XPATH, '//*[@id="app"]/div[1]/div/form/div[2]/div[2]/div/div/input')
+    remember_loc = (By.XPATH, '//*[@id="app"]/div[1]/div/form/div[2]/div[3]/label/span[2]')
+    login_loc = (By.XPATH, '//*[@id="app"]/div[1]/div/form/div[2]/button')
+
 
     def __init__(self, webdiver):
         super(LoginPage, self).__init__(webdiver)
@@ -25,39 +23,39 @@ class LoginPage(BasePage):
     def get_url(self):
         self.open_url(self.url)
 
-    @allure.step("输入手机号")
-    def input_phone(self, phone):
-        self.clear(self.phone_loc)
-        self.input_text(phone, self.phone_loc)
+    @allure.step("输入用户名")
+    def input_username(self, phone):
+        self.clear(self.userName_loc)
+        self.input_text(phone, self.userName_loc)
 
     @allure.step("输入密码")
     def input_pwd(self, pwd):
-        self.clear(self.pwd_loc)
-        self.input_text(pwd, self.pwd_loc)
+        self.clear(self.password_loc)
+        self.input_text(pwd, self.password_loc)
 
-    @allure.step("同意协议")
-    def agreement(self):
-        self.click(self.agree_loc)
+    @allure.step("记住我")
+    def remember_me(self):
+        self.click(self.remember_loc)
 
     @allure.step("点击登陆")
     def login(self):
-        self.click(self.login_btn_loc)
+        self.click(self.login_loc)
 
     @allure.step("获取登陆后用户名")
-    def get_userName(self):
+    def get_username(self):
         user_name = self.get_element(self.userName_loc).text
         return user_name
 
-    @allure.step("错误的密码")
-    def get_password_error(self):
-        pwd_err_msg = self.get_element(self.pwd_err_loc).text
-        png_name = "password_err_" + str(time.time()).split('.')[1] + ".png"
-        self.screenshot_and_save(file_name=png_name)
-        return pwd_err_msg
-
-    @allure.step("错误的手机号")
-    def get_phone_error(self):
-        phone_err_msg = self.get_element(self.phone_err_loc).text
-        png_name = "phone_err_" + str(time.time()).split('.')[1] + ".png"
-        self.screenshot_and_save(file_name=png_name)
-        return phone_err_msg
+    # @allure.step("错误的密码")
+    # def get_password_error(self):
+    #     pwd_err_msg = self.get_element(self.pwd_err_loc).text
+    #     png_name = "password_err_" + str(time.time()).split('.')[1] + ".png"
+    #     self.screenshot_and_save(file_name=png_name)
+    #     return pwd_err_msg
+    #
+    # @allure.step("错误的手机号")
+    # def get_phone_error(self):
+    #     phone_err_msg = self.get_element(self.phone_err_loc).text
+    #     png_name = "phone_err_" + str(time.time()).split('.')[1] + ".png"
+    #     self.screenshot_and_save(file_name=png_name)
+    #     return phone_err_msg
