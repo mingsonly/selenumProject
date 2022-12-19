@@ -132,6 +132,8 @@ class AndBasePage(BasePage):
     def phone_permission_enable(self):
         self.wait_util_click(self.phone_permission_loc)
 
+
+
     def sector_move(self, sector_id, index, isMvoe=True):
         """板块移动"""
         self.click(self.sector_sort_loc)
@@ -166,8 +168,10 @@ class AndBasePage(BasePage):
         self.click(self.sector_query_loc)
         sector_names = self.get_elements(self.sector_query_name_loc)
         sector_ids = self.get_elements(self.sector_query_id_loc)
-        result = dict(zip(sector_names, sector_ids))
-        return result
+        sectors = dict()
+        for name, id in zip(sector_names, sector_ids):
+            sectors[name.text] = id.text
+        return sectors
 
     def sector_add(self, sector_name, isAdd=True):
         "添加板块"

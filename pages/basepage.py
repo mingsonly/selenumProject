@@ -27,6 +27,9 @@ class BasePage(object):
     def __init__(self, driver: webdriver):
         self.driver = driver
 
+    def last_back(self):
+        self.driver.back()
+
     def open_url(self, url):
         """打开url"""
         self.driver.get(url)

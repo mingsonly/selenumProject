@@ -39,13 +39,15 @@ class TestAndroidSDK:
         time.sleep(1)
         # self.androidPage.impower()
 
-    def setup_class(self): pass
+    def setup_class(self):
+        pass
 
     def teardown(self):
         # self.androidPage.quit()
         pass
 
-    def teardown_class(self): pass
+    def teardown_class(self):
+        pass
 
     def get_sdk_cfg(self):
         web_sdk_cf = os.path.join(data_dir, "web_sdk.json")
@@ -84,16 +86,41 @@ class TestAndroidSDK:
         result = self.androidPage.sector_query()
         assert sector_name in result.keys()
 
+        # 返回上一页
+        self.androidPage.last_back()
+
         # 修改板块
+        sector_rename = "修改板块名称" + str(int(time.time()))[5:]
         sector_id, isUp = result[sector_name], True
-        self.androidPage.sector_update(sector_id, sector_name=sector_name, isUp=True)
-        # 校验修改内容
+        self.androidPage.sector_update(sector_id, sector_name=sector_rename, isUp=True)
+
+        # 名称：id
+        update_res = self.androidPage.sector_query()
+        for k, v in update_res.items():
+            # id 如果与上一次查询相等就判断 他的值是否变更。
+            if v == result[sector_name]:
+                # 校验修改内容
+                assert k == sector_rename
+
+        # 返回上一页
+        self.androidPage.last_back()
 
         # 移动板块
-        self.androidPage.sector_move(sector_id, index=1)
+        move_idx = 1
+        self.androidPage.sector_move(sector_id, index=move_idx)
+        sector_move_res = self.androidPage.sector_query()
+
         # 校验移动位置
+        for idx, dic in enumerate(sector_move_res.values()):
+            if sector_id == dic:
+                assert idx == move_idx
+
+        # 返回上一页
+        self.androidPage.last_back()
+        del_befor_size = len(sector_move_res)
 
         # 删除板块
         self.androidPage.sector_delete(sector_id)
-        delAfterQueryRes = self.androidPage.sector_query()
+        del_after_size = len(self.androidPage.sector_query())
         # 校验数据少了一条
+        assert del_befor_size - 1 == del_after_size
