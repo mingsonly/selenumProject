@@ -101,6 +101,7 @@ class AndBasePage(BasePage):
     sector_query_loc = (By.ID, "com.org.test:id/sector_query")
     sector_query_name_loc = (By.XPATH, "//*[contains(@resource-id,'com.org.test:id/lv_two_2')]")
     sector_query_id_loc = (By.XPATH, "//*[contains(@resource-id,'com.org.test:id/lv_two_1')]")
+    phone_permission_loc = (By.XPATH, "//*[contains(@text,'允许')]")
 
     # 添加板块
     sector_add_loc = (By.ID, "com.org.test:id/sector_add")
@@ -127,6 +128,12 @@ class AndBasePage(BasePage):
     sector_sort_index_loc = (By.ID, "com.org.test:id/sector_sort_index")
     sector_sort_cancel_loc = (By.ID, "com.org.test:id/sector_sort_cancel")
     sector_sort_submit_loc = (By.ID, "com.org.test:id/sector_sort_submit")
+
+    def phone_permission_enable(self):
+        time.sleep(1)
+        ele = self.get_element(self.phone_permission_loc)
+        if ele:
+            self.click(ele)
 
     def sector_move(self, sector_id, index, isMvoe=True):
         """板块移动"""
@@ -227,6 +234,7 @@ class AndBasePage(BasePage):
             "submit": self.connect_submit_loc,
             "cancel": self.connect_cancel_loc,
         }
+        # todo 这里点击之后会弹窗
         self.click(connect_status[isConnect])
 
     def envs_import_busy(self, envs, busy='import_accept'):

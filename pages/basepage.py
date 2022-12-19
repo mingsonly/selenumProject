@@ -29,6 +29,8 @@ class BasePage(object):
     def open_url(self, url):
         """打开url"""
         self.driver.get(url)
+    def imp_wait(self,seconds):
+        self.driver.implicitly_wait(seconds)
 
     def get_element(self, loc):
         """
@@ -37,7 +39,7 @@ class BasePage(object):
         :return: 该元素对象
         """
         # loc=(by=By.ID,value="")
-        time.sleep(1)
+        self.imp_wait(1)
         try:
             element = self.driver.find_element(*loc)
         except ElementNotFound:
@@ -52,7 +54,7 @@ class BasePage(object):
         :return: 该元素对象
         """
         # loc=(by=By.ID,value="")
-        time.sleep(1)
+        self.imp_wait(1)
         try:
             elements = self.driver.find_elements(*loc)
         except ElementNotFound:

@@ -68,6 +68,7 @@ class TestAndroidSDK:
         time.sleep(1)
         self.androidPage.connect_server(userid=userid, token=token, loginAppKey=loginAppKey, appSecret=appSecret,
                                         env=env)
+        self.androidPage.phone_permission_enable()
 
     def test_sector_stream(self):
         """
