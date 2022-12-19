@@ -48,7 +48,7 @@ class BasePage(object):
         :return: 该元素对象
         """
         # loc=(by=By.ID,value="")
-        self.imp_wait(1)
+        self.imp_wait(2)
         try:
             element = self.driver.find_element(*loc)
         except ElementNotFound:
@@ -63,7 +63,7 @@ class BasePage(object):
         :return: 该元素对象
         """
         # loc=(by=By.ID,value="")
-        self.imp_wait(1)
+        self.imp_wait(2)
         try:
             elements = self.driver.find_elements(*loc)
         except ElementNotFound:

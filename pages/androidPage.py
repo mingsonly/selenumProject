@@ -235,7 +235,6 @@ class AndBasePage(BasePage):
             "submit": self.connect_submit_loc,
             "cancel": self.connect_cancel_loc,
         }
-        # todo 这里点击之后会弹窗
         self.click(connect_status[isConnect])
 
     def envs_import_busy(self, envs, busy='import_accept'):

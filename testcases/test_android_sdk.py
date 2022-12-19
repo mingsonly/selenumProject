@@ -105,6 +105,10 @@ class TestAndroidSDK:
         # 返回上一页
         self.androidPage.last_back()
 
+        # 添加板块
+        sector_name_2 = "我的板块2" + str(int(time.time()))[5:]
+        self.androidPage.sector_add(sector_name=sector_name_2)
+
         # 移动板块
         move_idx = 1
         self.androidPage.sector_move(sector_id, index=move_idx)
