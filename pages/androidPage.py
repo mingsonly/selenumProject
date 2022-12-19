@@ -99,7 +99,8 @@ class AndBasePage(BasePage):
     # 自选股板块操作
     # 查询板块
     sector_query_loc = (By.ID, "com.org.test:id/sector_query")
-    sector_query_res_loc = (By.XPATH, "//*[contains(@resource-id,'com.org.test:id/lv_two_2')]")
+    sector_query_name_loc = (By.XPATH, "//*[contains(@resource-id,'com.org.test:id/lv_two_2')]")
+    sector_query_id_loc = (By.XPATH, "//*[contains(@resource-id,'com.org.test:id/lv_two_1')]")
 
     # 添加板块
     sector_add_loc = (By.ID, "com.org.test:id/sector_add")
@@ -159,10 +160,9 @@ class AndBasePage(BasePage):
     def sector_query(self):
         # 查询板块
         self.click(self.sector_query_loc)
-        sel_result = self.get_elements(self.sector_query_res_loc)
-        result = []
-        for txt in sel_result:
-            result.append(txt.text)
+        sector_names = self.get_elements(self.sector_query_name_loc)
+        sector_ids = self.get_elements(self.sector_query_id_loc)
+        result = dict(zip(sector_names, sector_ids))
         return result
 
     def sector_add(self, sector_name, isAdd=True):

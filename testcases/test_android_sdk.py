@@ -81,10 +81,10 @@ class TestAndroidSDK:
 
         # 查询板块
         result = self.androidPage.sector_query()
-        assert sector_name in result
+        assert sector_name in result.keys()
 
         # 修改板块
-        sector_id, isUp = "", True
+        sector_id, isUp = result[sector_name], True
         self.androidPage.sector_update(sector_id, sector_name=sector_name, isUp=True)
         # 校验修改内容
 
