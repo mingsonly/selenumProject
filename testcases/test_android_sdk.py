@@ -27,7 +27,7 @@ class TestAndroidSDK:
         caps["appium:deviceName"] = "6EJ7N18609022111"
         caps["appium:appPackage"] = "com.org.test"
         caps["appium:appActivity"] = ".MainActivity"
-        caps["appium:autoGrantPermissions"] = "true"
+        caps["appium:autoGrantPermissions"] = True
         caps["appium:ensureWebviewsHavePages"] = True
         caps["appium:nativeWebScreenshot"] = True
         # caps["appium:newCommandTimeout"] = 3600
@@ -62,7 +62,8 @@ class TestAndroidSDK:
                                         env=env)
 
     def sdk_login(self):
-        userid, token, loginAppKey, appSecret, env = 123121231, 2313121, "778_Mobile_34", "$2a$10$PT8Nig9yoNyJAqOBXbsKwuDNTC2HIaoOqQrQhQEcF9eOFWWZR.C8q", "uat"
+        # userid, token, loginAppKey, appSecret, env = 123121231, 2313121, "778_Mobile_34", "$2a$10$PT8Nig9yoNyJAqOBXbsKwuDNTC2HIaoOqQrQhQEcF9eOFWWZR.C8q", "uat"
+        userid, token, loginAppKey, appSecret, env = 123121231, 2313121, "234232_Mobile_71", "$2a$10$pGPlIyS7NWdgza6N.UkeaOoRwZ8.LvbsJp.CTdAF33q8O4ifg7MB6", "uat"
         self.androidPage.envs_import_busy(self.envs, busy='import_accept')
         time.sleep(1)
         self.androidPage.connect_server(userid=userid, token=token, loginAppKey=loginAppKey, appSecret=appSecret,
@@ -74,9 +75,24 @@ class TestAndroidSDK:
         :return: None
         """
         self.sdk_login()
+        # 添加板块
         sector_name = "我的板块" + str(int(time.time()))[5:]
         self.androidPage.sector_add(sector_name=sector_name)
-        self.androidPage.sector_query()
-        # todo 需要加入删除
-        result = self.androidPage.get_sector_result()
+
+        # 查询板块
+        result = self.androidPage.sector_query()
         assert result[1] == sector_name
+
+        # 修改板块
+        sector_id, isUp = "", True
+        self.androidPage.sector_update(sector_id, sector_name=sector_name, isUp=True)
+        # 校验修改内容
+
+        # 移动板块
+        self.androidPage.sector_move(sector_id, index=1)
+        # 校验移动位置
+
+        # 删除板块
+        self.androidPage.sector_delete(sector_id)
+        delAfterQueryRes = self.androidPage.sector_query()
+        # 校验数据少了一条

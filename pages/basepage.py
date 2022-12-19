@@ -17,7 +17,10 @@ img_dir = os.path.join(os.path.dirname(cur_dir), "screenshots")
 class BasePage(object):
     _blacklist = [
         (By.ID, "image_cancel"),
-        (By.ID, "tips")
+        (By.ID, "tips"),
+        # 授权按钮
+        (By.ID, "com.lbe.security.miui:id/permission_allow_foreground_only_button"),
+        (By.ID, 'android:id/button1'),
     ]
 
     def __init__(self, driver: webdriver):
@@ -42,10 +45,25 @@ class BasePage(object):
             element = self.driver.find_element(*loc)
         return element
 
+    def get_elements(self, loc):
+        """
+        获取页面元素，获取不到就进入处理异常函数，然后在重新定位，如果不行就报错。
+        :param loc: 元素定位元组
+        :return: 该元素对象
+        """
+        # loc=(by=By.ID,value="")
+        time.sleep(1)
+        try:
+            elements = self.driver.find_elements(*loc)
+        except ElementNotFound:
+            self.handle_exception()
+            elements = self.driver.find_elements(*loc)
+        return elements
+
     def handle_exception(self):
         """处理异常函数"""
+        page_source = self.driver.page_source
         for locator in self._blacklist:
-            page_source = self.driver.page_source
             if locator in page_source:
                 self.driver.find_element(*locator).click()
 

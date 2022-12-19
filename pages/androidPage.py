@@ -7,7 +7,6 @@ from selenium.webdriver.support.ui import WebDriverWait
 
 
 class AndBasePage(BasePage):
-    _blacklist = [(By.ID, "com.lbe.security.miui:id/permission_allow_foreground_only_button")]
     # connect按钮
     connect_loc = (By.ID, "com.org.test:id/btn_1")
     connect_userid_loc = (By.ID, "com.org.test:id/connect_userid")
@@ -100,6 +99,8 @@ class AndBasePage(BasePage):
     # 自选股板块操作
     # 查询板块
     sector_query_loc = (By.ID, "com.org.test:id/sector_query")
+    sector_query_res_loc = (By.XPATH, "//*[contains(@resource-id,'com.org.test:id/lv_two_2')]")
+
     # 添加板块
     sector_add_loc = (By.ID, "com.org.test:id/sector_add")
     sector_add_name_loc = (By.ID, "com.org.test:id/sector_add_name")
@@ -126,17 +127,8 @@ class AndBasePage(BasePage):
     sector_sort_cancel_loc = (By.ID, "com.org.test:id/sector_sort_cancel")
     sector_sort_submit_loc = (By.ID, "com.org.test:id/sector_sort_submit")
 
-    def get_sector_result(self):
-        """获取结果集合"""
-        result = []
-        for i in range(1, 3):
-            ele_loc = (By.ID, f"com.org.test:id/lv_two_{i}")
-            ele_txt = self.get_element(ele_loc).text
-            time.sleep(1)
-            result.append(ele_txt)
-        return result
-
     def sector_move(self, sector_id, index, isMvoe=True):
+        """板块移动"""
         self.click(self.sector_sort_loc)
         self.input_text(sector_id, self.sector_sort_id_loc)
         self.input_text(index, self.sector_sort_index_loc)
@@ -167,6 +159,11 @@ class AndBasePage(BasePage):
     def sector_query(self):
         # 查询板块
         self.click(self.sector_query_loc)
+        sel_result = self.get_elements(self.sector_query_res_loc)
+        result = []
+        for txt in sel_result:
+            result.append(txt.text)
+        return result
 
     def sector_add(self, sector_name, isAdd=True):
         "添加板块"
@@ -214,11 +211,6 @@ class AndBasePage(BasePage):
 
     def __init__(self, webdriver):
         super().__init__(webdriver)
-
-    def impower(self):
-        for loc in self._blacklist:
-            if self.get_element(loc):
-                self.click(loc)
 
     def connect_server(self, userid, token, loginAppKey, appSecret, pro_env='dev', env='uat', isConnect='submit',
                        openSSL=None):
