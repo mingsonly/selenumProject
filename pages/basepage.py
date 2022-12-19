@@ -3,11 +3,12 @@
 # date:  2022/11/13
 
 from selenium import webdriver
+from selenium.webdriver import ActionChains
 
 from exec.myexe import ElementNotFound
 from selenium.webdriver.common.by import By
 import os
-from selenium.webdriver.support.ui import Select
+from selenium.webdriver.support.ui import Select, WebDriverWait
 import time
 
 cur_dir = os.path.dirname(os.path.abspath(__file__))
@@ -29,8 +30,13 @@ class BasePage(object):
     def open_url(self, url):
         """打开url"""
         self.driver.get(url)
-    def imp_wait(self,seconds):
+
+    def imp_wait(self, seconds):
         self.driver.implicitly_wait(seconds)
+
+    def wait_util_click(self, loc):
+        wait = WebDriverWait(self.driver, 10).until(lambda x: x.find_element(*loc))
+        wait.click()
 
     def get_element(self, loc):
         """
@@ -72,7 +78,6 @@ class BasePage(object):
     def input_text(self, text, loc):
         """输入文本并点击"""
         self.get_element(loc).send_keys(text)
-
 
     def clear(self, loc):
         """清空动作"""

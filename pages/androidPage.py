@@ -101,7 +101,7 @@ class AndBasePage(BasePage):
     sector_query_loc = (By.ID, "com.org.test:id/sector_query")
     sector_query_name_loc = (By.XPATH, "//*[contains(@resource-id,'com.org.test:id/lv_two_2')]")
     sector_query_id_loc = (By.XPATH, "//*[contains(@resource-id,'com.org.test:id/lv_two_1')]")
-    phone_permission_loc = (By.XPATH, "//*[contains(@text,'允许')]")
+    phone_permission_loc = (By.XPATH, "//*[contains(@text,'允许') and contains(@resource-id, 'android:id/button1')]")
 
     # 添加板块
     sector_add_loc = (By.ID, "com.org.test:id/sector_add")
@@ -130,10 +130,7 @@ class AndBasePage(BasePage):
     sector_sort_submit_loc = (By.ID, "com.org.test:id/sector_sort_submit")
 
     def phone_permission_enable(self):
-        time.sleep(1)
-        ele = self.get_element(self.phone_permission_loc)
-        if ele:
-            self.click(ele)
+        self.wait_util_click(self.phone_permission_loc)
 
     def sector_move(self, sector_id, index, isMvoe=True):
         """板块移动"""
