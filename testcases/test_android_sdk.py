@@ -81,7 +81,7 @@ class TestAndroidSDK:
 
         # 查询板块
         result = self.androidPage.sector_query()
-        assert result[1] == sector_name
+        assert sector_name in result
 
         # 修改板块
         sector_id, isUp = "", True
