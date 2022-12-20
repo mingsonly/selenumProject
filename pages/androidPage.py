@@ -164,10 +164,14 @@ class AndBasePage(BasePage):
     def sector_query(self):
         # 查询板块
         self.click(self.sector_query_loc)
-        sector_names = self.get_elements(self.sector_query_name_loc)
-        sector_ids = self.get_elements(self.sector_query_id_loc)
+        result = self.get_result()
+        return result
+
+    def get_result(self):
+        names = self.get_elements(self.sector_query_name_loc)
+        ids = self.get_elements(self.sector_query_id_loc)
         sectors = dict()
-        for name, id in zip(sector_names, sector_ids):
+        for name, id in zip(names, ids):
             sectors[name.text] = id.text
         return sectors
 
@@ -215,18 +219,24 @@ class AndBasePage(BasePage):
     securitys_sort_cancel_loc = (By.ID, "com.org.test:id/securitys_sort_cancel")
     securitys_sort_submit_loc = (By.ID, "com.org.test:id/securitys_sort_submit")
 
-    def owner_stock_query(self):
+    def owner_stock_query(self, sector_id, isQuery=True):
         """
         查询自选股
         :return:
         """
-
+        self.click(self.securitys_query_loc)
+        self.input_text(sector_id, self.securitys_query_id_loc)
+        add_type = self.securitys_query_submit_loc if isQuery else self.securitys_query_cancel_loc
+        self.click(add_type)
+        result = self.get_result()
+        return result
 
     def owner_stock_add(self, sector_id, stock_code, isAdd=True):
         """
         添加自选股
         :return:
         """
+
         self.click(self.securitys_add_loc)
         self.input_text(sector_id, self.securitys_add_id_loc)
         self.input_text(stock_code, self.securitys_add_code_loc)

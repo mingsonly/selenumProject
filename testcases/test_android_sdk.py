@@ -38,6 +38,8 @@ class TestAndroidSDK:
         self.envs = self.get_sdk_cfg()['envs']
         self.androidPage.imp_wait(1)
         # self.androidPage.impower()
+        self.sdk_login()
+
 
     def setup_class(self):
         pass
@@ -77,7 +79,6 @@ class TestAndroidSDK:
         添加板块-->查询板块-->修改板块-->移动板块-->删除板块
         :return: None
         """
-        self.sdk_login()
         # 添加板块
         sector_name = "我的板块" + str(int(time.time()))[5:]
         self.androidPage.sector_add(sector_name=sector_name)
@@ -131,4 +132,12 @@ class TestAndroidSDK:
 
 
 
+
+    def test_owner_stock_add(self):
+        sectors = self.androidPage.sector_query()
+        self.androidPage.last_back()
+        # {'修改板块名称42259': '17d4cab1-9d46-4c0d-bb56-ec21a319375e', '我的板块208060': '4ea20cc5-55f7-44e3-837d-f3c71232de8f'} 600213.SH
+        sector_id = sectors['我的板块208060']
+        self.androidPage.owner_stock_add(sector_id=sector_id, stock_code='600213.SH')
+        self.androidPage.owner_stock_query(sector_id=sector_id)
 

@@ -41,6 +41,11 @@ class BasePage(object):
         wait = WebDriverWait(self.driver, 10).until(lambda x: x.find_element(*loc))
         wait.click()
 
+    def scroll_web(self):
+        js = "window.scrollTo(0,document.body.scrollHeight)"
+        self.driver.execute_script(js)
+
+
     def get_element(self, loc):
         """
         获取页面元素，获取不到就进入处理异常函数，然后在重新定位，如果不行就报错。
