@@ -132,8 +132,6 @@ class AndBasePage(BasePage):
     def phone_permission_enable(self):
         self.wait_util_click(self.phone_permission_loc)
 
-
-
     def sector_move(self, sector_id, index, isMvoe=True):
         """板块移动"""
         self.click(self.sector_sort_loc)
@@ -216,6 +214,56 @@ class AndBasePage(BasePage):
     securitys_sort_index_loc = (By.ID, "com.org.test:id/securitys_sort_index")
     securitys_sort_cancel_loc = (By.ID, "com.org.test:id/securitys_sort_cancel")
     securitys_sort_submit_loc = (By.ID, "com.org.test:id/securitys_sort_submit")
+
+    def owner_stock_query(self):
+        """
+        查询自选股
+        :return:
+        """
+
+
+    def owner_stock_add(self, sector_id, stock_code, isAdd=True):
+        """
+        添加自选股
+        :return:
+        """
+        self.click(self.securitys_add_loc)
+        self.input_text(sector_id, self.securitys_add_id_loc)
+        self.input_text(stock_code, self.securitys_add_code_loc)
+        add_type = self.securitys_add_submit_loc if isAdd else self.securitys_add_cancel_loc
+        self.click(add_type)
+
+    def owner_stock_del(self, sector_id, stock_code, isDel=True):
+        """
+        删除自选股
+        :return:
+        """
+        self.click(self.securitys_delete_loc)
+        self.input_text(sector_id, self.securitys_delete_id_loc)
+        self.input_text(stock_code, self.securitys_delete_code_loc)
+        add_type = self.securitys_delete_submit_loc if isDel else self.securitys_delete_cancel_loc
+        self.click(add_type)
+
+    def owner_stock_clear(self, sector_id, isClear=True):
+        """
+        清除自选股
+        :return:
+        """
+        self.click(self.securitys_clean_loc)
+        self.input_text(sector_id, self.securitys_clean_id_loc)
+        clear_type = self.securitys_clean_submit_loc if isClear else self.securitys_clean_cancel_loc
+        self.click(clear_type)
+
+    def owner_stock_move(self, sector_id, move_idx, isMove=True):
+        """
+        移动自选股
+        :return:
+        """
+        self.click(self.securitys_sort_loc)
+        self.input_text(sector_id, self.securitys_sort_id_loc)
+        self.input_text(move_idx, self.securitys_sort_index_loc)
+        add_type = self.securitys_sort_submit_loc if isMove else self.securitys_sort_cancel_loc
+        self.click(add_type)
 
     def __init__(self, webdriver):
         super().__init__(webdriver)

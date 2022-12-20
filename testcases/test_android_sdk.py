@@ -36,7 +36,7 @@ class TestAndroidSDK:
         driver = webdriver.Remote("http://127.0.0.1:4723/wd/hub", caps)
         self.androidPage = AndBasePage(driver)
         self.envs = self.get_sdk_cfg()['envs']
-        time.sleep(1)
+        self.androidPage.imp_wait(1)
         # self.androidPage.impower()
 
     def setup_class(self):
@@ -128,3 +128,7 @@ class TestAndroidSDK:
         del_after_size = len(self.androidPage.sector_query())
         # 校验数据少了一条
         assert del_befor_size - 1 == del_after_size
+
+
+
+
