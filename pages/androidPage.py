@@ -20,6 +20,10 @@ class AndBasePage(BasePage):
     connect_submit_loc = (By.ID, "com.org.test:id/connect_submit")
     # 断开连接
     disconnect_loc = (By.ID, "com.org.test:id/btn_2")
+
+    def disconnect(self):
+        self.click(self.disconnect_loc)
+
     # 环境导入相关定位
     importenvbtn_loc = (By.ID, "com.org.test:id/btn_33")
     importenvtxt_loc = (By.ID, "com.org.test:id/importenvtext")
@@ -236,7 +240,8 @@ class AndBasePage(BasePage):
         添加自选股
         :return:
         """
-
+        # todo 这里需要滚动下拉条，有问题待调试
+        self.scroll_web(self.securitys_add_loc)
         self.click(self.securitys_add_loc)
         self.input_text(sector_id, self.securitys_add_id_loc)
         self.input_text(stock_code, self.securitys_add_code_loc)

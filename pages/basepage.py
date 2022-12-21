@@ -40,11 +40,17 @@ class BasePage(object):
     def wait_util_click(self, loc):
         wait = WebDriverWait(self.driver, 10).until(lambda x: x.find_element(*loc))
         wait.click()
+    # todo  这里有问题待调试
+    def scroll_web(self,ele_loc):
 
-    def scroll_web(self):
-        js = "window.scrollTo(0,document.body.scrollHeight)"
+        from selenium.webdriver import ActionChains
+
+        ele = self.get_element(ele_loc)
+        ActionChains(self.driver).scroll_to_element(ele)
+
+        js = 'window.scrollTo(0,document.body.scrollHeight)'
         self.driver.execute_script(js)
-
+        print("23422222222")
 
     def get_element(self, loc):
         """

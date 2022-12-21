@@ -147,8 +147,11 @@ def fetch_status_code(func):
 
     return fetch_log_msg
 
-time_str = str(int(time.time()))[7:]
+
+time_str = str(int(time.time()))
 log_path = os.path.join(log_dir, f"status_code_{time_str}.log")
+
+
 def fetch_code(pattern):
     result = []
     with open(log_path, "rt", encoding='utf-8', errors='ignore') as f:
@@ -161,6 +164,7 @@ def fetch_code(pattern):
 
 def execute_cmd_commind(cmd):
     cmds = {
+        "clear": "-P 5037 -s 005da3360804 shell am start -W -n com.org.test/.MainActivity -S -a android.intent.action.MAIN -c android.intent.category.LAUNCHER -f 0x10200000",
         "logcat": f"adb logcat -v time > {log_path}",
         "adb_close": "taskkill /f /t /im adb.exe"
     }

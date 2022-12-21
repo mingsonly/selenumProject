@@ -25,14 +25,14 @@ class TestAndroidSDK:
     def setup(self):
         caps = {}
         caps["platformName"] = "android"
-        caps["appium:deviceName"] = "6EJ7N18609022111"
+        caps["appium:deviceName"] = "005da3360804"
         caps["appium:appPackage"] = "com.org.test"
         caps["appium:appActivity"] = ".MainActivity"
         caps["appium:autoGrantPermissions"] = True
         caps["appium:ensureWebviewsHavePages"] = True
         caps["appium:nativeWebScreenshot"] = True
         # caps["appium:newCommandTimeout"] = 3600
-        caps["appium:connectHardwareKeyboard"] = True
+        # caps["appium:connectHardwareKeyboard"] = True
 
         driver = webdriver.Remote("http://127.0.0.1:4723/wd/hub", caps)
         self.androidPage = AndBasePage(driver)
@@ -142,14 +142,29 @@ class TestAndroidSDK:
         self.androidPage.owner_stock_query(sector_id=sector_id)
 
 
-
+    # todo 存在 appium版本兼容问题
     def test_status_code_1002001000(self):
+        """1002001000：建立行情连接成功"""
         execute_cmd_commind(cmd='logcat')
         self.sdk_login()
+        self.androidPage.imp_wait(20)
         execute_cmd_commind(cmd='adb_close')
         result = fetch_code("1002001000")
-        for line in result:
-            assert 1002001000 in line
+        assert result
 
 
 
+    def test_status_code_1002001001(self):
+        """1002001001：断开行情连接成功"""
+        # execute_cmd_commind(cmd='clear')
+        self.sdk_login()
+        execute_cmd_commind(cmd='logcat')
+        self.androidPage.imp_wait(10)
+        self.androidPage.disconnect()
+        self.androidPage.imp_wait(20)
+        # self.androidPage.imp_wait(5)
+        execute_cmd_commind(cmd='adb_close')
+        code = "1002001001"
+        result = fetch_code(code)
+        print(result)
+        assert result
