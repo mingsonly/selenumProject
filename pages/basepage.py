@@ -37,6 +37,20 @@ class BasePage(object):
     def imp_wait(self, seconds):
         self.driver.implicitly_wait(seconds)
 
+    def internetOff(self, state):
+        """断开网络"""
+        net_type = {
+            1: self.driver.mobile.AIRPLANE_MODE,
+            2: self.driver.mobile.WIFI_NETWORK,
+            4: self.driver.mobile.DATA_NETWORK,
+            6: self.driver.mobile.ALL_NETWORK,
+        }
+        # 判断当前网络是不是与要设置得一致，不一致就修改
+
+
+        self.driver.mobile.set_network_connection(net_type[state])
+
+
     def wait_util_click(self, loc):
         wait = WebDriverWait(self.driver, 10).until(lambda x: x.find_element(*loc))
         wait.click()

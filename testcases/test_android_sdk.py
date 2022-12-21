@@ -166,8 +166,6 @@ class TestAndroidSDK:
 
     def test_status_code_1002001001(self):
         """1002001001：断开行情连接成功"""
-        # execute_cmd_commind(cmd='clear')
-
         self.sdk_login()
         execute_cmd_commind(cmd='logcat')
         self.androidPage.imp_wait(10)
@@ -177,5 +175,22 @@ class TestAndroidSDK:
         execute_cmd_commind(cmd='adb_close')
         code = self.status_code["1002001001"]
         result = fetch_code(code)
-        print(result)
+        assert result
+
+
+    def test_status_code_1002001002(self):
+        """1002001002：行情连接断开，正在尝试重连"""
+        self.sdk_login()
+        execute_cmd_commind(cmd='logcat')
+        self.androidPage.imp_wait(10)
+        # 1-飞行模式，2-wify,3-数据
+        self.androidPage.internetOff(1)
+        self.androidPage.imp_wait(30)
+        # self.androidPage.imp_wait(5)
+        self.androidPage.internetOff(2)
+        self.androidPage.imp_wait(30)
+        execute_cmd_commind(cmd='adb_close')
+        # code = self.status_code["1002001001"]
+        code = "1002001002"
+        result = fetch_code(code)
         assert result
