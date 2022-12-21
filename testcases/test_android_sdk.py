@@ -12,6 +12,7 @@ from pages.androidPage import AndBasePage
 from util.common import get_logger
 import os
 import json
+from util.common import fetch_code,execute_cmd_commind
 
 logger = get_logger()
 cur_dir = os.path.dirname(os.path.abspath(__file__))
@@ -38,8 +39,7 @@ class TestAndroidSDK:
         self.envs = self.get_sdk_cfg()['envs']
         self.androidPage.imp_wait(1)
         # self.androidPage.impower()
-        self.sdk_login()
-
+        # self.sdk_login()
 
     def setup_class(self):
         pass
@@ -79,6 +79,8 @@ class TestAndroidSDK:
         添加板块-->查询板块-->修改板块-->移动板块-->删除板块
         :return: None
         """
+        self.sdk_login()
+
         # 添加板块
         sector_name = "我的板块" + str(int(time.time()))[5:]
         self.androidPage.sector_add(sector_name=sector_name)
@@ -130,9 +132,7 @@ class TestAndroidSDK:
         # 校验数据少了一条
         assert del_befor_size - 1 == del_after_size
 
-
-
-
+    # todo 待完善
     def test_owner_stock_add(self):
         sectors = self.androidPage.sector_query()
         self.androidPage.last_back()
@@ -140,4 +140,16 @@ class TestAndroidSDK:
         sector_id = sectors['我的板块208060']
         self.androidPage.owner_stock_add(sector_id=sector_id, stock_code='600213.SH')
         self.androidPage.owner_stock_query(sector_id=sector_id)
+
+
+
+    def test_status_code_1002001000(self):
+        execute_cmd_commind(cmd='logcat')
+        self.sdk_login()
+        execute_cmd_commind(cmd='adb_close')
+        result = fetch_code("1002001000")
+        for line in result:
+            assert 1002001000 in line
+
+
 

@@ -15,6 +15,8 @@ from PIL import Image
 import requests
 import uuid
 import time
+from functools import wraps
+import re
 
 cur_dir = os.path.dirname(os.path.abspath(__file__))
 log_dir = os.path.join(os.path.dirname(cur_dir), "logs")
@@ -125,3 +127,50 @@ def get_session():
     # todo 此处如果报未知错误，是因为传输数据得格式因为 json=data
     return s.headers
 
+
+def fetch_status_code(func):
+    """
+    在日志文件中匹配错误状态码
+    :param func 业务函数对象
+    :return: mydecorate 装饰过后得函数对象
+    """
+
+    @wraps(func)
+    def fetch_log_msg(*args, **kwargs):
+        time_str = str(int(time.time()))[7:]
+        log_path = os.path.join(log_dir, f"status_code_{time_str}.log")
+        execute_cmd_commind("logcat")
+        re_pattern = func(*args, **kwargs)
+        execute_cmd_commind("adb_close", log_path)
+        result = fetch_code(re_pattern)
+        return result
+
+    return fetch_log_msg
+
+time_str = str(int(time.time()))[7:]
+log_path = os.path.join(log_dir, f"status_code_{time_str}.log")
+def fetch_code(pattern):
+    result = []
+    with open(log_path, "rt", encoding='utf-8', errors='ignore') as f:
+        for idx, line in enumerate(f, 1):
+            line = line.replace('\\', "").strip()
+            if re.findall(pattern, line):
+                result.append({line[:18]: line})
+    return result
+
+
+def execute_cmd_commind(cmd):
+    cmds = {
+        "logcat": f"adb logcat -v time > {log_path}",
+        "adb_close": "taskkill /f /t /im adb.exe"
+    }
+    os.popen(cmds[cmd])
+
+# if __name__ == '__main__':
+#     import os
+#
+#     pattern = "1002001005"
+#     fecth = fetch_code(pattern, "1220_01.txt")
+#     print(fecth)
+# for i in fecth:
+#     print(i)
