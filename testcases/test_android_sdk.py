@@ -23,6 +23,8 @@ data_dir = os.path.join(os.path.dirname(cur_dir), "data")
 
 class TestAndroidSDK:
     def setup(self):
+        # 连接夜神模拟器
+        execute_cmd_commind(cmd='connect_mock_yes')
         caps = {}
         caps["platformName"] = "android"
         caps["appium:deviceName"] = "005da3360804"
@@ -40,13 +42,17 @@ class TestAndroidSDK:
         self.androidPage.imp_wait(1)
         # self.androidPage.impower()
         # self.sdk_login()
+        self.status_code = {
+            "1002001000":'{"message":"登录成功,行情已开启","code":1002001000}',
+            "1002001001":'{"message":"主行情连接正常关闭","code":1002001001}',
+        }
 
     def setup_class(self):
         pass
 
     def teardown(self):
-        # self.androidPage.quit()
-        pass
+        self.androidPage.quit()
+        # pass
 
     def teardown_class(self):
         pass
@@ -72,7 +78,8 @@ class TestAndroidSDK:
         time.sleep(1)
         self.androidPage.connect_server(userid=userid, token=token, loginAppKey=loginAppKey, appSecret=appSecret,
                                         env=env)
-        self.androidPage.phone_permission_enable()
+        # 模拟器不需要弹窗
+        # self.androidPage.phone_permission_enable()
 
     def test_sector_stream(self):
         """
@@ -142,6 +149,8 @@ class TestAndroidSDK:
         self.androidPage.owner_stock_query(sector_id=sector_id)
 
 
+
+
     # todo 存在 appium版本兼容问题
     def test_status_code_1002001000(self):
         """1002001000：建立行情连接成功"""
@@ -149,7 +158,8 @@ class TestAndroidSDK:
         self.sdk_login()
         self.androidPage.imp_wait(20)
         execute_cmd_commind(cmd='adb_close')
-        result = fetch_code("1002001000")
+        code = self.status_code["1002001000"]
+        result = fetch_code(code)
         assert result
 
 
@@ -157,6 +167,7 @@ class TestAndroidSDK:
     def test_status_code_1002001001(self):
         """1002001001：断开行情连接成功"""
         # execute_cmd_commind(cmd='clear')
+
         self.sdk_login()
         execute_cmd_commind(cmd='logcat')
         self.androidPage.imp_wait(10)
@@ -164,7 +175,7 @@ class TestAndroidSDK:
         self.androidPage.imp_wait(20)
         # self.androidPage.imp_wait(5)
         execute_cmd_commind(cmd='adb_close')
-        code = "1002001001"
+        code = self.status_code["1002001001"]
         result = fetch_code(code)
         print(result)
         assert result

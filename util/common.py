@@ -164,6 +164,7 @@ def fetch_code(pattern):
 
 def execute_cmd_commind(cmd):
     cmds = {
+        "connect_mock_yes":"adb connect 127.0.0.1:62001",
         "clear": "-P 5037 -s 005da3360804 shell am start -W -n com.org.test/.MainActivity -S -a android.intent.action.MAIN -c android.intent.category.LAUNCHER -f 0x10200000",
         "logcat": f"adb logcat -v time > {log_path}",
         "adb_close": "taskkill /f /t /im adb.exe"
