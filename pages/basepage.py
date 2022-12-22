@@ -37,8 +37,8 @@ class BasePage(object):
     def imp_wait(self, seconds):
         self.driver.implicitly_wait(seconds)
 
-    def internetOff(self, state):
-        """断开网络"""
+    def internet_switch(self, state):
+        """网络切换"""
         net_type = {
             1: self.driver.mobile.AIRPLANE_MODE,
             2: self.driver.mobile.WIFI_NETWORK,
@@ -54,6 +54,9 @@ class BasePage(object):
     def wait_util_click(self, loc):
         wait = WebDriverWait(self.driver, 10).until(lambda x: x.find_element(*loc))
         wait.click()
+
+
+
     # todo  这里有问题待调试
     def scroll_web(self,ele_loc):
 
@@ -105,6 +108,7 @@ class BasePage(object):
 
     def input_text(self, text, loc):
         """输入文本并点击"""
+        self.clear(loc)
         self.get_element(loc).send_keys(text)
 
     def clear(self, loc):

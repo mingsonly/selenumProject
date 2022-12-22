@@ -100,6 +100,104 @@ class AndBasePage(BasePage):
     pricestatic_cancel_loc = (By.ID, "com.org.test:id/pricestatic_cancel")
     pricestatic_submit_loc = (By.ID, "com.org.test:id/pricestatic_submit")
 
+    # 板块成分
+    sectorplate_loc = (By.ID, "com.org.test:id/sectorplate")
+    sectorplate_id_loc = (By.ID, "com.org.test:id/sectorplate_id")
+    sectorplate_begin_loc = (By.ID, "com.org.test:id/sectorplate_begin")
+    sectorplate_count_loc = (By.ID, "com.org.test:id/sectorplate_count")
+    sectorplate_cancel_loc = (By.ID, "com.org.test:id/sectorplate_cancel")
+    sectorplate_submit_loc = (By.ID, "com.org.test:id/sectorplate_submit")
+
+    # 指数对应板块
+    indexForId_loc = (By.ID, "com.org.test:id/indexForId")
+    indexforid_id_loc = (By.ID, "com.org.test:id/indexforid_id")
+    indexforid_cancel_loc = (By.ID, "com.org.test:id/indexforid_cancel")
+    indexforid_submit_loc = (By.ID, "com.org.test:id/indexforid_submit")
+
+    # 逐笔成交
+    gStep_loc = (By.ID, "com.org.test:id/gStep")
+    gstep_code_loc = (By.ID, "com.org.test:id/gstep_code")
+    gstep_begin_loc = (By.ID, "com.org.test:id/gstep_begin")
+    gstep_count_loc = (By.ID, "com.org.test:id/gstep_count")
+    gstep_field_loc = (By.ID, "com.org.test:id/gstep_field")
+    switchStep_loc = (By.ID, "com.org.test:id/switchStep")
+    withdrawal_loc = (By.ID, "com.org.test:id/withdrawal")
+    gstep_cancel_loc = (By.ID, "com.org.test:id/gstep_cancel")
+    gstep_submit_loc = (By.ID, "com.org.test:id/gstep_submit")
+
+    # 逐笔委托
+    gOrder_loc = (By.ID, "com.org.test:id/gOrder")
+    gorder_code_loc = (By.ID, "com.org.test:id/gorder_code")
+    gorder_begin_loc = (By.ID, "com.org.test:id/gorder_begin")
+    gorder_count_loc = (By.ID, "com.org.test:id/gorder_count")
+    gorder_field_loc = (By.ID, "com.org.test:id/gorder_field")
+    switchOrder_loc = (By.ID, "com.org.test:id/switchOrder")
+    gorder_cancel_loc = (By.ID, "com.org.test:id/gorder_cancel")
+    gorder_submit_loc = (By.ID, "com.org.test:id/gorder_submit")
+
+    # 买卖队列
+    gTradeQueue_loc = (By.ID, "com.org.test:id/gTradeQueue")
+    gtrade_code_loc = (By.ID, "com.org.test:id/gtrade_code")
+    gtrade_type_loc = (By.ID, "com.org.test:id/gtrade_type")
+    gtrade_cancel_loc = (By.ID, "com.org.test:id/gtrade_cancel")
+    gtrade_submit_loc = (By.ID, "com.org.test:id/gtrade_submit")
+
+    # 分量统计
+    gVolumeStatistics_loc = (By.ID, "com.org.test:id/gVolumeStatistics")
+    gvolume_code_loc = (By.ID, "com.org.test:id/gvolume_code")
+    gvolume_cancel_loc = (By.ID, "com.org.test:id/gvolume_cancel")
+    gvolume_submit_loc = (By.ID, "com.org.test:id/gvolume_submit")
+
+    # 资金流向
+    gMoneyFlow_loc = (By.ID, "com.org.test:id/gMoneyFlow")
+    gmoney_code_loc = (By.ID, "com.org.test:id/gmoney_code")
+    gmoney_cancel_loc = (By.ID, "com.org.test:id/gmoney_cancel")
+    gmoney_submit_loc = (By.ID, "com.org.test:id/gmoney_submit")
+
+    # 定制开发
+    quoteTest_loc = (By.ID, "com.org.test:id/quoteTest")
+    quote_interface_loc = (By.ID, "com.org.test:id/quote_interface")
+    quote_field_loc = (By.ID, "com.org.test:id/quote_field")
+    quote_condition_loc = (By.ID, "com.org.test:id/quote_condition")
+    quote_keys_loc = (By.ID, "com.org.test:id/quote_keys")
+    quote_range_loc = (By.ID, "com.org.test:id/quote_range")
+    quote_subscribe_loc = (By.ID, "com.org.test:id/quote_subscribe")
+    quote_cancel_loc = (By.ID, "com.org.test:id/quote_cancel")
+    quote_submit_loc = (By.ID, "com.org.test:id/quote_submit")
+
+    # 个股信息
+    nStockInfo_loc = (By.ID, "com.org.test:id/nStockInfo")
+    nstockinfo_codes_loc = (By.ID, "com.org.test:id/nstockinfo_codes")
+    nstockinfo_fields_loc = (By.ID, "com.org.test:id/nstockinfo_fields")
+    nstockinfo_cancel_loc = (By.ID, "com.org.test:id/nstockinfo_cancel")
+    nstockinfo_submit_loc = (By.ID, "com.org.test:id/nstockinfo_submit")
+
+    # 键盘精灵
+    btn_5_loc = (By.ID, "com.org.test:id/btn_5")
+    keyWizard_code_loc = (By.ID, "com.org.test:id/keyWizard_code")
+    keyWizard_category_loc = (By.ID, "com.org.test:id/keyWizard_category")
+    kline_market_loc = (By.ID, "com.org.test:id/kline_market")
+    keyWizard_begin_loc = (By.ID, "com.org.test:id/keyWizard_begin")
+    keyWizard_count_loc = (By.ID, "com.org.test:id/keyWizard_count")
+    keyWizard_field_loc = (By.ID, "com.org.test:id/keyWizard_field")
+    keyWizard_cancel_loc = (By.ID, "com.org.test:id/keyWizard_cancel")
+    keyWizard_submit_loc = (By.ID, "com.org.test:id/keyWizard_submit")
+
+    def keyWizard_query_all(self, code, category, market, begin, count, field=None, isQuery=True):
+        self.click(self.btn_5_loc)
+        self.input_text(code, self.keyWizard_code_loc)
+        self.input_text(category, self.keyWizard_category_loc)
+        self.input_text(market, self.kline_market_loc)
+        self.input_text(begin, self.keyWizard_begin_loc)
+        self.input_text(count, self.keyWizard_count_loc)
+        if field:
+            self.input_text(field, self.keyWizard_field_loc)
+
+        if isQuery:
+            self.click(self.keyWizard_submit_loc)
+        else:
+            self.click(self.keyWizard_cancel_loc)
+
     # 自选股板块操作
     # 查询板块
     sector_query_loc = (By.ID, "com.org.test:id/sector_query")
