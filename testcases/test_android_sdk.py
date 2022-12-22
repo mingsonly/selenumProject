@@ -23,8 +23,6 @@ data_dir = os.path.join(os.path.dirname(cur_dir), "data")
 
 class TestAndroidSDK:
     def setup(self):
-        # 连接夜神模拟器
-        execute_cmd_commind(cmd='connect_mock_yes')
         caps = {}
         caps["platformName"] = "android"
         caps["appium:deviceName"] = "005da3360804"
@@ -42,11 +40,6 @@ class TestAndroidSDK:
         self.androidPage.imp_wait(1)
         # self.androidPage.impower()
         # self.sdk_login()
-        self.status_code = {
-            "1002001000":'{"message":"登录成功,行情已开启","code":1002001000}',
-            "1002001001":'{"message":"主行情连接正常关闭","code":1002001001}',
-        }
-
     def setup_class(self):
         pass
 
@@ -151,46 +144,6 @@ class TestAndroidSDK:
 
 
 
-    # todo 存在 appium版本兼容问题
-    def test_status_code_1002001000(self):
-        """1002001000：建立行情连接成功"""
-        execute_cmd_commind(cmd='logcat')
-        self.sdk_login()
-        self.androidPage.imp_wait(20)
-        execute_cmd_commind(cmd='adb_close')
-        code = self.status_code["1002001000"]
-        result = fetch_code(code)
-        assert result
 
 
 
-    def test_status_code_1002001001(self):
-        """1002001001：断开行情连接成功"""
-        self.sdk_login()
-        execute_cmd_commind(cmd='logcat')
-        self.androidPage.imp_wait(10)
-        self.androidPage.disconnect()
-        self.androidPage.imp_wait(20)
-        # self.androidPage.imp_wait(5)
-        execute_cmd_commind(cmd='adb_close')
-        code = self.status_code["1002001001"]
-        result = fetch_code(code)
-        assert result
-
-
-    def test_status_code_1002001002(self):
-        """1002001002：行情连接断开，正在尝试重连"""
-        self.sdk_login()
-        execute_cmd_commind(cmd='logcat')
-        self.androidPage.imp_wait(10)
-        # 1-飞行模式，2-wify,3-数据
-        self.androidPage.internetOff(1)
-        self.androidPage.imp_wait(30)
-        # self.androidPage.imp_wait(5)
-        self.androidPage.internetOff(2)
-        self.androidPage.imp_wait(30)
-        execute_cmd_commind(cmd='adb_close')
-        # code = self.status_code["1002001001"]
-        code = "1002001002"
-        result = fetch_code(code)
-        assert result

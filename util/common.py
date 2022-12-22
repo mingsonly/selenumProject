@@ -164,15 +164,26 @@ def fetch_code(pattern):
 
 def execute_cmd_commind(cmd):
     cmds = {
-        "connect_mock_yes":"adb connect 127.0.0.1:62001",
-        "clear": "-P 5037 -s 005da3360804 shell am start -W -n com.org.test/.MainActivity -S -a android.intent.action.MAIN -c android.intent.category.LAUNCHER -f 0x10200000",
-        "logcat": f"adb logcat -v time > {log_path}",
+        "start_nox": r"D:\Program Files\Nox\bin\Nox.exe",
+        "adb_connect_nox": "adb connect 127.0.0.1:62001",
+        "adb_clear": "adb -P 5037 -s 005da3360804 shell am start -W -n com.org.test/.MainActivity -S -a android.intent.action.MAIN -c android.intent.category.LAUNCHER -f 0x10200000",
+        "adb_logcat": f"adb logcat -v time > {log_path}",
         "adb_close": "taskkill /f /t /im adb.exe"
     }
     os.popen(cmds[cmd])
 
+
+def str_to_timeStamp(time_str):
+    year = time.localtime(time.time()).tm_year
+    time_str = str(year) + "-" + time_str
+    time_struct = time.strptime(time_str, "%Y-%m-%d %H:%M:%S")
+    time_stamp = int(time.mktime(time_struct))
+    return time_stamp
+
 # if __name__ == '__main__':
 #     import os
+#     rsult = str_to_timeStamp("12-22 09:41:08")
+#     print(rsult)
 #
 #     pattern = "1002001005"
 #     fecth = fetch_code(pattern, "1220_01.txt")
