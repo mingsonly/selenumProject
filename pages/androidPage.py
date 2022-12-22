@@ -60,6 +60,17 @@ class AndBasePage(BasePage):
     snapshot_fields_loc = (By.ID, "com.org.test:id/snapshot_fields")
     snapshot_cancel_loc = (By.ID, "com.org.test:id/snapshot_cancel")
     snapshot_submit_loc = (By.ID, "com.org.test:id/snapshot_submit")
+
+    def snapshot_subscription(self, snapshot_code, fields, isSubscription=True):
+        self.click(self.mark_loc)
+        self.input_text(snapshot_code, self.snapshot_code_loc)
+        self.imp_wait(180)
+        self.input_text(fields, self.snapshot_fields_loc)
+        if isSubscription:
+            self.click(self.snapshot_submit_loc)
+        else:
+            self.click(self.snapshot_cancel_loc)
+
     # 集合竞价
     callaution_query_loc = (By.ID, "com.org.test:id/callaution_query")
     callaution_code_loc = (By.ID, "com.org.test:id/callaution_code")
