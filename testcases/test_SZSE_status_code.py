@@ -26,6 +26,7 @@ class TestAndroidSDK:
         # todo 切记 这里链接得是模拟器，如果电脑插上其他手机在充电，会默认发送到充电得实体机器上。
         # 连接夜神模拟器
         execute_cmd_commind(cmd='adb_connect_nox')
+
         caps = {}
         caps["platformName"] = "android"
         caps["appium:deviceName"] = "005da3360804"
@@ -40,6 +41,7 @@ class TestAndroidSDK:
 
         self.androidPage = AndBasePage(driver)
         self.envs = self.get_sdk_cfg()['envs']
+        self.androidPage.internet_switch(2)
         self.androidPage.imp_wait(1)
         self.status_code = {
             "1002001000": '{"message":"登录成功,行情已开启","code":1002001000}',  # pass
@@ -247,7 +249,6 @@ class TestAndroidSDK:
         result = fetch_code(code, self.log_startTS)
         assert result
 
-    # todo 全自动，加入断网步骤
     def test_status_code_1002001007(self):
         """
         1002001007：HTTP网关继续尝试登录
@@ -263,8 +264,9 @@ class TestAndroidSDK:
         time.sleep(3)
         code = self.status_code["1002001007"]
         result = fetch_code(code, self.log_startTS)
-        # self.androidPage.internet_switch(2)
         assert result
+
+
 
     # todo 半自动化
     def test_status_code_1002001008(self):
