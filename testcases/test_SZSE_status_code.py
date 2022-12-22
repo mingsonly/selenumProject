@@ -96,7 +96,7 @@ class TestAndroidSDK:
         self.androidPage.connect_server(userid=userid, token=token, loginAppKey=loginAppKey, appSecret=appSecret,
                                         env=env)
         # 模拟器不需要弹窗
-        self.androidPage.phone_permission_enable()
+        # self.androidPage.phone_permission_enable()
 
     def test_status_code_1002001000(self):
         """1002001000：建立行情连接成功"""
@@ -252,22 +252,18 @@ class TestAndroidSDK:
         """
         1002001007：HTTP网关继续尝试登录
         logic: 登录成功--> 运维关闭平台服务--> 等待20 --> 查看日志
-        step: 登录成功-->断网-->请求键盘精灵-->查看日志
+        step: 飞行模式-->登录->请求键盘精灵-->查看日志
         """
+        self.androidPage.internet_switch(1)
         execute_cmd_commind(cmd='adb_logcat')
         time.sleep(3)
         self.sdk_login()
-        time.sleep(10)
-        # todo 断网
-
-        # 请求键盘精灵接口
-        self.androidPage.keyWizard_query_all(code="0005", category="all", market="SH,SZ,HK", begin=0, count=20,
-                                             field=None, isQuery=True)
         time.sleep(10)
         execute_cmd_commind(cmd='adb_close')
         time.sleep(3)
         code = self.status_code["1002001007"]
         result = fetch_code(code, self.log_startTS)
+        # self.androidPage.internet_switch(2)
         assert result
 
     # todo 半自动化
