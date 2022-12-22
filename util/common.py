@@ -152,13 +152,17 @@ time_str = str(int(time.time()))
 log_path = os.path.join(log_dir, f"status_code_{time_str}.log")
 
 
-def fetch_code(pattern):
+def fetch_code(pattern, startTs:int):
     result = []
     with open(log_path, "rt", encoding='utf-8', errors='ignore') as f:
         for idx, line in enumerate(f, 1):
             line = line.replace('\\', "").strip()
             if re.findall(pattern, line):
-                result.append({line[:18]: line})
+                time_str = line[:14]
+                k = str_to_timeStamp(time_str)
+                if k < startTs:
+                    continue
+                result.append({k: line})
     return result
 
 

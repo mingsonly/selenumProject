@@ -45,7 +45,8 @@ class TestAndroidSDK:
             "1002001000": '{"message":"登录成功,行情已开启","code":1002001000}',
             "1002001001": '{"message":"主行情连接正常关闭","code":1002001001}',
         }
-        self.expect_time = time.time()
+        # 获取case开始执行得时间，目的用于校验抓取得日志在执行得这段时间内得
+        self.log_startTS = int(time.time())
 
     def setup_class(self):
         pass
@@ -90,40 +91,42 @@ class TestAndroidSDK:
         """1002001000：建立行情连接成功"""
         execute_cmd_commind(cmd='adb_logcat')
         self.sdk_login()
-        self.androidPage.imp_wait(20)
+        time.sleep(10)
         execute_cmd_commind(cmd='adb_close')
+        time.sleep(3)
         code = self.status_code["1002001000"]
-        result = fetch_code(code)
+        result = fetch_code(code, self.log_startTS)
         assert result
 
     def test_status_code_1002001001(self):
         """1002001001：断开行情连接成功"""
         self.sdk_login()
         execute_cmd_commind(cmd='adb_logcat')
-        self.androidPage.imp_wait(10)
+        time.sleep(3)
         self.androidPage.disconnect()
-        self.androidPage.imp_wait(20)
+        time.sleep(10)
         # self.androidPage.imp_wait(5)
         execute_cmd_commind(cmd='adb_close')
-        self.androidPage.imp_wait(5)
+        time.sleep(3)
         code = self.status_code["1002001001"]
-        result = fetch_code(code)
-        print(result)
+        result = fetch_code(code, self.log_startTS)
         assert result
+
 
     def test_status_code_1002001002(self):
         """1002001002：行情连接断开，正在尝试重连"""
         self.sdk_login()
         execute_cmd_commind(cmd='adb_logcat')
-        self.androidPage.imp_wait(10)
+        time.sleep(3)
         # 1-飞行模式，2-wify,3-数据
         self.androidPage.internetOff(1)
-        self.androidPage.imp_wait(30)
+        time.sleep(10)
         # self.androidPage.imp_wait(5)
         self.androidPage.internetOff(2)
-        self.androidPage.imp_wait(30)
+        time.sleep(10)
         execute_cmd_commind(cmd='adb_close')
+        time.sleep(3)
         # code = self.status_code["1002001001"]
         code = "1002001002"
-        result = fetch_code(code)
+        result = fetch_code(code, self.log_startTS)
         assert result
