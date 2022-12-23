@@ -1,7 +1,6 @@
 # coding=utf-8
 import time
 
-
 """
 appium 网络设置平台机型支持
 http://appium.io/docs/cn/writing-running-appium/other/network-connection/
@@ -35,15 +34,16 @@ import json
 from util.common import fetch_code, execute_cmd_commind
 from util.pytest_utils import execute_manual_step
 
-
 logger = get_logger()
 cur_dir = os.path.dirname(os.path.abspath(__file__))
 log_dir = os.path.join(os.path.dirname(cur_dir), "logs")
 img_dir = os.path.join(os.path.dirname(cur_dir), "screenshots")
 data_dir = os.path.join(os.path.dirname(cur_dir), "data")
+
+
 # todo 运行case需在控制台输入命令：
 #  全部执行：pytest -svq .\testcases\test_SZSE_status_code_manual.py
-# 单个执行：
+#  单个执行：pytest -svq .\testcases\test_SZSE_status_code_manual.py::TestAndroidSDK::test_status_code_1002001002
 
 class TestAndroidSDK:
     def setup(self):
@@ -113,24 +113,20 @@ class TestAndroidSDK:
         # 模拟器不需要弹窗
         self.androidPage.phone_permission_enable()
 
-    # todo 手动测试通过，自动化和模拟器需要在看看问题
     def test_status_code_1002001002(self):
         """1002001002：行情连接断开，正在尝试重连
         logic: 由于服务端故障、网络中断、客户端休眠等原因导致与行情服务的连接异常断开，SDK会自动进行重连，客户无需处理
         """
         self.sdk_login()
         execute_cmd_commind(cmd='adb_logcat')
-        # todo
-        execute_manual_step("请断开手机网络？提示行情断开正在重连在输入pass!!!")
-
+        time.sleep(3)
+        execute_manual_step("请断开手机网络？提示行情断开正在重连再输入pass!!!")
         time.sleep(3)
         execute_cmd_commind(cmd='adb_close')
-        # code = self.status_code["1002001001"]
-        code = "1002001002"
+        code = self.status_code["1002001002"]
+        # code = "1002001002"
         result = fetch_code(code, self.log_startTS)
         assert result
-
-
 
     def test_status_code_1002001003_platformServer_disconnect(self):
         """
@@ -144,14 +140,12 @@ class TestAndroidSDK:
         # todo 平台登录失败
         execute_manual_step("运维下线平台服务了？")
 
-
         time.sleep(3)
         execute_cmd_commind(cmd='adb_close')
         # code = self.status_code["1002001001"]
         code = self.status_code["1002001003"]
         result = fetch_code(code, self.log_startTS)
         assert result
-
 
     def test_status_code_1002001003_quotaServer_disconnect(self):
         """
@@ -165,13 +159,11 @@ class TestAndroidSDK:
         # todo case 挂起，等待运维操作完成，在继续执行
         execute_manual_step("运维下线行情服务了？")
 
-
         execute_cmd_commind(cmd='adb_close')
         # code = self.status_code["1002001001"]
         code = self.status_code["1002001003"]
         result = fetch_code(code, self.log_startTS)
         assert result
-
 
     def test_status_code_1002001005(self):
         """
@@ -182,7 +174,6 @@ class TestAndroidSDK:
         time.sleep(3)
         self.sdk_login()
         execute_manual_step("请另外一台手机登录相同账号")
-
 
         execute_cmd_commind(cmd='adb_close')
         time.sleep(3)
@@ -209,6 +200,7 @@ class TestAndroidSDK:
         code = "1002001006"
         result = fetch_code(code, self.log_startTS)
         assert result
+
     def test_status_code_1002001008(self):
         """
         1002001008：1002001008：切换 HTTP 连接站点
@@ -244,7 +236,6 @@ class TestAndroidSDK:
         time.sleep(3)
         # todo 通过保留一个站点，然后触发互踢。???
         execute_manual_step("运维关闭平台站点服务了？")
-
 
         time.sleep(3)
         execute_cmd_commind(cmd='adb_close')
@@ -288,7 +279,6 @@ class TestAndroidSDK:
         # todo 运维关闭行情认证服务
         execute_manual_step("运维关闭行情认证服务了？")
 
-
         time.sleep(3)
         execute_cmd_commind(cmd='adb_close')
         time.sleep(3)
@@ -296,8 +286,6 @@ class TestAndroidSDK:
         code = "1002001011"
         result = fetch_code(code, self.log_startTS)
         assert result
-
-
 
     # todo 运维下线平台服务接口
     def test_status_code_1002001016(self):
@@ -325,5 +313,3 @@ class TestAndroidSDK:
         code = "1002001016"
         result = fetch_code(code, self.log_startTS)
         assert result
-
-
