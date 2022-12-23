@@ -177,6 +177,7 @@ def execute_cmd_commind(cmd, packageName='com.org.test'):
         "client_standby_2": f"adb shell am set-inactive {packageName} falsedisable",
         "client_doze_1": "adb shell dumpsys battery unplug",
         "client_doze_2": "adb shell dumpsys deviceidle enable",
+        "stop_app": f"adb shell am force-stop {packageName}"
     }
     os.popen(cmds[cmd])
 

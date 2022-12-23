@@ -75,7 +75,7 @@ class TestAndroidSDK:
         pass
 
     def teardown(self):
-        self.androidPage.quit_app()
+        self.androidPage.quit()
         # pass
 
     def teardown_class(self):

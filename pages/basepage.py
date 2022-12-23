@@ -150,7 +150,7 @@ class BasePage(object):
         path = os.path.join(img_dir, file_name)
         self.driver.get_screenshot_as_file(path)
 
-    def quit_app(self):
+    def quit(self):
         """
         关闭浏览器
         :return: None
