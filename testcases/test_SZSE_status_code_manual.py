@@ -113,21 +113,6 @@ class TestAndroidSDK:
         # 模拟器不需要弹窗
         self.androidPage.phone_permission_enable()
 
-    def test_status_code_1002001002(self):
-        """1002001002：行情连接断开，正在尝试重连
-        logic: 由于服务端故障、网络中断、客户端休眠等原因导致与行情服务的连接异常断开，SDK会自动进行重连，客户无需处理
-        """
-        self.sdk_login()
-        execute_cmd_commind(cmd='adb_logcat')
-        time.sleep(3)
-        execute_manual_step("请断开手机网络？提示行情断开正在重连再输入pass!!!")
-        time.sleep(3)
-        execute_cmd_commind(cmd='adb_close')
-        code = self.status_code["1002001002"]
-        # code = "1002001002"
-        result = fetch_code(code, self.log_startTS)
-        assert result
-
     def test_status_code_1002001003_platformServer_disconnect(self):
         """
         1002001003：建立行情连接失败，平台登录失败
@@ -138,7 +123,7 @@ class TestAndroidSDK:
         self.sdk_login()
         time.sleep(3)
         # todo 平台登录失败
-        execute_manual_step("运维下线平台服务了？")
+        execute_manual_step("请断网,再输入pass？")
 
         time.sleep(3)
         execute_cmd_commind(cmd='adb_close')
@@ -165,9 +150,12 @@ class TestAndroidSDK:
         result = fetch_code(code, self.log_startTS)
         assert result
 
+
+    # todo 返回的状态码存在两个code，异常
     def test_status_code_1002001005(self):
         """
         1002001005：行情服务主动断开与SDK的连接：XXXX
+        todo {"message":"\"{\\\"code\\\":1001001001,\\\"msg\\\":\\\"会话token无效\\\"}\"","code":1002001005}???
         logic: 由于异常调用或多点登录限制引起的行情服务主动断开连接，该信息主要用于分析断开原因，无需处理
         """
         execute_cmd_commind(cmd='adb_logcat')
@@ -191,35 +179,13 @@ class TestAndroidSDK:
         time.sleep(3)
         self.sdk_login()
         # todo 用户信息过期 或者 运维断行情服务
-        execute_manual_step("运维断行情服务了？")
+        execute_manual_step("运维关闭终端行情网关服务(quote-gateway-service)了？")
 
-        time.sleep(3)
+
         execute_cmd_commind(cmd='adb_close')
         time.sleep(3)
         # code = self.status_code["1002001001"]
         code = "1002001006"
-        result = fetch_code(code, self.log_startTS)
-        assert result
-
-    def test_status_code_1002001008(self):
-        """
-        1002001008：1002001008：切换 HTTP 连接站点
-        logic:
-            1、平台站点服务异常，导致在登录过程中当前站点不可用，选择且他站点登录
-            2、行情服务token校验失败（token过期），触发站点切换
-        """
-        execute_cmd_commind(cmd='adb_logcat')
-        time.sleep(3)
-        self.sdk_login()
-        time.sleep(10)
-        # todo 运维关闭行情认证服务
-        execute_manual_step("运维关闭平台站点服务了？")
-
-        time.sleep(3)
-        execute_cmd_commind(cmd='adb_close')
-        time.sleep(3)
-        # code = self.status_code["1002001001"]
-        code = "1002001008"
         result = fetch_code(code, self.log_startTS)
         assert result
 
@@ -245,24 +211,25 @@ class TestAndroidSDK:
         result = fetch_code(code, self.log_startTS)
         assert result
 
-    # todo 手工通过，自动化需要在看看，为何模拟器上面飞行模式不一样
-    def test_status_code_1002001010(self):
+    def test_status_code_1002001008(self):
         """
-        1002001010：行情重新连接成功
-        logic: 行情连接出现异常断开，但SDK会自动进行重连，当重连成功后会发送该消息
-        step: 登录成功-->断网-->联网-->查看日志
+        1002001008：1002001008：切换 HTTP 连接站点
+        logic:
+            1、平台站点服务异常，导致在登录过程中当前站点不可用，选择且他站点登录
+            2、行情服务token校验失败（token过期），触发站点切换
         """
         execute_cmd_commind(cmd='adb_logcat')
         time.sleep(3)
         self.sdk_login()
-        time.sleep(5)
-        execute_manual_step("请先断网-->行情出现异常-->联网？")
+        time.sleep(10)
+        # todo 运维关闭行情认证服务
+        execute_manual_step("运维关闭平台站点服务了？")
 
         time.sleep(3)
         execute_cmd_commind(cmd='adb_close')
         time.sleep(3)
         # code = self.status_code["1002001001"]
-        code = "1002001010"
+        code = "1002001008"
         result = fetch_code(code, self.log_startTS)
         assert result
 
@@ -311,5 +278,39 @@ class TestAndroidSDK:
         time.sleep(3)
         # code = self.status_code["1002001012"]
         code = "1002001016"
+        result = fetch_code(code, self.log_startTS)
+        assert result
+
+    # pass
+    def test_status_code_1002001002(self):
+        """1002001002：行情连接断开，正在尝试重连
+        logic: 由于服务端故障、网络中断、客户端休眠等原因导致与行情服务的连接异常断开，SDK会自动进行重连，客户无需处理
+        """
+        self.sdk_login()
+        execute_cmd_commind(cmd='adb_logcat')
+        time.sleep(3)
+        execute_manual_step("请断开手机网络？提示行情断开正在重连再输入pass!!!")
+        time.sleep(3)
+        execute_cmd_commind(cmd='adb_close')
+        code = self.status_code["1002001002"]
+        # code = "1002001002"
+        result = fetch_code(code, self.log_startTS)
+        assert result
+
+    def test_status_code_1002001010(self):
+        """
+        1002001010：行情重新连接成功
+        logic: 行情连接出现异常断开，但SDK会自动进行重连，当重连成功后会发送该消息
+        step: 登录成功-->断网-->联网-->查看日志
+        """
+        execute_cmd_commind(cmd='adb_logcat')
+        time.sleep(3)
+        self.sdk_login()
+        execute_manual_step("请先断网-->行情出现异常-->联网-->弹窗提示行情重连成功，然后输入pass")
+        time.sleep(3)
+        execute_cmd_commind(cmd='adb_close')
+        time.sleep(3)
+        # code = self.status_code["1002001001"]
+        code = "1002001010"
         result = fetch_code(code, self.log_startTS)
         assert result
