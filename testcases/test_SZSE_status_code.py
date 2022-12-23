@@ -124,62 +124,6 @@ class TestAndroidSDK:
         # 模拟器不需要弹窗
         # self.androidPage.phone_permission_enable()
 
-    # todo 限制登录设备1台，然后多台设备登录同一个账号待处理
-    def test_status_code_1002001005(self):
-        """
-        1002001005：行情服务主动断开与SDK的连接：XXXX
-        logic: 由于异常调用或多点登录限制引起的行情服务主动断开连接，该信息主要用于分析断开原因，无需处理
-        """
-        execute_cmd_commind(cmd='adb_logcat')
-        time.sleep(3)
-        self.sdk_login()
-        time.sleep(10)
-        self.androidPage.disconnect()
-
-        time.sleep(10)
-        # userid, token, loginAppKey, appSecret = 123121231, 2313121, "234232_Mobile_71", "$2a$10$pGPlIyS7NWdgza6N.UkeaOoRwZ8.LvbsJp.CTdAF33q8O4ifg7MB6"
-        # self.androidPage.connect_server(userid=userid, token=token, loginAppKey=loginAppKey, appSecret=appSecret,
-        #                                 env="uat")
-
-        # 请求键盘精灵接口
-        self.androidPage.keyWizard_query_all(code="0005", category="all", market="SH,SZ,HK", begin=0, count=20,
-                                             field=None, isQuery=True)
-        time.sleep(10)
-
-        execute_cmd_commind(cmd='adb_close')
-        time.sleep(3)
-        # code = self.status_code["1002001001"]
-        code = "1002001005"
-        result = fetch_code(code, self.log_startTS)
-        assert result
-
-    # todo 手工通过，自动化需要在看看，为何模拟器上面飞行模式不一样
-    def test_status_code_1002001010(self):
-        """
-        1002001010：行情重新连接成功
-        logic: 行情连接出现异常断开，但SDK会自动进行重连，当重连成功后会发送该消息
-        step: 登录成功-->断网-->联网-->查看日志
-        """
-        execute_cmd_commind(cmd='adb_logcat')
-        time.sleep(3)
-        self.sdk_login()
-        time.sleep(5)
-        # 飞行模式 todo 真机上 无法操作网络 带排查
-        self.androidPage.internet_switch(1)
-        print("========================")
-        self.androidPage.keyWizard_query_all(code="0005", category="all", market="SH,SZ,HK", begin=0, count=20,
-                                         field=None, isQuery=True)
-        time.sleep(15)
-        self.androidPage.internet_switch(2)
-        self.androidPage.last_back()
-        time.sleep(30)
-        print("========================")
-        # execute_cmd_commind(cmd='adb_close')
-        time.sleep(3)
-        # code = self.status_code["1002001001"]
-        code = "1002001010"
-        result = fetch_code(code, self.log_startTS)
-        assert result
 
     # todo bug ,数据太大会把ui撑爆，看不到后续按钮
     def test_status_code_1002001014(self):
@@ -203,27 +147,6 @@ class TestAndroidSDK:
         result = fetch_code(code, self.log_startTS)
         assert result
 
-    # todo 手动测试通过，自动化和模拟器需要在看看问题
-    def test_status_code_1002001002(self):
-        """1002001002：行情连接断开，正在尝试重连
-        logic: 由于服务端故障、网络中断、客户端休眠等原因导致与行情服务的连接异常断开，SDK会自动进行重连，客户无需处理
-        """
-        self.sdk_login()
-        execute_cmd_commind(cmd='adb_logcat')
-        time.sleep(3)
-        # 1-飞行模式，2-wify,3-数据
-        phone_client_sleep()
-        time.sleep(10)
-        # self.androidPage.imp_wait(5)
-        # self.androidPage.internet_switch(2)
-        phone_client_work()
-        time.sleep(10)
-        execute_cmd_commind(cmd='adb_close')
-        time.sleep(3)
-        # code = self.status_code["1002001001"]
-        code = "1002001002"
-        result = fetch_code(code, self.log_startTS)
-        assert result
 
     def test_status_code_1002001000(self):
         """1002001000：建立行情连接成功"""
