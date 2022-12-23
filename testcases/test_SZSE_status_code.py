@@ -50,18 +50,7 @@ class TestAndroidSDK:
         # todo 切记 这里链接得是模拟器，如果电脑插上其他手机在充电，会默认发送到充电得实体机器上。
         # 连接夜神模拟器
         execute_cmd_commind(cmd='adb_connect_nox')
-
-        caps = {}
-        caps["platformName"] = "android"
-        caps["appium:deviceName"] = "005da3360804"
-        caps["appium:appPackage"] = "com.org.test"
-        caps["appium:appActivity"] = ".MainActivity"
-        caps["appium:autoGrantPermissions"] = True
-        caps["appium:ensureWebviewsHavePages"] = True
-        caps["appium:nativeWebScreenshot"] = True
-        # caps["appium:newCommandTimeout"] = 3600
-        # caps["appium:connectHardwareKeyboard"] = True
-        driver = webdriver.Remote("http://127.0.0.1:4723/wd/hub", caps)
+        driver = self.driver_config()
 
         self.androidPage = AndBasePage(driver)
         self.envs = self.get_sdk_cfg()['envs']
@@ -86,7 +75,7 @@ class TestAndroidSDK:
         pass
 
     def teardown(self):
-        self.androidPage.quit()
+        self.androidPage.quit_app()
         # pass
 
     def teardown_class(self):
