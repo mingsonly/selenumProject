@@ -41,25 +41,16 @@ cur_dir = os.path.dirname(os.path.abspath(__file__))
 log_dir = os.path.join(os.path.dirname(cur_dir), "logs")
 img_dir = os.path.join(os.path.dirname(cur_dir), "screenshots")
 data_dir = os.path.join(os.path.dirname(cur_dir), "data")
-
+# todo 运行case需在控制台输入命令：
+#  全部执行：pytest -svq .\testcases\test_SZSE_status_code_manual.py
+# 单个执行：
 
 class TestAndroidSDK:
     def setup(self):
         # todo 切记 这里链接得是模拟器，如果电脑插上其他手机在充电，会默认发送到充电得实体机器上。
         # 连接夜神模拟器
         execute_cmd_commind(cmd='adb_connect_nox')
-
-        caps = {}
-        caps["platformName"] = "android"
-        caps["appium:deviceName"] = "005da3360804"
-        caps["appium:appPackage"] = "com.org.test"
-        caps["appium:appActivity"] = ".MainActivity"
-        caps["appium:autoGrantPermissions"] = True
-        caps["appium:ensureWebviewsHavePages"] = True
-        caps["appium:nativeWebScreenshot"] = True
-        # caps["appium:newCommandTimeout"] = 3600
-        # caps["appium:connectHardwareKeyboard"] = True
-        driver = webdriver.Remote("http://127.0.0.1:4723/wd/hub", caps)
+        driver = self.driver_config()
 
         self.androidPage = AndBasePage(driver)
         self.envs = self.get_sdk_cfg()['envs']
@@ -120,7 +111,7 @@ class TestAndroidSDK:
         self.androidPage.connect_server(userid=userid, token=token, loginAppKey=loginAppKey, appSecret=appSecret,
                                         env=env)
         # 模拟器不需要弹窗
-        # self.androidPage.phone_permission_enable()
+        self.androidPage.phone_permission_enable()
 
     # todo 手动测试通过，自动化和模拟器需要在看看问题
     def test_status_code_1002001002(self):
@@ -129,11 +120,11 @@ class TestAndroidSDK:
         """
         self.sdk_login()
         execute_cmd_commind(cmd='adb_logcat')
-        time.sleep(3)
         # todo
-        execute_manual_step("请断开手机网络？")
-        execute_cmd_commind(cmd='adb_close')
+        execute_manual_step("请断开手机网络？提示行情断开正在重连在输入pass!!!")
+
         time.sleep(3)
+        execute_cmd_commind(cmd='adb_close')
         # code = self.status_code["1002001001"]
         code = "1002001002"
         result = fetch_code(code, self.log_startTS)
