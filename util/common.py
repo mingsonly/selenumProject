@@ -152,7 +152,7 @@ time_str = str(int(time.time()))
 log_path = os.path.join(log_dir, f"status_code_{time_str}.log")
 
 
-def fetch_code(pattern, startTs:int):
+def fetch_code(pattern, startTs: int):
     result = []
     with open(log_path, "rt", encoding='utf-8', errors='ignore') as f:
         for idx, line in enumerate(f, 1):
@@ -166,15 +166,29 @@ def fetch_code(pattern, startTs:int):
     return result
 
 
-def execute_cmd_commind(cmd):
+def execute_cmd_commind(cmd, packageName='com.org.test'):
     cmds = {
         "start_nox": r"D:\Program Files\Nox\bin\Nox.exe",
         "adb_connect_nox": "adb connect 127.0.0.1:62001",
         "adb_clear": "adb -P 5037 -s 005da3360804 shell am start -W -n com.org.test/.MainActivity -S -a android.intent.action.MAIN -c android.intent.category.LAUNCHER -f 0x10200000",
         "adb_logcat": f"adb logcat -v time > {log_path}",
-        "adb_close": "taskkill /f /t /im adb.exe"
+        "adb_close": "taskkill /f /t /im adb.exe",
+        "client_standby_1": "adb shell dumpsys battery unplug",
+        "client_standby_2": f"adb shell am set-inactive {packageName} falsedisable",
+        "client_doze_1": "adb shell dumpsys battery unplug",
+        "client_doze_2": "adb shell dumpsys deviceidle enable",
     }
     os.popen(cmds[cmd])
+
+
+def phone_client_sleep(packageName='com.org.test'):
+    execute_cmd_commind("client_standby_1")
+    execute_cmd_commind("client_standby_2", packageName)
+
+
+def phone_client_work():
+    execute_cmd_commind("client_doze_1")
+    execute_cmd_commind("client_doze_2")
 
 
 def str_to_timeStamp(time_str):
