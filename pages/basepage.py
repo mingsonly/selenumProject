@@ -2,11 +2,11 @@
 # __author:  angel
 # date:  2022/11/13
 
-from selenium import webdriver
-from selenium.webdriver import ActionChains
-
+# from selenium import webdriver
+from appium import webdriver
 from exec.myexe import ElementNotFound
 from selenium.webdriver.common.by import By
+from appium.webdriver.common.touch_action import TouchAction
 import os
 from selenium.webdriver.support.ui import Select, WebDriverWait
 import time
@@ -26,6 +26,67 @@ class BasePage(object):
 
     def __init__(self, driver: webdriver):
         self.driver = driver
+        self.width = self.driver.get_window_size()['width']
+        self.height = self.driver.get_window_size()['height']
+
+    def _option_key_event(self, arg, num=0):
+        """
+        操作实体按键:
+        code码 https://developer.android.com/reference/android/view/KeyEvent.html
+        :param arg: event_list key
+        :param num: KEYCODE_NUM 时用到的对应数字
+        :return: None
+        """
+        event_list = {
+            'KEYCODE_HOME': 3,
+            'KEYCODE_BACK': 4,
+            'KEYCODE_NUM': 8,
+            'KEYCODE_MENU': 82,
+        }
+        if arg == 'KEYCODE_NUM':
+            self.driver.press_keycode(8 + int(num))
+        elif arg in event_list:
+            self.driver.press_keycode(int(event_list[arg]))
+
+    def input_num_by_keyboard(self,num):
+        """
+        模仿键盘输入数字
+        :param num: 数字
+        :return: None
+        """
+        nums = list(num)
+        for num in nums:
+            self._option_key_event('KEYCODE_NUM',num)
+
+
+    def swip_down(self, count=1, meth=None):
+        """
+        向下滑动，下拉框
+        :param count: 滑动次数
+        :param meth: 传入的方法method(action),如果返回True,则终止刷新
+        :return: None
+        Examples:
+            action.swip_down(count=100,method=lambda action:not action.is_key_text_displayed("暂无元素"))
+        """
+        if count == 1:
+            self.driver.swipe(self.width / 2, self.height * 2 / 5, self.width / 2, self.height * 4 / 5, 2000)
+            self.driver.implicitly_wait(1)
+        else:
+            for x in range(count):
+                self.driver.swipe(self.width / 2, self.height * 2 / 5, self.width / 2, self.height * 4 / 5, 2000)
+                self.driver.implicitly_wait(1)
+                try:
+                    if meth(self):
+                        break
+                except:
+                    pass
+
+    def swip_left(self, count=1):
+        for x in range(count):
+            self.driver.implicitly_wait(1)
+            self.driver.swipe(self.width * 9 / 10, self.height / 2, self.width / 10, self.height / 2, 1500)
+
+
 
     def last_back(self):
         self.driver.back()
@@ -47,18 +108,14 @@ class BasePage(object):
         }
         # 判断当前网络是不是与要设置得一致，不一致就修改
 
-
         self.driver.mobile.set_network_connection(net_type[state])
-
 
     def wait_util_click(self, loc):
         wait = WebDriverWait(self.driver, 10).until(lambda x: x.find_element(*loc))
         wait.click()
 
-
-
     # todo  这里有问题待调试
-    def scroll_web(self,ele_loc):
+    def scroll_web(self, ele_loc):
 
         from selenium.webdriver import ActionChains
 
