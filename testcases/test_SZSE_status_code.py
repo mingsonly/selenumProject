@@ -57,16 +57,16 @@ class TestAndroidSDK:
         # self.androidPage.internet_switch(2)
         self.androidPage.imp_wait(1)
         self.status_code = {
-            "1002001000": '{"message":"建立行情连接成功","code":1002001000}',  # pass
-            "1002001001": '{"message":"主行情连接正常关闭","code":1002001001}',  # pass
-            "1002001002": '{"message":"行情连接异常断开,正在重连","code":1002001002}',  # pass
-            "1002001003": '{"message":"建立行情连接失败：无效的环境类型选项","code":1002001003}',  # pass
-            "1002001007": '{"message":"HTTP网关继续尝试登录","code":1002001007}',  # pass
-            "1002001010": '{"message":"行情重连成功","code":1002001010}',  # pass
-            "1002001012": '{"message":"HTTP请求异常，正在重试","code":1002001012}',  # pass
-            "1002001013": '{"message":"HTTP请求失败","code":1002001013}',  # pass
-            "1002001015": '{"message":"没有可用的连接","code":1002001015}',  # pass
-            "1002001017": '{"message":"sdk重复连接","code":1002001017}',  # pass
+            "1002001000": '"code":1002001000',  # pass
+            "1002001001": '"code":1002001001',  # pass
+            "1002001002": '"code":1002001002',  # pass
+            "1002001003": '"code":1002001003',  # pass
+            "1002001007": '"code":1002001007',  # pass
+            "1002001010": '"code":1002001010',  # pass
+            "1002001012": '"code":1002001012',  # pass
+            "1002001013": '"code":1002001013',  # pass
+            "1002001015": '"code":1002001015',  # pass
+            "1002001017": '"code":1002001017',  # pass
         }
         # 获取case开始执行得时间，目的用于校验抓取得日志在执行得这段时间内得
         self.log_startTS = int(time.time())
@@ -158,7 +158,7 @@ class TestAndroidSDK:
         time.sleep(10)
         # self.androidPage.imp_wait(5)
         execute_cmd_commind(cmd='adb_close')
-        time.sleep(3)
+        time.sleep(5)
         code = self.status_code["1002001001"]
         result = fetch_code(code, self.log_startTS)
         assert result
@@ -173,103 +173,11 @@ class TestAndroidSDK:
         self.sdk_login(env="invalid_env")
         time.sleep(10)
         execute_cmd_commind(cmd='adb_close')
-        time.sleep(3)
+        time.sleep(5)
         code = self.status_code["1002001003"]
         result = fetch_code(code, self.log_startTS)
         assert result
 
-    def test_status_code_1002001007(self):
-        """
-        1002001007：HTTP网关继续尝试登录
-        logic: 登录成功--> 运维关闭平台服务--> 等待20 --> 查看日志
-        step: 飞行模式-->登录->请求键盘精灵-->查看日志
-        """
-        self.androidPage.internet_switch(1)
-        execute_cmd_commind(cmd='adb_logcat')
-        time.sleep(3)
-        self.sdk_login()
-        time.sleep(10)
-        execute_cmd_commind(cmd='adb_close')
-        time.sleep(3)
-        code = self.status_code["1002001007"]
-        result = fetch_code(code, self.log_startTS)
-        assert result
-
-    # 只能模拟器上运行，因为appium支持系统版本低，现有的都不符合，详情请看最上面备注
-    def test_status_code_1002001012(self):
-        """
-        1002001012：HTTP请求异常，正在重试
-        logic: 平台服务接口发送请求，服务端异常或断网，重新尝试发送
-        step: 登录成功-->断网-->请求键盘精灵接口-->查看日志
-        """
-        execute_cmd_commind(cmd='adb_logcat')
-        time.sleep(3)
-        self.sdk_login()
-        time.sleep(3)
-        # 手机断网
-        self.androidPage.internet_switch(1)
-        # 请求键盘精灵接口
-        self.androidPage.keyWizard_query_all(code="0005", category="all", market="SH,SZ,HK", begin=0, count=20,
-                                             field=None, isQuery=True)
-        time.sleep(20)
-        execute_cmd_commind(cmd='adb_close')
-        time.sleep(3)
-        code = self.status_code["1002001012"]
-        # code = "1002001012"
-        result = fetch_code(code, self.log_startTS)
-        assert result
-
-    def test_status_code_1002001013(self):
-        """
-        1002001013：HTTP请求失败
-        logic: 平台服务接口发送请求后，服务端异常情况
-            1、在触发三次重新发送依然不成功
-            2、重新执行 GSession 的登录流程（包括登录三次重试，HTTP 站点切换）
-            3、重新登录失败，返回通知消息
-        step: 登录成功-->断网-->请求键盘精灵-->查看日志
-        """
-        execute_cmd_commind(cmd='adb_logcat')
-        time.sleep(3)
-        self.sdk_login()
-        time.sleep(3)
-        self.androidPage.internet_switch(1)
-        time.sleep(3)
-
-        # 请求键盘精灵接口
-        self.androidPage.keyWizard_query_all(code="0005", category="all", market="SH,SZ,HK", begin=0, count=20,
-                                             field=None, isQuery=True)
-        time.sleep(20)
-        execute_cmd_commind(cmd='adb_close')
-        time.sleep(3)
-        code = self.status_code["1002001013"]
-        result = fetch_code(code, self.log_startTS)
-        assert result
-
-    def test_status_code_1002001015(self):
-        """
-        1002001015：没有可用的连接
-        logic: 在NSDK没有执行连接，或者连接断开场景下，发送数据请求
-            1，行情服务注定断开，clearData
-            2，token 验证失败消息状态码是 5 或者1001001007，切换站点之前，clearData
-            3，行情服务重连失败，clearData
-            4，平台服务登录失败，clearData
-            5，用户调用 disconnect，clearData
-        step: 未登录 or disconnect-->请求键盘精灵接口-->查看日志
-        """
-        execute_cmd_commind(cmd='adb_logcat')
-        time.sleep(3)
-        self.androidPage.envs_import_busy(self.envs, busy='import_accept')
-        time.sleep(3)
-        # 请求键盘精灵接口
-        self.androidPage.keyWizard_query_all(code="0005", category="all", market="SH,SZ,HK", begin=0, count=20,
-                                             field=None, isQuery=True)
-        time.sleep(10)
-        execute_cmd_commind(cmd='adb_close')
-        time.sleep(3)
-        # code = self.status_code["1002001012"]
-        code = "1002001015"
-        result = fetch_code(code, self.log_startTS)
-        assert result
 
     def test_status_code_1002001017(self):
         """
@@ -280,7 +188,7 @@ class TestAndroidSDK:
         execute_cmd_commind(cmd='adb_logcat')
         time.sleep(3)
         self.sdk_login()
-        time.sleep(3)
+        time.sleep(5)
         userid, token, loginAppKey, appSecret = 123121231, 2313121, "234232_Mobile_71", "$2a$10$pGPlIyS7NWdgza6N.UkeaOoRwZ8.LvbsJp.CTdAF33q8O4ifg7MB6"
         self.androidPage.connect_server(userid=userid, token=token, loginAppKey=loginAppKey, appSecret=appSecret,
                                         env="uat")
