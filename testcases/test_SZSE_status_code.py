@@ -54,10 +54,10 @@ class TestAndroidSDK:
 
         self.androidPage = AndBasePage(driver)
         self.envs = self.get_sdk_cfg()['envs']
-        self.androidPage.internet_switch(2)
+        # self.androidPage.internet_switch(2)
         self.androidPage.imp_wait(1)
         self.status_code = {
-            "1002001000": '{"message":"登录成功,行情已开启","code":1002001000}',  # pass
+            "1002001000": '{"message":"建立行情连接成功","code":1002001000}',  # pass
             "1002001001": '{"message":"主行情连接正常关闭","code":1002001001}',  # pass
             "1002001002": '{"message":"行情连接异常断开,正在重连","code":1002001002}',  # pass
             "1002001003": '{"message":"建立行情连接失败：无效的环境类型选项","code":1002001003}',  # pass
@@ -105,13 +105,14 @@ class TestAndroidSDK:
         # userid, token, loginAppKey, appSecret, env = 123121231, 2313121, "778_Mobile_34", "$2a$10$PT8Nig9yoNyJAqOBXbsKwuDNTC2HIaoOqQrQhQEcF9eOFWWZR.C8q", "uat"
         if env is None:
             env = "uat"
-        userid, token, loginAppKey, appSecret = 123121231, 2313121, "234232_Mobile_71", "$2a$10$pGPlIyS7NWdgza6N.UkeaOoRwZ8.LvbsJp.CTdAF33q8O4ifg7MB6"
+        userid, token, loginAppKey, appSecret = 12323, 21121, "234232_Mobile_71", "$2a$10$pGPlIyS7NWdgza6N.UkeaOoRwZ8.LvbsJp.CTdAF33q8O4ifg7MB6"
         self.androidPage.envs_import_busy(self.envs, busy='import_accept')
         time.sleep(1)
         self.androidPage.connect_server(userid=userid, token=token, loginAppKey=loginAppKey, appSecret=appSecret,
                                         env=env)
         # 模拟器不需要弹窗
         # self.androidPage.phone_permission_enable()
+        time.sleep(3)
 
 
     # todo bug ,数据太大会把ui撑爆，看不到后续按钮
@@ -143,7 +144,7 @@ class TestAndroidSDK:
         self.sdk_login()
         time.sleep(10)
         execute_cmd_commind(cmd='adb_close')
-        time.sleep(3)
+        time.sleep(5)
         code = self.status_code["1002001000"]
         result = fetch_code(code, self.log_startTS)
         assert result
