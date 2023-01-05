@@ -189,18 +189,21 @@ class TestAndroidSDK:
         result = fetch_code(code, self.log_startTS)
         assert result
 
-    # todo 半自动化 业务需要理清楚
+    # todo 管理系统保留一个站点（其他站点下线）
     def test_status_code_1002001009(self):
         """
         1002001009：行情服务无法校验 token，请重新登录
         logic: 当前行情服务无法验证token，触发1011错误，前端切换站点失败，需要重新调用NSDK.connect进行连接
-        step: todo 通过保留一个站点，然后触发互踢。???
+        step:
+            前提：
+                1. SDK部署完成
+                2. 管理系统保留一个站点（其他站点下线）
+            1. 利用两个相同登录参数触发互踢
         """
         execute_cmd_commind(cmd='adb_logcat')
         time.sleep(3)
         self.sdk_login()
         time.sleep(3)
-        # todo 通过保留一个站点，然后触发互踢。???
         execute_manual_step("运维关闭平台站点服务了？")
 
         time.sleep(3)
@@ -233,18 +236,17 @@ class TestAndroidSDK:
         result = fetch_code(code, self.log_startTS)
         assert result
 
-    # todo 半自动 待确认切换三次站点时间
     def test_status_code_1002001011(self):
         """
         1002001011：服务异常，登录失败
         logic: 在行情服务验证 token 失败之后进行站点切换登录，只执行三次站点切换，超过三次之后触发服务异常，无法登录，需要重新调用NSDK。connect进行链接
-        step: todo 登录成功-->运维关闭行情服务认证-->等待（切换3次要多久）-->查看日志
+        step: 登录成功-->运维关闭(platform-api-internal-gateway-service)-->等待20分钟（切换3次要多久）-->查看日志
         """
         execute_cmd_commind(cmd='adb_logcat')
         time.sleep(3)
         self.sdk_login()
         # todo 运维关闭行情认证服务
-        execute_manual_step("运维关闭行情认证服务了？")
+        execute_manual_step("运维关闭(platform-api-internal-gateway-service)服务？")
 
         time.sleep(3)
         execute_cmd_commind(cmd='adb_close')
