@@ -17,7 +17,7 @@ import uuid
 import time
 from functools import wraps
 import re
-from util.shell import Shell
+# from util.shell import Shell
 
 cur_dir = os.path.dirname(os.path.abspath(__file__))
 log_dir = os.path.join(os.path.dirname(cur_dir), "logs")
@@ -45,13 +45,13 @@ def start_webdriver(web="chrome"):
     return browsers[web]()
 
 
-def get_android_devices():
-    android_devices = []
-    for device in Shell.start("adb devices").splitlines():
-        if 'device' in device and 'devices' not in device:
-            device = device.split('\t')[0]
-            android_devices.append(device)
-    return android_devices
+# def get_android_devices():
+#     android_devices = []
+#     for device in Shell.start("adb devices").splitlines():
+#         if 'device' in device and 'devices' not in device:
+#             device = device.split('\t')[0]
+#             android_devices.append(device)
+#     return android_devices
 
 
 def get_logger():

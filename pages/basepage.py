@@ -2,11 +2,10 @@
 # __author:  angel
 # date:  2022/11/13
 
-# from selenium import webdriver
-from appium import webdriver
+from selenium import webdriver
+# from appium import webdriver
 from exec.myexe import ElementNotFound
 from selenium.webdriver.common.by import By
-from appium.webdriver.common.touch_action import TouchAction
 import os
 from selenium.webdriver.support.ui import Select, WebDriverWait
 import time
