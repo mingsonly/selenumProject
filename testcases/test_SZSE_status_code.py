@@ -59,7 +59,6 @@ class TestAndroidSDK:
         self.status_code = {
             "1002001000": '"code":1002001000',  # pass
             "1002001001": '"code":1002001001',  # pass
-            "1002001002": '"code":1002001002',  # pass
             "1002001003": '"code":1002001003',  # pass
             "1002001007": '平台登录重试',  # pass
             "1002001010": '"code":1002001010',  # pass
@@ -178,30 +177,6 @@ class TestAndroidSDK:
         result = fetch_code(code, self.log_startTS)
         assert result
 
-
-    def test_status_code_1002001017(self):
-        """
-        1002001017：SDK重复连接
-        logic: NSDK在连接成功或者重连中状态，再次调用 connect 进行连接
-        step: 登录成功-->再次登录-->查看日志
-        """
-        execute_cmd_commind(cmd='adb_logcat')
-        time.sleep(3)
-        self.sdk_login()
-        time.sleep(5)
-        userid, token, loginAppKey, appSecret = 123121231, 2313121, "234232_Mobile_71", "$2a$10$pGPlIyS7NWdgza6N.UkeaOoRwZ8.LvbsJp.CTdAF33q8O4ifg7MB6"
-        self.androidPage.connect_server(userid=userid, token=token, loginAppKey=loginAppKey, appSecret=appSecret,
-                                        env="uat")
-
-        time.sleep(10)
-        execute_cmd_commind(cmd='adb_close')
-        time.sleep(10)
-        code = self.status_code["1002001017"]
-        # code = "1002001017"
-        result = fetch_code(code, self.log_startTS)
-        assert result
-
-
     # todo 这个case需要链接模拟器，appium不支持真机高版本
     def test_status_code_1002001007(self):
         """
@@ -288,10 +263,31 @@ class TestAndroidSDK:
         # 请求键盘精灵接口
         self.androidPage.keyWizard_query_all(code="0005", category="all", market="SH,SZ,HK", begin=0, count=20,
                                              field=None, isQuery=True)
+        time.sleep(15)
+        execute_cmd_commind(cmd='adb_close')
+        time.sleep(10)
+        code = self.status_code["1002001015"]
+        # code = "1002001015"
+        result = fetch_code(code, self.log_startTS)
+        assert result
+    def test_status_code_1002001017(self):
+        """
+        1002001017：SDK重复连接
+        logic: NSDK在连接成功或者重连中状态，再次调用 connect 进行连接
+        step: 登录成功-->再次登录-->查看日志
+        """
+        execute_cmd_commind(cmd='adb_logcat')
+        time.sleep(3)
+        self.sdk_login()
+        time.sleep(5)
+        userid, token, loginAppKey, appSecret = 123121231, 2313121, "234232_Mobile_71", "$2a$10$pGPlIyS7NWdgza6N.UkeaOoRwZ8.LvbsJp.CTdAF33q8O4ifg7MB6"
+        self.androidPage.connect_server(userid=userid, token=token, loginAppKey=loginAppKey, appSecret=appSecret,
+                                        env="uat")
+
         time.sleep(10)
         execute_cmd_commind(cmd='adb_close')
-        time.sleep(5)
-        # code = self.status_code["1002001012"]
-        code = "1002001015"
+        time.sleep(10)
+        code = self.status_code["1002001017"]
+        # code = "1002001017"
         result = fetch_code(code, self.log_startTS)
         assert result
