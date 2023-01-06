@@ -260,8 +260,9 @@ class TestAndroidSDK:
         step: 未登录 or disconnect-->请求键盘精灵接口-->查看日志
         """
         execute_cmd_commind(cmd='adb_logcat')
+        self.sdk_login()
         time.sleep(3)
-        self.androidPage.envs_import_busy(self.envs, busy='import_accept')
+        self.androidPage.disconnect()
         time.sleep(3)
         # 请求键盘精灵接口
         self.androidPage.keyWizard_query_all(code="0005", category="all", market="SH,SZ,HK", begin=0, count=20,
