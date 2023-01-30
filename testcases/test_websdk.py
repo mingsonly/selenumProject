@@ -352,16 +352,24 @@ class TestWebSDK:
         tbody = self.webSDK.get_search_result()
         assert tbody == ""
 
-
-
-    def test_kline_normal(self, stock_code="600000.SH", startDay="20230110", endDay="20230130", fields="$all",
-                          isSubcrible="true", size=10):
+    @pytest.mark.parametrize("stock_code,startDay,endDay,fields,isSubcrible,size", [
+        ("600000.SH", "20230110", "20230130", "$all", "true", 10),
+        # ("600000.SH", "20201124", "20210315", "$all", "true", 10), # todo 有bug 查询出来的没有在日期范围内
+    ])
+    def test_kline_normal(self, stock_code, startDay, endDay, fields, isSubcrible, size):
         """
         """
+        all_fields = "date open high low close volume amount deallots"
         cmd = self.webSDK.kLine_js(stock_code=stock_code, startDay=startDay, endDay=endDay, fields=fields,
                                    isSubcrible=isSubcrible, size=size)
         self.webSDK.exec_js_cmd(cmd)
         kline_result = self.webSDK.get_search_result()
+        time.sleep(2)
+        kline_titles = self.webSDK.get_result_title()
+        if fields == "$all":
+            assert kline_titles.lower() == all_fields
+        else:
+            assert kline_titles.lower() == fields
         klines = kline_result.split("\n")
         startTS = str_to_stamp(startDay, sep="")
         endTS = str_to_stamp(endDay, sep="")
@@ -369,4 +377,3 @@ class TestWebSDK:
         assert len(kline_records) <= size
         for record_ts in kline_records:
             assert startTS <= record_ts <= endTS
-
