@@ -296,13 +296,35 @@ class TestWebSDK:
         assert stocks[0].split(".")[0] == keyword
         assert len(stocks) <= pageSize
 
-    @pytest.mark.parametrize("stock,fields", [("600123.SH", "Code,Name,SectorID,SectorName,MarginTrade,StockConnect")])
+    @pytest.mark.parametrize("stock,fields", [
+        ("600123.SH", "Code,Name,SectorID,SectorName,MarginTrade,StockConnect"),
+        ("600123.SH,600000.SH", "Code,Name,SectorID,SectorName,MarginTrade,StockConnect"),
+        ("600123.SH,600000.SH", "Code"),
+    ])
     def test_single_stock(self, stock, fields):
         single_stock_cmd = self.webSDK.singel_stock_js(stocks=stock, fields=fields)
         self.webSDK.exec_js_cmd(single_stock_cmd)
+        time.sleep(1)
         tbody = self.webSDK.get_search_result()
-        time.sleep(6)
+        time.sleep(2)
+        if "," in stock:
+            tbody = tbody.split("\n")
+            for idx, sto in enumerate(tbody):
+                assert sto.split()[0] == stock.split(",")[idx]
+        else:
+            assert tbody.startswith(stock)
         fields_lower = fields.lower().replace(",", " ")
         title = self.webSDK.get_result_title()
+        time.sleep(3)
         assert fields_lower == title
-        assert tbody.startswith(stock)
+
+    @pytest.mark.parametrize("stock,fields", [
+        ("", "Code,Name,SectorID,SectorName,MarginTrade,StockConnect"),  # 个股信息空查询
+        ("600123.SH,600000.SH", ""),  # 个股信息查询字段为空
+    ])
+    def test_single_stock_err(self, stock, fields):
+        single_stock_cmd = self.webSDK.singel_stock_js(stocks=stock, fields=fields)
+        self.webSDK.exec_js_cmd(single_stock_cmd)
+        time.sleep(1)
+        tbody = self.webSDK.get_search_result()
+        assert tbody == ""
