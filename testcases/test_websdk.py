@@ -328,3 +328,26 @@ class TestWebSDK:
         time.sleep(1)
         tbody = self.webSDK.get_search_result()
         assert tbody == ""
+
+    @pytest.mark.parametrize("stock", [
+        ("000001.SH")
+    ])
+    def test_snapshotUpdowns(self, stock):
+        cmd = self.webSDK.snapshotUpdowns_js(stock_code=stock)
+        self.webSDK.exec_js_cmd(cmd)
+        time.sleep(1)
+        tbody = self.webSDK.get_search_result()
+        assert tbody.startswith(stock)
+        pre_titles = 'Code RiseCount SuspensionCount FallCount ScopeName ScopeValue'
+        real_titles = self.webSDK.get_result_title()
+        assert real_titles == pre_titles
+
+    @pytest.mark.parametrize("stock", [
+        ("")
+    ])
+    def test_snapshotUpdowns_err(self, stock):
+        cmd = self.webSDK.snapshotUpdowns_js(stock_code=stock)
+        self.webSDK.exec_js_cmd(cmd)
+        time.sleep(1)
+        tbody = self.webSDK.get_search_result()
+        assert tbody == ""
