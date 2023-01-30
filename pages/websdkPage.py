@@ -141,7 +141,7 @@ class WebSDKPage(BasePage):
 
     def singel_stock_js(self, stocks: str, fields="Code,Name,SectorID,SectorName,MarginTrade,StockConnect"):
         cmd = self.func_str + """
-            let stockInformation = NSDK.createRequestItem(SDK_REQUET_NSTOCKINFO);
+            let stockInformation = NSDK.createRequestItem(SDK_REQUEST_NSTOCKINFO);
             stockInformation.setDataCallback(onCallback);""" + f"""
             stockInformation.setCodes("{stocks}");
             stockInformation.setFields("{fields}");
