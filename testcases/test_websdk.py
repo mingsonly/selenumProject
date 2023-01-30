@@ -21,6 +21,16 @@ log_dir = os.path.join(os.path.dirname(cur_dir), "logs")
 img_dir = os.path.join(os.path.dirname(cur_dir), "screenshots")
 data_dir = os.path.join(os.path.dirname(cur_dir), "data")
 
+"""
+SDK_KEYWIZARD_CATEGORY_ALL ：所有
+SDK_KEYWIZARD_CATEGORY_BOND: 债券
+SDK_KEYWIZARD_CATEGORY_FOND: 基金
+SDK_KEYWIZARD_CATEGORY_INDEX: 指数
+SDK_KEYWIZARD_CATEGORY_OPTION: 期权
+SDK_KEYWIZARD_CATEGORY_STOCK: 股票
+SDK_KEYWIZARD_MARKET_SHSZHK： 深圳信
+"""
+
 
 class TestWebSDK:
     def setup(self):
@@ -130,9 +140,9 @@ class TestWebSDK:
         websdk.login()
         time.sleep(5)
 
-    @pytest.mark.parametrize("pageNo, pageSize, keyword,fields", [
+    @pytest.mark.parametrize("pageNo, pageSize, keyword, fields", [
         (0, 10, "000", "sufSecuCode,secuAbbr,ExchgMarket"),
-        # (0, 10, "000005.SZ"), todo searchKeyword.match("000005.SZ"") 不支持.
+        (0, 10, "0", "sufSecuCode,secuAbbr,ExchgMarket"),
     ]
                              )
     def test_keword_fuzzy_query_PQMR_1074(self, pageNo, pageSize, keyword, fields):
@@ -156,10 +166,79 @@ class TestWebSDK:
             assert stock.startswith(keyword)
         assert len(stocks) <= pageSize
 
-    @pytest.mark.parametrize("pageNo, pageSize, keyword,fields", [
-        (0, 10, "平安银行","sufSecuCode,secuAbbr,ExchgMarket"),
+    @pytest.mark.parametrize("pageNo, pageSize, keyword, fields", [
+        (0, 10, "平安", "sufSecuCode,secuAbbr,ExchgMarket"),
     ]
-    )
+                             )
+    def test_keword_fuzzy_query_PQMR_1077(self, pageNo, pageSize, keyword, fields):
+        """
+        键盘精灵支持名称模糊匹配
+        :param pageNo:
+        :param pageSize:
+        :param keyword:
+        :return: No
+        """
+        seachKeyWord_cmd = self.webSDK.search_key_js(pageNo, pageSize, keyword, fields)
+        self.webSDK.exec_js_cmd(seachKeyWord_cmd)
+        time.sleep(6)
+        titles = self.webSDK.get_result_title()
+        # 校验查询结果集字段等于请求字段，需要转换对比
+        assert fields.lower() == titles.replace(" ", ",")
+        tbody = self.webSDK.get_search_result()
+        time.sleep(6)
+        stocks = tbody.split("\n")
+        for stock in stocks:
+            assert keyword in stock
+        assert len(stocks) <= pageSize
+
+    @pytest.mark.parametrize("pageNo, pageSize, keyword, fields", [
+        (0, 10, "pazq", "sufSecuCode,secuAbbr,ExchgMarket"),
+    ]
+                             )
+    def test_keword_fuzzy_query_PQMR_1079(self, pageNo, pageSize, keyword, fields):
+        """
+        键盘精灵支持名称缩写模糊匹配
+        :param pageNo:
+        :param pageSize:
+        :param keyword:
+        :return: No
+        """
+        seachKeyWord_cmd = self.webSDK.search_key_js(pageNo, pageSize, keyword, fields)
+        self.webSDK.exec_js_cmd(seachKeyWord_cmd)
+        time.sleep(6)
+        titles = self.webSDK.get_result_title()
+        # 校验查询结果集字段等于请求字段，需要转换对比
+        assert fields.lower() == titles.replace(" ", ",")
+        tbody = self.webSDK.get_search_result()
+        time.sleep(6)
+        stocks = tbody.split("\n")
+        assert stocks
+        assert len(stocks) <= pageSize
+
+    @pytest.mark.parametrize("pageNo, pageSize, keyword, fields", [
+        (0, 10, ",", "sufSecuCode,secuAbbr,ExchgMarket"),
+        (0, 10, "1234325342", "sufSecuCode,secuAbbr,ExchgMarket"),
+        (0, 10, "", "sufSecuCode,secuAbbr,ExchgMarket"),
+    ]
+                             )
+    def test_keword_err_query_PQMR_1076(self, pageNo, pageSize, keyword, fields):
+        """
+        键盘精灵输入异常符号查询为空
+        :param pageNo:
+        :param pageSize:
+        :param keyword:
+        :return: No
+        """
+        seachKeyWord_cmd = self.webSDK.search_key_js(pageNo, pageSize, keyword, fields)
+        self.webSDK.exec_js_cmd(seachKeyWord_cmd)
+        time.sleep(6)
+        tbody = self.webSDK.get_search_result()
+        assert tbody == ""
+
+    @pytest.mark.parametrize("pageNo, pageSize, keyword,fields", [
+        (0, 10, "平安银行", "sufSecuCode,secuAbbr,ExchgMarket"),
+    ]
+                             )
     def test_keword_precise_query_PQMR_1258(self, pageNo, pageSize, keyword, fields):
         """
         精确查询
@@ -168,7 +247,7 @@ class TestWebSDK:
         :param keyword:
         :return: No
         """
-        seachKeyWord_cmd = self.webSDK.search_key_js(pageNo, pageSize, keyword,fields)
+        seachKeyWord_cmd = self.webSDK.search_key_js(pageNo, pageSize, keyword, fields)
         self.webSDK.exec_js_cmd(seachKeyWord_cmd)
         time.sleep(6)
         titles = self.webSDK.get_result_title()
@@ -177,6 +256,44 @@ class TestWebSDK:
         tbody = self.webSDK.get_search_result()
         stocks = tbody.split()
         assert stocks[1] == keyword
+        assert len(stocks) <= pageSize
+
+    @pytest.mark.parametrize("pageNo, pageSize, keyword,fields", [
+        (0, 10, "300002", "sufSecuCode,secuAbbr,ExchgMarket"),
+        (0, 10, "002607", "sufSecuCode,secuAbbr,ExchgMarket"),
+        (0, 10, "600213", "sufSecuCode,secuAbbr,ExchgMarket"),
+        (0, 10, "399975", "sufSecuCode,secuAbbr,ExchgMarket"),
+        # (0, 10, "202007", "sufSecuCode,secuAbbr,ExchgMarket"), # todo 这个股票没有
+        # (0, 10, "124044", "sufSecuCode,secuAbbr,ExchgMarket"), # todo 这个股票没有
+        (0, 10, "118000", "sufSecuCode,secuAbbr,ExchgMarket"),  # 查询可转债
+        (0, 10, "152800", "sufSecuCode,secuAbbr,ExchgMarket"),  # 查询企业债
+        (0, 10, "010303", "sufSecuCode,secuAbbr,ExchgMarket"),  # 查询国债
+        (0, 10, "508000", "sufSecuCode,secuAbbr,ExchgMarket"),  # 查询REITs
+        (0, 10, "501000", "sufSecuCode,secuAbbr,ExchgMarket"),  # 查询LOF
+        (0, 10, "516150", "sufSecuCode,secuAbbr,ExchgMarket"),  # 查询ETF
+        (0, 10, "508027", "sufSecuCode,secuAbbr,ExchgMarket"),  # 查询封闭式基金
+        (0, 10, "600000", "sufSecuCode,secuAbbr,ExchgMarket"),  # 查询A股股票
+        (0, 10, "900901", "sufSecuCode,secuAbbr,ExchgMarket"),  # 查询B股股票
+        (0, 10, "688001", "sufSecuCode,secuAbbr,ExchgMarket"),  # 查询科创版股票
+    ]
+                             )
+    def test_keyword_precise_query_by_code(self, pageNo, pageSize, keyword, fields):
+        """
+        精确查询
+        :param pageNo:
+        :param pageSize:
+        :param keyword:
+        :return: No
+        """
+        seachKeyWord_cmd = self.webSDK.search_key_js(pageNo, pageSize, keyword, fields)
+        self.webSDK.exec_js_cmd(seachKeyWord_cmd)
+        time.sleep(6)
+        titles = self.webSDK.get_result_title()
+        # 校验查询结果集字段等于请求字段，需要转换对比
+        assert fields.lower() == titles.replace(" ", ",")
+        tbody = self.webSDK.get_search_result()
+        stocks = tbody.split()
+        assert stocks[0].split(".")[0] == keyword
         assert len(stocks) <= pageSize
 
     @pytest.mark.parametrize("stock,fields", [("600123.SH", "Code,Name,SectorID,SectorName,MarginTrade,StockConnect")])
