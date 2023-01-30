@@ -160,7 +160,8 @@ class WebSDKPage(BasePage):
         """
         return snap_cmd
 
-    def kLine_js(self, stock_code="600000.SH", startDay="20201124", endDay="20210315", fields="all", isSubcrible=True):
+    def kLine_js(self, stock_code="600000.SH", startDay="20201124", endDay="20210315", fields="$all", isSubcrible="true",
+                 size=10):
         kline_cmd = self.func_str + """
             let kLine = NSDK.createRequestItem(SDK_REQUEST_KLINE);
             kLine.setDataCallback(onCallback);
@@ -168,9 +169,9 @@ class WebSDKPage(BasePage):
             kLine.setCode("{stock_code}");
             kLine.setPeriod(SDK_KLINE_PERIOD_DAY);
             kLine.setCqMode(SDK_KLINE_CQMODE_FORWARD);
-            kLine.setLimit(-1,200);
+            kLine.setLimit(-1,{size});
             kLine.setDateRange("{startDay}","{endDay}");
-            kLine.setFields("${fields}");
+            kLine.setFields("{fields}");
             kLine.setSubscribe({isSubcrible});
             //开始查询
             kLine.request();

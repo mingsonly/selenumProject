@@ -8,7 +8,7 @@ from pages.indexPage import IndexPage
 import time
 from selenium.webdriver import ActionChains
 import pytest
-from util.common import get_logger, start_webdriver, get_env_data
+from util.common import get_logger, start_webdriver, get_env_data, str_to_stamp
 from exec.myexe import *
 import os
 from pages.websdkPage import WebSDKPage
@@ -351,3 +351,22 @@ class TestWebSDK:
         time.sleep(1)
         tbody = self.webSDK.get_search_result()
         assert tbody == ""
+
+
+
+    def test_kline_normal(self, stock_code="600000.SH", startDay="20230110", endDay="20230130", fields="$all",
+                          isSubcrible="true", size=10):
+        """
+        """
+        cmd = self.webSDK.kLine_js(stock_code=stock_code, startDay=startDay, endDay=endDay, fields=fields,
+                                   isSubcrible=isSubcrible, size=size)
+        self.webSDK.exec_js_cmd(cmd)
+        kline_result = self.webSDK.get_search_result()
+        klines = kline_result.split("\n")
+        startTS = str_to_stamp(startDay, sep="")
+        endTS = str_to_stamp(endDay, sep="")
+        kline_records = list(map(lambda x: str_to_stamp(x.split()[0]), klines))
+        assert len(kline_records) <= size
+        for record_ts in kline_records:
+            assert startTS <= record_ts <= endTS
+

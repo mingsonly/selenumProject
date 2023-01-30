@@ -209,10 +209,16 @@ def str_to_timeStamp(time_str):
     time_stamp = int(time.mktime(time_struct))
     return time_stamp
 
+def str_to_stamp(time_str, sep="/"):
+    time_struct = time.strptime(time_str, f"%Y{sep}%m{sep}%d")
+    time_stamp = int(time.mktime(time_struct))
+    return time_stamp
+
 # if __name__ == '__main__':
 #     import os
-#     rsult = str_to_timeStamp("12-22 09:41:08")
+#     rsult = str_to_stamp("2023/01/22")
 #     print(rsult)
+#     print(1674316800)
 #
 #     pattern = "1002001005"
 #     fecth = fetch_code(pattern, "1220_01.txt")
