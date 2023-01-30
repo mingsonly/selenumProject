@@ -109,12 +109,13 @@ class WebSDKPage(BasePage):
     def exec_js_cmd(self, cmd):
         self.exex_js(cmd)
 
-    def search_key_js(self, page_no, page_size, keyword, fields="sufSecuCode,secuAbbr"):
+    def search_key_js(self, page_no, page_size, keyword, fields="sufSecuCode,secuAbbr",
+                      category="SDK_KEYWIZARD_CATEGORY_ALL", market="SDK_KEYWIZARD_MARKET_SHSZHK"):
         cmd = self.func_str + """
             let searchKeyword = NSDK.createRequestItem(SDK_REQUEST_KEYWIZARD);
-            searchKeyword.setDataCallback(onCallback);
-            searchKeyword.setCategory(SDK_KEYWIZARD_CATEGORY_ALL);
-            searchKeyword.setMarket(SDK_KEYWIZARD_MARKET_SHSZHK);""" + f"""
+            searchKeyword.setDataCallback(onCallback);""" + f"""
+            searchKeyword.setCategory({category});""" + f"""
+            searchKeyword.setMarket({market});""" + f"""
             searchKeyword.setFields("{fields}");""" + f"""
             searchKeyword.setPageNo({page_no});
             searchKeyword.setPageSize({page_size});
