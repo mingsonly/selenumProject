@@ -354,7 +354,9 @@ class TestWebSDK:
 
     @pytest.mark.parametrize("stock_code,startDay,endDay,fields,isSubcrible,size", [
         ("600000.SH", "20230110", "20230130", "$all", "true", 10),
-        # ("600000.SH", "20201124", "20210315", "$all", "true", 10), # todo 有bug 查询出来的没有在日期范围内
+        ("600000.SH", "20230110", "20230130", "date", "true", 10),
+        ("600000.SH", "20230110", "20230130", "date,open", "true", 10),
+        ("600000.SH", "20201124", "20210315", "$all", "true", 10), # todo 有bug 查询出来的没有在日期范围内
     ])
     def test_kline_normal(self, stock_code, startDay, endDay, fields, isSubcrible, size):
         """
@@ -369,6 +371,8 @@ class TestWebSDK:
         if fields == "$all":
             assert kline_titles.lower() == all_fields
         else:
+            if "," in fields:
+                fields = fields.replace(",", " ")
             assert kline_titles.lower() == fields
         klines = kline_result.split("\n")
         startTS = str_to_stamp(startDay, sep="")
