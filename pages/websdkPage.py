@@ -32,6 +32,7 @@ class WebSDKPage(BasePage):
                 GTSEvent.event(DataEvent.ACCEPTDATA,response);
             }
             """
+
     def __int__(self, webdriver):
         super().__init__(webdriver)
 
@@ -108,17 +109,16 @@ class WebSDKPage(BasePage):
     def exec_js_cmd(self, cmd):
         self.exex_js(cmd)
 
-    def search_key_js(self, page_no, page_size, keyword):
+    def search_key_js(self, page_no, page_size, keyword, fields="sufSecuCode,secuAbbr"):
         cmd = self.func_str + """
             let searchKeyword = NSDK.createRequestItem(SDK_REQUEST_KEYWIZARD);
             searchKeyword.setDataCallback(onCallback);
             searchKeyword.setCategory(SDK_KEYWIZARD_CATEGORY_ALL);
-            searchKeyword.setMarket(SDK_KEYWIZARD_MARKET_SHSZHK);
-            searchKeyword.setFields("sufSecuCode,secuAbbr");
-            """ + f"""
+            searchKeyword.setMarket(SDK_KEYWIZARD_MARKET_SHSZHK);""" + f"""
+            searchKeyword.setFields("{fields}");""" + f"""
             searchKeyword.setPageNo({page_no});
             searchKeyword.setPageSize({page_size});
-            searchKeyword.match("{keyword}");
+            searchKeyword.match("{str(keyword)}");
         """
         return cmd
 
@@ -192,7 +192,7 @@ class WebSDKPage(BasePage):
         return order_cmd
 
     def step_order_js(self, stock_code='000001.SZ', limit=10, fields="all", isSubcrible=True):
-        step_cmd = self.func_str+"""
+        step_cmd = self.func_str + """
             let step  = NSDK.createRequestItem(SDK_REQUEST_STEP);
             //设置回调函数
             step.setDataCallback(onCallback);
@@ -307,28 +307,26 @@ class WebSDKPage(BasePage):
             //设置回调函数
             requestCommon.setDataCallback(onCallback);
             requestCommon.setAPI(SDK_USERSECTOR_GET);
-            requestCommon.setParam(SDK_USERSECTOR_USERID,"{{ userid }}");"""+f"""
+            requestCommon.setParam(SDK_USERSECTOR_USERID,"{{ userid }}");""" + f"""
             requestCommon.setParam(SDK_USERSECTOR_FIELDS,SDK_USERSECTOR_FIELDS_VALUE);
             //开始查询
             requestCommon.request();
         """
         return sel_plate_cmd
 
-
-    def add_plate_js(self,plate_name):
+    def add_plate_js(self, plate_name):
         add_plate_cmd = self.func_str + """
             let requestCommon = NSDK.createRequestItem(SDK_REQUEST_REQUESTCOMMON);
             //设置回调函数
             requestCommon.setDataCallback(onCallback);
             requestCommon.setAPI(SDK_USERSECTOR_ADD);
             requestCommon.setParam(SDK_USERSECTOR_FIELDS,"sectorid");
-            requestCommon.setParam(SDK_USERSECTOR_USERID, "{{ userid }}");"""+f"""
+            requestCommon.setParam(SDK_USERSECTOR_USERID, "{{ userid }}");""" + f"""
             requestCommon.setParam(SDK_USERSECTOR_SECTORNAME,'{plate_name}');//添加的板块名称
             //开始查询
             requestCommon.request();
         """
         return add_plate_cmd
-
 
     def del_plate_js(self, plate_id='1537874208340045824'):
         del_plate_cmd = self.func_str + """
@@ -336,13 +334,12 @@ class WebSDKPage(BasePage):
             //设置回调函数
             requestCommon.setDataCallback(onCallback);
             requestCommon.setAPI(SDK_USERSECTOR_DELETE);
-            requestCommon.setParam(SDK_USERSECTOR_USERID, "{{ userid }}");"""+f"""
+            requestCommon.setParam(SDK_USERSECTOR_USERID, "{{ userid }}");""" + f"""
             requestCommon.setParam(SDK_USERSECTOR_SECTORID, "{plate_id}");//删除的板块id
             //开始查询
             requestCommon.request();
         """
         return del_plate_cmd
-
 
     def rename_plate_js(self, new_name, plate_id='1537874208340045824'):
         rename_plate_cmd = self.func_str + """
@@ -350,7 +347,7 @@ class WebSDKPage(BasePage):
             //设置回调函数
             requestCommon.setDataCallback(onCallback);
             requestCommon.setAPI(SDK_USERSECTOR_EDIT);
-            requestCommon.setParam(SDK_USERSECTOR_USERID, "{{ userid }}");"""+f"""
+            requestCommon.setParam(SDK_USERSECTOR_USERID, "{{ userid }}");""" + f"""
             requestCommon.setParam(SDK_USERSECTOR_SECTORID, "{plate_id}");//板块id
             requestCommon.setParam(SDK_USERSECTOR_SECTORNAME, '{new_name}');
             //开始查询
@@ -358,15 +355,13 @@ class WebSDKPage(BasePage):
         """
         return rename_plate_cmd
 
-
-
     def move_plate_js(self, index=0, plate_id='1537874208340045824'):
         move_plate_cmd = self.func_str + """
             let requestCommon = NSDK.createRequestItem(SDK_REQUEST_REQUESTCOMMON);
             //设置回调函数
             requestCommon.setDataCallback(onCallback);
             requestCommon.setAPI(SDK_USERSECTOR_MOVE);
-            requestCommon.setParam(SDK_USERSECTOR_USERID, "{{ userid }}");"""+f"""
+            requestCommon.setParam(SDK_USERSECTOR_USERID, "{{ userid }}");""" + f"""
             requestCommon.setParam(SDK_USERSECTOR_SECTORID, "{plate_id}");//移动的板块
             requestCommon.setParam(SDK_USERSECTOR_TARGETINDEX, {index});//移动到的下标 0开始
             //开始查询
@@ -374,15 +369,13 @@ class WebSDKPage(BasePage):
         """
         return move_plate_cmd
 
-
-
-    def search_mystock_js(self,plate_id='1537874208340045824',fields='secucode'):
+    def search_mystock_js(self, plate_id='1537874208340045824', fields='secucode'):
         search_mystock_cmd = self.func_str + """
             let requestCommon = NSDK.createRequestItem(SDK_REQUEST_REQUESTCOMMON);
             //设置回调函数
             requestCommon.setDataCallback(onCallback);
             requestCommon.setAPI(SDK_USERSECURITY_GET);
-            requestCommon.setParam(SDK_USERSECURITY_USERID,"{{ userid }}");"""+f"""
+            requestCommon.setParam(SDK_USERSECURITY_USERID,"{{ userid }}");""" + f"""
             requestCommon.setParam(SDK_USERSECURITY_SECTORID,"{plate_id}");//被查询板块的id
             requestCommon.setParam("fields","{fields}");//查询字段
             //开始查询
@@ -390,14 +383,13 @@ class WebSDKPage(BasePage):
         """
         return search_mystock_cmd
 
-
-    def add_mystock_js(self,plate_id='1537874208340045824',stock='600000.SH'):
+    def add_mystock_js(self, plate_id='1537874208340045824', stock='600000.SH'):
         add_mystock_cmd = self.func_str + """
             let requestCommon = NSDK.createRequestItem(SDK_REQUEST_REQUESTCOMMON);
             requestCommon.setDataCallback(onCallback);
             //设置回调函数
             requestCommon.setAPI(SDK_USERSECURITY_ADD);
-            requestCommon.setParam(SDK_USERSECURITY_USERID, "{{ userid }}");"""+f"""
+            requestCommon.setParam(SDK_USERSECURITY_USERID, "{{ userid }}");""" + f"""
             requestCommon.setParam(SDK_USERSECURITY_SECTORID, "{plate_id}");//添加股票的板块id
             requestCommon.setParam(SDK_USERSECURITY_SECURITYS, "{stock}");//添加的股票代码
             //开始查询

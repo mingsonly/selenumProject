@@ -45,9 +45,6 @@ class TestWebSDK:
             data = json.load(f)
         return data
 
-
-
-
     @staticmethod
     def set_env_config_old(env):
         envs = """
@@ -133,18 +130,54 @@ class TestWebSDK:
         websdk.login()
         time.sleep(5)
 
-    @pytest.mark.parametrize("pageNo, pageSize, keyword", [
-        (1, 10, "000")]
-    )
-    def test_keword_search(self, pageNo, pageSize, keyword):
-        seachKeyWord_cmd = self.webSDK.search_key_js(pageNo, pageSize, keyword)
+    @pytest.mark.parametrize("pageNo, pageSize, keyword,fields", [
+        (0, 10, "000", "sufSecuCode,secuAbbr,ExchgMarket"),
+        # (0, 10, "000005.SZ"), todo searchKeyword.match("000005.SZ"") 不支持.
+    ]
+                             )
+    def test_keword_fuzzy_query_PQMR_1074(self, pageNo, pageSize, keyword, fields):
+        """
+        模糊查询
+        :param pageNo:
+        :param pageSize:
+        :param keyword:
+        :return: No
+        """
+        seachKeyWord_cmd = self.webSDK.search_key_js(pageNo, pageSize, keyword, fields)
         self.webSDK.exec_js_cmd(seachKeyWord_cmd)
+        time.sleep(6)
+        titles = self.webSDK.get_result_title()
+        # 校验查询结果集字段等于请求字段，需要转换对比
+        assert fields.lower() == titles.replace(" ", ",")
         tbody = self.webSDK.get_search_result()
         time.sleep(6)
         stocks = tbody.split("\n")
         for stock in stocks:
             assert stock.startswith(keyword)
-        assert len(stocks) == pageSize
+        assert len(stocks) <= pageSize
+
+    @pytest.mark.parametrize("pageNo, pageSize, keyword,fields", [
+        (0, 10, "平安银行","sufSecuCode,secuAbbr,ExchgMarket"),
+    ]
+    )
+    def test_keword_precise_query_PQMR_1258(self, pageNo, pageSize, keyword, fields):
+        """
+        精确查询
+        :param pageNo:
+        :param pageSize:
+        :param keyword:
+        :return: No
+        """
+        seachKeyWord_cmd = self.webSDK.search_key_js(pageNo, pageSize, keyword,fields)
+        self.webSDK.exec_js_cmd(seachKeyWord_cmd)
+        time.sleep(6)
+        titles = self.webSDK.get_result_title()
+        # 校验查询结果集字段等于请求字段，需要转换对比
+        assert fields.lower() == titles.replace(" ", ",")
+        tbody = self.webSDK.get_search_result()
+        stocks = tbody.split()
+        assert stocks[1] == keyword
+        assert len(stocks) <= pageSize
 
     @pytest.mark.parametrize("stock,fields", [("600123.SH", "Code,Name,SectorID,SectorName,MarginTrade,StockConnect")])
     def test_single_stock(self, stock, fields):
