@@ -384,7 +384,9 @@ class TestWebSDK:
 
     @pytest.mark.parametrize("stock_code,limit,fields,isSubcrible", [
         # ('000001.SZ', 10, "$all", "true"),
-        ('000001.SZ', 10, "time,price", "true"),
+        # ('000001.SZ', 10, "time,price", "true"),
+        # ('000001.SZ', 10, "time", "true"),
+        ('000001.SZ', 10, "deallots", "true"),
     ])
     def test_split_the_deal(self, stock_code, limit, fields, isSubcrible):
         """
@@ -398,11 +400,11 @@ class TestWebSDK:
         self.webSDK.exec_js_cmd(cmd)
         record = self.webSDK.get_search_result()
         print(record)
-        # 3 校验长度
+        # 3.1 校验长度
         records = record.split("\n")
         assert len(records) <= limit
 
-        # 4 校验字段显示
+        # 3.2 校验字段显示
         if fields == "$all":
             pre_titles = "time,price,volume,amount,deallots"
         else:
@@ -413,7 +415,7 @@ class TestWebSDK:
         real_titles = real_titles.replace(" ", ",")
         assert pre_titles == real_titles
 
-        # 校验订阅后
+        # 3.3 校验订阅后字段更新
         new_record = self.webSDK.get_search_result()
         if isSubcrible:
             assert new_record != records
