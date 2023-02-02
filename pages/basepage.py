@@ -47,7 +47,7 @@ class BasePage(object):
         elif arg in event_list:
             self.driver.press_keycode(int(event_list[arg]))
 
-    def input_num_by_keyboard(self,num):
+    def input_num_by_keyboard(self, num):
         """
         模仿键盘输入数字
         :param num: 数字
@@ -55,8 +55,7 @@ class BasePage(object):
         """
         nums = list(num)
         for num in nums:
-            self._option_key_event('KEYCODE_NUM',num)
-
+            self._option_key_event('KEYCODE_NUM', num)
 
     def swip_down(self, count=1, meth=None):
         """
@@ -84,8 +83,6 @@ class BasePage(object):
         for x in range(count):
             self.driver.implicitly_wait(1)
             self.driver.swipe(self.width * 9 / 10, self.height / 2, self.width / 10, self.height / 2, 1500)
-
-
 
     def last_back(self):
         self.driver.back()
@@ -224,3 +221,8 @@ class BasePage(object):
     def exex_js(self, js):
         """执行js脚本"""
         self.driver.execute_script(js)
+
+    def get_select_obj(self, loc):
+        se = self.get_element(loc)
+        select = Select(se)
+        return select

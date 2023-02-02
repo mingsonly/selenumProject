@@ -263,8 +263,8 @@ class TestWebSDK:
         (0, 10, "002607", "sufSecuCode,secuAbbr,ExchgMarket"),
         (0, 10, "600213", "sufSecuCode,secuAbbr,ExchgMarket"),
         (0, 10, "399975", "sufSecuCode,secuAbbr,ExchgMarket"),
-        # (0, 10, "202007", "sufSecuCode,secuAbbr,ExchgMarket"), # todo 这个股票没有
-        # (0, 10, "124044", "sufSecuCode,secuAbbr,ExchgMarket"), # todo 这个股票没有
+        (0, 10, "399481", "sufSecuCode,secuAbbr,ExchgMarket"),  # 查询债券指数(.SZ)
+        (0, 10, "501005", "sufSecuCode,secuAbbr,ExchgMarket"),  # 查询ETF基金(.SH)
         (0, 10, "118000", "sufSecuCode,secuAbbr,ExchgMarket"),  # 查询可转债
         (0, 10, "152800", "sufSecuCode,secuAbbr,ExchgMarket"),  # 查询企业债
         (0, 10, "010303", "sufSecuCode,secuAbbr,ExchgMarket"),  # 查询国债
@@ -356,7 +356,7 @@ class TestWebSDK:
         ("600000.SH", "20230110", "20230130", "$all", "true", 10),
         ("600000.SH", "20230110", "20230130", "date", "true", 10),
         ("600000.SH", "20230110", "20230130", "date,open", "true", 10),
-        ("600000.SH", "20201124", "20210315", "$all", "true", 10), # todo 有bug 查询出来的没有在日期范围内
+        ("600000.SH", "20201124", "20210315", "$all", "true", 10),  # todo 有bug 查询出来的没有在日期范围内
     ])
     def test_kline_normal(self, stock_code, startDay, endDay, fields, isSubcrible, size):
         """
@@ -381,3 +381,41 @@ class TestWebSDK:
         assert len(kline_records) <= size
         for record_ts in kline_records:
             assert startTS <= record_ts <= endTS
+
+    @pytest.mark.parametrize("stock_code,limit,fields,isSubcrible", [
+        # ('000001.SZ', 10, "$all", "true"),
+        ('000001.SZ', 10, "time,price", "true"),
+    ])
+    def test_split_the_deal(self, stock_code, limit, fields, isSubcrible):
+        """
+        1,选择分笔成交
+        2,编辑js脚本并执行
+        3,校验结果: 长度，字段显示，订阅后数据变化
+        """
+        # self.webSDK.choice_busy_by_index(1)
+        self.webSDK.choice_busy_by_txt("分笔成交")
+        cmd = self.webSDK.ticket_js(stock_code=stock_code, limit=limit, fields=fields, isSubcrible=isSubcrible)
+        self.webSDK.exec_js_cmd(cmd)
+        record = self.webSDK.get_search_result()
+        print(record)
+        # 3 校验长度
+        records = record.split("\n")
+        assert len(records) <= limit
+
+        # 4 校验字段显示
+        if fields == "$all":
+            pre_titles = "time,price,volume,amount,deallots"
+        else:
+            pre_titles = fields
+        real_titles = self.webSDK.get_result_title()
+        # 转小写并空格替换成逗号
+        real_titles = real_titles.lower()
+        real_titles = real_titles.replace(" ", ",")
+        assert pre_titles == real_titles
+
+        # 校验订阅后
+        new_record = self.webSDK.get_search_result()
+        if isSubcrible:
+            assert new_record != records
+        else:
+            assert new_record == records

@@ -1,159 +1,10 @@
-# encoding: utf-8
-import time
-import allure
-from pages.basepage import BasePage
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import Select
-from selenium import webdriver
-from util.common import get_logger
-
-log = get_logger()
-
-
-@allure.story("websdkç™»å½•")
-class WebSDKPage(BasePage):
-    url = "https://uat-cloud.hongwuniu.com/page/gsdk/demo/index.html"
-    connect_loc = (By.ID, "connect")
-    run_loc = (By.ID, "run")
-    busyOpt_loc = (By.ID, "funcSelect")
-    userID_loc = (By.ID, "tenant_account")
-    userToken_loc = (By.ID, "tenant_token")
-    userEnv_loc = (By.ID, "envData")
-    authEnv_loc = (By.ID, "tenant_authServer")
-    app_key_loc = (By.ID, "app_key")
-    app_cert_loc = (By.ID, "app_setcert")
-    otherParams_loc = (By.ID, "tenant_params")
-    ssl_loc = (By.ID, "sslSelect")
-    login_loc = (By.ID, "login")
-    title_loc = (By.XPATH, '//*[@id="showTable"]/thead/tr')
-    result_loc = (By.XPATH, '//*[@id="showTable"]/tbody')
-    busy_type = (By.XPATH, '//*[@id="funcSelect"]')
-    js_loc = (By.XPATH, '//*[@id="editor"]/div[2]/div')
-    run_loc = (By.XPATH, '//*[@id="run"]')
-
+class JsCommind(object):
     func_str = """
             function onCallback (response){
-                //ç»“æœé›†
+                //½á¹û¼¯
                 GTSEvent.event(DataEvent.ACCEPTDATA,response);
             }
             """
-
-    def __int__(self, webdriver):
-        super().__init__(webdriver)
-
-    @allure.step("æ‰“å¼€ç¯å¢ƒåœ°å€")
-    def open_env(self):
-        self.open_url(self.url)
-
-    @allure.step("é“¾æ¥æœåŠ¡")
-    def connect_server(self):
-        self.click(self.connect_loc)
-
-    @allure.step("è¾“å…¥ç”¨æˆ·id")
-    def input_userId(self, userId):
-        self.clear(self.userID_loc)
-        self.input_text(userId, self.userID_loc)
-
-    @allure.step("è¾“å…¥token")
-    def input_token(self, token):
-        self.clear(self.userToken_loc)
-        self.input_text(token, self.userToken_loc)
-
-    @allure.step("è¾“å…¥env")
-    def input_env(self, env):
-        self.clear(self.userEnv_loc)
-        self.input_text(env, self.userEnv_loc)
-
-    @allure.step("è¾“å…¥è®¤è¯ç¯å¢ƒ")
-    def input_auth_env(self, env):
-        self.clear(self.authEnv_loc)
-        self.input_text(env, self.authEnv_loc)
-
-    @allure.step("è¾“å…¥appkey")
-    def input_appkey(self, appkey):
-        self.clear(self.app_key_loc)
-        self.input_text(appkey, self.app_key_loc)
-
-    @allure.step("è¾“å…¥appsert")
-    def input_appsert(self, appsert):
-        self.clear(self.app_cert_loc)
-        self.input_text(appsert, self.app_cert_loc)
-
-    @allure.step("è¾“å…¥å…¶ä»–å‚æ•°")
-    def input_others_params(self, other_params):
-        self.clear(self.otherParams_loc)
-        self.input_text(other_params, self.otherParams_loc)
-
-    @allure.step("å¯ç”¨ssl")
-    def enable_ssl(self, value="use"):
-        """
-        æ˜¯å¦ä½¿ç”¨sslç™»å½•
-        :param value: use or none
-        :return: None
-        """
-        self.select_option(self.ssl_loc, value)
-
-    @allure.step("ä¸ä½¿ç”¨ssl")
-    def unable_ssl(self, value="none"):
-        """
-        æ˜¯å¦ä½¿ç”¨sslç™»å½•
-        :param value: use or none
-        :return: None
-        """
-        self.select_option(self.ssl_loc, value)
-
-    def choice_busy_by_index(self,index):
-        select = self.get_select_obj(self.busy_type)
-        select.select_by_index(index)
-
-    def choice_busy_by_txt(self, txt):
-        select = self.get_select_obj(self.busy_type)
-        select.select_by_visible_text(txt)
-
-
-
-
-    @allure.step("ç™»å½•")
-    def login(self):
-        self.click(self.login_loc)
-
-    @allure.step("å…³é—­æµè§ˆå™¨")
-    def close(self):
-        self.quit()
-
-    @allure.step("æ‰§è¡Œjså‘½ä»¤")
-    def exec_js_cmd(self, cmd):
-        self.exex_js(cmd)
-
-    def search_key_js(self, page_no, page_size, keyword, fields="sufSecuCode,secuAbbr",
-                      category="SDK_KEYWIZARD_CATEGORY_ALL", market="SDK_KEYWIZARD_MARKET_SHSZHK"):
-        cmd = self.func_str + """
-            let searchKeyword = NSDK.createRequestItem(SDK_REQUEST_KEYWIZARD);
-            searchKeyword.setDataCallback(onCallback);""" + f"""
-            searchKeyword.setCategory({category});""" + f"""
-            searchKeyword.setMarket({market});""" + f"""
-            searchKeyword.setFields("{fields}");""" + f"""
-            searchKeyword.setPageNo({page_no});
-            searchKeyword.setPageSize({page_size});
-            searchKeyword.match("{str(keyword)}");
-        """
-        return cmd
-
-    def get_search_result(self):
-        try:
-            keyword_text = self.get_element(self.result_loc).text
-        except ValueError:
-            log.log("æŸ¥è¯¢ç»“æœä¸ºç©ºï¼Œè¯·ç¨åï¼Œæ­£åœ¨é‡æ–°è¯·æ±‚ï¼ï¼ï¼")
-            keyword_text = self.get_element(self.result_loc).text
-        return keyword_text
-
-    def get_result_title(self):
-        try:
-            title = self.get_element(self.title_loc).text
-        except ValueError:
-            log.log("ç»“æœæ ‡é¢˜ä¸ºç©ºï¼Œè¯·ç¨åï¼Œæ­£åœ¨é‡æ–°è¯·æ±‚ï¼ï¼ï¼")
-            title = self.get_element(self.title_loc).text
-        return title
 
     def singel_stock_js(self, stocks: str, fields="Code,Name,SectorID,SectorName,MarginTrade,StockConnect"):
         cmd = self.func_str + """
@@ -168,15 +19,16 @@ class WebSDKPage(BasePage):
     def snapshotUpdowns_js(self, stock_code):
         snap_cmd = self.func_str + """
         let snapshotUpdowns = NSDK.createRequestItem(SDK_REQUEST_UPDOWNDISTRIBUTION);
-        //è®¾ç½®å›è°ƒå‡½æ•°
+        //ÉèÖÃ»Øµ÷º¯Êı
         snapshotUpdowns.setDataCallback(onCallback);""" + f"""
         snapshotUpdowns.setCode("{stock_code}");
-        //å¼€å§‹æŸ¥è¯¢
+        //¿ªÊ¼²éÑ¯
         snapshotUpdowns.request();
         """
         return snap_cmd
 
-    def kLine_js(self, stock_code="600000.SH", startDay="20201124", endDay="20210315", fields="$all", isSubcrible="true",
+    def kLine_js(self, stock_code="600000.SH", startDay="20201124", endDay="20210315", fields="$all",
+                 isSubcrible="true",
                  size=10):
         kline_cmd = self.func_str + """
             let kLine = NSDK.createRequestItem(SDK_REQUEST_KLINE);
@@ -189,7 +41,7 @@ class WebSDKPage(BasePage):
             kLine.setDateRange("{startDay}","{endDay}");
             kLine.setFields("{fields}");
             kLine.setSubscribe({isSubcrible});
-            //å¼€å§‹æŸ¥è¯¢
+            //¿ªÊ¼²éÑ¯
             kLine.request();
         """
         return kline_cmd
@@ -197,14 +49,14 @@ class WebSDKPage(BasePage):
     def order_js(self, stock_code="000001.SZ", limit=10, fields="all", isSubcrible=True):
         order_cmd = self.func_str + """
             let order  = NSDK.createRequestItem(SDK_REQUEST_ORDER);
-            //è®¾ç½®å›è°ƒå‡½æ•°
+            //ÉèÖÃ»Øµ÷º¯Êı
             order.setDataCallback(onCallback);
         """ + f"""
             order.setCode("{stock_code}");
             order.setLimit(-1,{limit});
             order.setFields("${fields}");
             order.setSubscribe({isSubcrible});
-            //å¼€å§‹æŸ¥è¯¢
+            //¿ªÊ¼²éÑ¯
             order.request();
         """
         return order_cmd
@@ -212,7 +64,7 @@ class WebSDKPage(BasePage):
     def step_order_js(self, stock_code='000001.SZ', limit=10, fields="all", isSubcrible=True):
         step_cmd = self.func_str + """
             let step  = NSDK.createRequestItem(SDK_REQUEST_STEP);
-            //è®¾ç½®å›è°ƒå‡½æ•°
+            //ÉèÖÃ»Øµ÷º¯Êı
             step.setDataCallback(onCallback);
         """ + f"""
             step.setCode("{stock_code}");
@@ -220,22 +72,21 @@ class WebSDKPage(BasePage):
             step.setLimit(-1,{limit});
             step.setFields("${fields}");
             step.setSubscribe({isSubcrible});
-            //å¼€å§‹æŸ¥è¯¢
+            //¿ªÊ¼²éÑ¯
             step.request();
         """
         return step_cmd
 
-    def ticket_js(self, stock_code='000001.SZ', limit=10, fields="$all", isSubcrible="true"):
-        "åˆ†ç¬”æˆäº¤"
+    def ticket_js(self, stock_code='000001.SZ', limit=10, fields="all", isSubcrible=True):
         step_cmd = self.func_str + """
             let tick  = NSDK.createRequestItem(SDK_REQUEST_TICK);
-            //è®¾ç½®å›è°ƒå‡½æ•°
+            //ÉèÖÃ»Øµ÷º¯Êı
             tick.setDataCallback(onCallback);""" + f"""
             tick.setCode("{stock_code}");
             tick.setLimit(-1,{limit});
-            tick.setFields("{fields}");
+            tick.setFields("${fields}");
             tick.setSubscribe({isSubcrible});
-            //å¼€å§‹æŸ¥è¯¢
+            //¿ªÊ¼²éÑ¯
             tick.request();
         """
         return step_cmd
@@ -243,27 +94,27 @@ class WebSDKPage(BasePage):
     def sort_js(self, stock_code='000001.SZ,600000.SH,688588.SH', limit=10, sortedFields="PercentChange"):
         sort_cmd = self.func_str + """
             let sort = NSDK.createRequestItem(SDK_REQUEST_SORT);
-            //è®¾ç½®å›è°ƒå‡½æ•°
+            //ÉèÖÃ»Øµ÷º¯Êı
             sort.setDataCallback(onCallback);""" + f"""
             sort.setCodes("{stock_code}");
             sort.setSectorId("101010199911000");
             sort.setSortField("{sortedFields}",SDK_SORTTYPE_DESC);
             sort.setLimit(-1,{limit});
-            //å¼€å§‹æŸ¥è¯¢
+            //¿ªÊ¼²éÑ¯
             sort.request();
         """
         return sort_cmd
 
-    def trend_js(self, stock_code='000001.SZ', days=1, fields="all", subcrible="true"):
+    def trend_js(self, stock_code='000001.SZ', days=1, fields="all", subcrible=True):
         trend_cmd = self.func_str + f"""
             let trend  = NSDK.createRequestItem(SDK_REQUEST_TREND);
-            //è®¾ç½®å›è°ƒå‡½æ•°
+            //ÉèÖÃ»Øµ÷º¯Êı
             trend.setDataCallback(onCallback);
             trend.setCode("{stock_code}");
             trend.setDays({days});
             trend.setFields("${fields}");
             trend.setSubscribe({subcrible});
-            //å¼€å§‹æŸ¥è¯¢
+            //¿ªÊ¼²éÑ¯
             trend.request();
         """
         return trend_cmd
@@ -271,12 +122,12 @@ class WebSDKPage(BasePage):
     def hisTrend_js(self, stock_code='000001.SZ', date="20210524", fields="all"):
         hisTrend_cmd = self.func_str + f"""
             let hisTrend  = NSDK.createRequestItem(SDK_REQUEST_HISTREND);
-            //è®¾ç½®å›è°ƒå‡½æ•°
+            //ÉèÖÃ»Øµ÷º¯Êı
             hisTrend.setDataCallback(onCallback);
             hisTrend.setCode("{stock_code}");
             hisTrend.setDate("{date}");
             hisTrend.setFields("${fields}");
-            //å¼€å§‹æŸ¥è¯¢
+            //¿ªÊ¼²éÑ¯
             hisTrend.request();
         """
         return hisTrend_cmd
@@ -284,12 +135,12 @@ class WebSDKPage(BasePage):
     def callAution_js(self, stock_code='000001.SZ', fields="all", subcrible=True):
         callAution_cmd = self.func_str + f"""
             let callAution  = NSDK.createRequestItem(SDK_REQUEST_CALLAUTION);
-            //è®¾ç½®å›è°ƒå‡½æ•°
+            //ÉèÖÃ»Øµ÷º¯Êı
             callAution.setDataCallback(onCallback);
             callAution.setCode("{stock_code}");
             callAution.setFields("${fields}");
             callAution.setSubscribe({subcrible});
-            //å¼€å§‹æŸ¥è¯¢
+            //¿ªÊ¼²éÑ¯
             callAution.request();
         """
         return callAution_cmd
@@ -297,11 +148,11 @@ class WebSDKPage(BasePage):
     def subscribe_js(self, stock_code='000001.SZ,000002.SZ', fields="code,last,change"):
         subscribe_cmd = self.func_str + f"""
             let subscribe   = NSDK.createRequestItem(SDK_REQUEST_QUOTESUBSCRIBE);
-            //è®¾ç½®å›è°ƒå‡½æ•°
+            //ÉèÖÃ»Øµ÷º¯Êı
             subscribe.setDataCallback(onCallback);
             subscribe.setCodes("{stock_code}");
             subscribe.setFields("{fields}");
-            //å¼€å§‹æŸ¥è¯¢
+            //¿ªÊ¼²éÑ¯
             subscribe.request();
         """
         return subscribe_cmd
@@ -309,13 +160,13 @@ class WebSDKPage(BasePage):
     def price_js(self, stock_code='000001.SZ,000002.SZ', limit=10, fields="all", subcrible=True):
         price_cmd = self.func_str + f"""
             let price   = NSDK.createRequestItem(SDK_REQUEST_PRICEDISTRIBUTION);
-            //è®¾ç½®å›è°ƒå‡½æ•°
+            //ÉèÖÃ»Øµ÷º¯Êı
             price.setDataCallback(onCallback);
             price.setCode("{stock_code}");
             price.setLimit(-1,{limit});
             price.setFields("${fields}");
             price.setSubscribe({subcrible});
-            //å¼€å§‹æŸ¥è¯¢
+            //¿ªÊ¼²éÑ¯
             price.request();
         """
         return price_cmd
@@ -323,12 +174,12 @@ class WebSDKPage(BasePage):
     def select_plate_js(self):
         sel_plate_cmd = self.func_str + """
             let requestCommon = NSDK.createRequestItem(SDK_REQUEST_REQUESTCOMMON);
-            //è®¾ç½®å›è°ƒå‡½æ•°
+            //ÉèÖÃ»Øµ÷º¯Êı
             requestCommon.setDataCallback(onCallback);
             requestCommon.setAPI(SDK_USERSECTOR_GET);
             requestCommon.setParam(SDK_USERSECTOR_USERID,"{{ userid }}");""" + f"""
             requestCommon.setParam(SDK_USERSECTOR_FIELDS,SDK_USERSECTOR_FIELDS_VALUE);
-            //å¼€å§‹æŸ¥è¯¢
+            //¿ªÊ¼²éÑ¯
             requestCommon.request();
         """
         return sel_plate_cmd
@@ -336,13 +187,13 @@ class WebSDKPage(BasePage):
     def add_plate_js(self, plate_name):
         add_plate_cmd = self.func_str + """
             let requestCommon = NSDK.createRequestItem(SDK_REQUEST_REQUESTCOMMON);
-            //è®¾ç½®å›è°ƒå‡½æ•°
+            //ÉèÖÃ»Øµ÷º¯Êı
             requestCommon.setDataCallback(onCallback);
             requestCommon.setAPI(SDK_USERSECTOR_ADD);
             requestCommon.setParam(SDK_USERSECTOR_FIELDS,"sectorid");
             requestCommon.setParam(SDK_USERSECTOR_USERID, "{{ userid }}");""" + f"""
-            requestCommon.setParam(SDK_USERSECTOR_SECTORNAME,'{plate_name}');//æ·»åŠ çš„æ¿å—åç§°
-            //å¼€å§‹æŸ¥è¯¢
+            requestCommon.setParam(SDK_USERSECTOR_SECTORNAME,'{plate_name}');//Ìí¼ÓµÄ°å¿éÃû³Æ
+            //¿ªÊ¼²éÑ¯
             requestCommon.request();
         """
         return add_plate_cmd
@@ -350,12 +201,12 @@ class WebSDKPage(BasePage):
     def del_plate_js(self, plate_id='1537874208340045824'):
         del_plate_cmd = self.func_str + """
             let requestCommon = NSDK.createRequestItem(SDK_REQUEST_REQUESTCOMMON);
-            //è®¾ç½®å›è°ƒå‡½æ•°
+            //ÉèÖÃ»Øµ÷º¯Êı
             requestCommon.setDataCallback(onCallback);
             requestCommon.setAPI(SDK_USERSECTOR_DELETE);
             requestCommon.setParam(SDK_USERSECTOR_USERID, "{{ userid }}");""" + f"""
-            requestCommon.setParam(SDK_USERSECTOR_SECTORID, "{plate_id}");//åˆ é™¤çš„æ¿å—id
-            //å¼€å§‹æŸ¥è¯¢
+            requestCommon.setParam(SDK_USERSECTOR_SECTORID, "{plate_id}");//É¾³ıµÄ°å¿éid
+            //¿ªÊ¼²éÑ¯
             requestCommon.request();
         """
         return del_plate_cmd
@@ -363,13 +214,13 @@ class WebSDKPage(BasePage):
     def rename_plate_js(self, new_name, plate_id='1537874208340045824'):
         rename_plate_cmd = self.func_str + """
             let requestCommon = NSDK.createRequestItem(SDK_REQUEST_REQUESTCOMMON);
-            //è®¾ç½®å›è°ƒå‡½æ•°
+            //ÉèÖÃ»Øµ÷º¯Êı
             requestCommon.setDataCallback(onCallback);
             requestCommon.setAPI(SDK_USERSECTOR_EDIT);
             requestCommon.setParam(SDK_USERSECTOR_USERID, "{{ userid }}");""" + f"""
-            requestCommon.setParam(SDK_USERSECTOR_SECTORID, "{plate_id}");//æ¿å—id
+            requestCommon.setParam(SDK_USERSECTOR_SECTORID, "{plate_id}");//°å¿éid
             requestCommon.setParam(SDK_USERSECTOR_SECTORNAME, '{new_name}');
-            //å¼€å§‹æŸ¥è¯¢
+            //¿ªÊ¼²éÑ¯
             requestCommon.request();
         """
         return rename_plate_cmd
@@ -377,13 +228,13 @@ class WebSDKPage(BasePage):
     def move_plate_js(self, index=0, plate_id='1537874208340045824'):
         move_plate_cmd = self.func_str + """
             let requestCommon = NSDK.createRequestItem(SDK_REQUEST_REQUESTCOMMON);
-            //è®¾ç½®å›è°ƒå‡½æ•°
+            //ÉèÖÃ»Øµ÷º¯Êı
             requestCommon.setDataCallback(onCallback);
             requestCommon.setAPI(SDK_USERSECTOR_MOVE);
             requestCommon.setParam(SDK_USERSECTOR_USERID, "{{ userid }}");""" + f"""
-            requestCommon.setParam(SDK_USERSECTOR_SECTORID, "{plate_id}");//ç§»åŠ¨çš„æ¿å—
-            requestCommon.setParam(SDK_USERSECTOR_TARGETINDEX, {index});//ç§»åŠ¨åˆ°çš„ä¸‹æ ‡ 0å¼€å§‹
-            //å¼€å§‹æŸ¥è¯¢
+            requestCommon.setParam(SDK_USERSECTOR_SECTORID, "{plate_id}");//ÒÆ¶¯µÄ°å¿é
+            requestCommon.setParam(SDK_USERSECTOR_TARGETINDEX, {index});//ÒÆ¶¯µ½µÄÏÂ±ê 0¿ªÊ¼
+            //¿ªÊ¼²éÑ¯
             requestCommon.request();
         """
         return move_plate_cmd
@@ -391,13 +242,13 @@ class WebSDKPage(BasePage):
     def search_mystock_js(self, plate_id='1537874208340045824', fields='secucode'):
         search_mystock_cmd = self.func_str + """
             let requestCommon = NSDK.createRequestItem(SDK_REQUEST_REQUESTCOMMON);
-            //è®¾ç½®å›è°ƒå‡½æ•°
+            //ÉèÖÃ»Øµ÷º¯Êı
             requestCommon.setDataCallback(onCallback);
             requestCommon.setAPI(SDK_USERSECURITY_GET);
             requestCommon.setParam(SDK_USERSECURITY_USERID,"{{ userid }}");""" + f"""
-            requestCommon.setParam(SDK_USERSECURITY_SECTORID,"{plate_id}");//è¢«æŸ¥è¯¢æ¿å—çš„id
-            requestCommon.setParam("fields","{fields}");//æŸ¥è¯¢å­—æ®µ
-            //å¼€å§‹æŸ¥è¯¢
+            requestCommon.setParam(SDK_USERSECURITY_SECTORID,"{plate_id}");//±»²éÑ¯°å¿éµÄid
+            requestCommon.setParam("fields","{fields}");//²éÑ¯×Ö¶Î
+            //¿ªÊ¼²éÑ¯
             requestCommon.request();
         """
         return search_mystock_cmd
@@ -406,12 +257,12 @@ class WebSDKPage(BasePage):
         add_mystock_cmd = self.func_str + """
             let requestCommon = NSDK.createRequestItem(SDK_REQUEST_REQUESTCOMMON);
             requestCommon.setDataCallback(onCallback);
-            //è®¾ç½®å›è°ƒå‡½æ•°
+            //ÉèÖÃ»Øµ÷º¯Êı
             requestCommon.setAPI(SDK_USERSECURITY_ADD);
             requestCommon.setParam(SDK_USERSECURITY_USERID, "{{ userid }}");""" + f"""
-            requestCommon.setParam(SDK_USERSECURITY_SECTORID, "{plate_id}");//æ·»åŠ è‚¡ç¥¨çš„æ¿å—id
-            requestCommon.setParam(SDK_USERSECURITY_SECURITYS, "{stock}");//æ·»åŠ çš„è‚¡ç¥¨ä»£ç 
-            //å¼€å§‹æŸ¥è¯¢
+            requestCommon.setParam(SDK_USERSECURITY_SECTORID, "{plate_id}");//Ìí¼Ó¹ÉÆ±µÄ°å¿éid
+            requestCommon.setParam(SDK_USERSECURITY_SECURITYS, "{stock}");//Ìí¼ÓµÄ¹ÉÆ±´úÂë
+            //¿ªÊ¼²éÑ¯
             requestCommon.request();
         """
         return add_mystock_cmd
