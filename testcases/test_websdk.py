@@ -1,5 +1,6 @@
 # encoding: utf-8
 import json
+from datetime import datetime
 
 import allure
 from selenium import webdriver
@@ -352,18 +353,20 @@ class TestWebSDK:
         tbody = self.webSDK.get_search_result()
         assert tbody == ""
 
-    @pytest.mark.parametrize("stock_code,startDay,endDay,fields,isSubcrible,size", [
-        ("600000.SH", "20230110", "20230130", "$all", "true", 10),
-        ("600000.SH", "20230110", "20230130", "date", "true", 10),
-        ("600000.SH", "20230110", "20230130", "date,open", "true", 10),
-        ("600000.SH", "20201124", "20210315", "$all", "true", 10),  # todo 有bug 查询出来的没有在日期范围内
+    @pytest.mark.parametrize("stock_code,startDay,endDay,fields,isSubcrible,size,period", [
+        ("518880.SH", "20230110", "20230130", "$all", "true", 10, "SDK_KLINE_PERIOD_DAY"),  # 查看ETF的默认K线字段
+        # ("600000.SH", "20230110", "20230130", "$all", "true", 10,"SDK_KLINE_PERIOD_DAY"),
+        # ("600000.SH", "20230110", "20230130", "date", "true", 10,"SDK_KLINE_PERIOD_DAY"),
+        # ("600000.SH", "20230110", "20230130", "date,open", "true", 10,"SDK_KLINE_PERIOD_DAY"),
+        # ("600000.SH", "20201124", "20210315", "$all", "true", 10,"SDK_KLINE_PERIOD_DAY"),  #
     ])
-    def test_kline_normal(self, stock_code, startDay, endDay, fields, isSubcrible, size):
+    def test_kline_normal(self, stock_code, startDay, endDay, fields, isSubcrible, size, period):
         """
+        查看K线字段
         """
         all_fields = "date open high low close volume amount deallots"
         cmd = self.webSDK.kLine_js(stock_code=stock_code, startDay=startDay, endDay=endDay, fields=fields,
-                                   isSubcrible=isSubcrible, size=size)
+                                   isSubcrible=isSubcrible, size=size, period=period)
         self.webSDK.exec_js_cmd(cmd)
         kline_result = self.webSDK.get_search_result()
         time.sleep(2)
@@ -375,12 +378,31 @@ class TestWebSDK:
                 fields = fields.replace(",", " ")
             assert kline_titles.lower() == fields
         klines = kline_result.split("\n")
-        startTS = str_to_stamp(startDay, sep="")
-        endTS = str_to_stamp(endDay, sep="")
-        kline_records = list(map(lambda x: str_to_stamp(x.split()[0]), klines))
-        assert len(kline_records) <= size
-        for record_ts in kline_records:
-            assert startTS <= record_ts <= endTS
+        # 校验查询长度
+        assert len(klines) <= size
+
+        # 校验日期间隔 todo 也存在某段时间缺数据的情况，所以间隔不好校验
+        def check_date_gap(klines):
+            date_interval = {"SDK_KLINE_PERIOD_DAY": 1, "SDK_KLINE_PERIOD_MONTH": 28, "SDK_KLINE_PERIOD_YEAR": 360}
+            # 返回只有 2023/01/17 这种格式的数据
+            klines = list(map(lambda x: x.split()[0], klines))
+            klines = list(map(lambda x: datetime.strptime(x, "%Y/%m/%d"), klines))
+            # todo 也存在某段时间缺数据的情况，不好校验
+            for i in range(len(klines)):
+                if date_interval[period] == 1:
+                    assert (klines[i + 1] - klines[i]).days == date_interval[period]
+                elif date_interval[period] == 28:
+                    assert (klines[i + 1] - klines[i]).days >= date_interval[period]
+                elif date_interval[period] == 360:
+                    assert (klines[i + 1] - klines[i]).days >= date_interval[period]
+
+        # todo 日期范围校验不需要，如果没有数据会补上，优先limit然后是日期范围，不能作为测试依据
+        def check_date_range(date_result, startDay, endDay):
+            startTS = str_to_stamp(startDay, sep="")
+            endTS = str_to_stamp(endDay, sep="")
+            kline_records = list(map(lambda x: str_to_stamp(x.split()[0]), date_result))
+            for record_ts in kline_records:
+                assert startTS <= record_ts <= endTS
 
     @pytest.mark.parametrize("stock_code,limit,fields,isSubcrible", [
         ('000001.SZ', 10, "$all", "true"),

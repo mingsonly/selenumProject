@@ -102,16 +102,13 @@ class WebSDKPage(BasePage):
         """
         self.select_option(self.ssl_loc, value)
 
-    def choice_busy_by_index(self,index):
+    def choice_busy_by_index(self, index):
         select = self.get_select_obj(self.busy_type)
         select.select_by_index(index)
 
     def choice_busy_by_txt(self, txt):
         select = self.get_select_obj(self.busy_type)
         select.select_by_visible_text(txt)
-
-
-
 
     @allure.step("登录")
     def login(self):
@@ -176,16 +173,17 @@ class WebSDKPage(BasePage):
         """
         return snap_cmd
 
-    def kLine_js(self, stock_code="600000.SH", startDay="20201124", endDay="20210315", fields="$all", isSubcrible="true",
-                 size=10):
+    def kLine_js(self, stock_code="600000.SH", period="SDK_KLINE_PERIOD_DAY", cqMode="SDK_KLINE_CQMODE_FORWARD",
+                 orderType=-1, startDay="20201124", endDay="20210315", fields="$all",
+                 isSubcrible="true", size=10):
         kline_cmd = self.func_str + """
             let kLine = NSDK.createRequestItem(SDK_REQUEST_KLINE);
             kLine.setDataCallback(onCallback);
         """ + f"""
             kLine.setCode("{stock_code}");
-            kLine.setPeriod(SDK_KLINE_PERIOD_DAY);
-            kLine.setCqMode(SDK_KLINE_CQMODE_FORWARD);
-            kLine.setLimit(-1,{size});
+            kLine.setPeriod({str(period)});
+            kLine.setCqMode({str(cqMode)});
+            kLine.setLimit({orderType},{size});
             kLine.setDateRange("{startDay}","{endDay}");
             kLine.setFields("{fields}");
             kLine.setSubscribe({isSubcrible});
