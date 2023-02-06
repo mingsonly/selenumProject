@@ -383,10 +383,21 @@ class TestWebSDK:
             assert startTS <= record_ts <= endTS
 
     @pytest.mark.parametrize("stock_code,limit,fields,isSubcrible", [
-        # ('000001.SZ', 10, "$all", "true"),
-        # ('000001.SZ', 10, "time,price", "true"),
-        # ('000001.SZ', 10, "time", "true"),
-        ('000001.SZ', 10, "deallots", "true"),
+        ('000001.SZ', 10, "$all", "true"),
+        ('00001.HK', 200, "$all", "true"),
+        ('131800.SZ', 200, "$all", "true"),  # 期权
+        ('131800.SZ', 200, "$all", "true"),  # 国债逆回购
+        ('123002.SZ', 10, "$all", "true"),  # 可转债
+        ('200011.SZ', 10, "$all", "true"),  # 债券（除可转债）
+        ('200011.SZ', 10, "$all", "true"),  # B股
+        ('159602.SZ', 10, "$all", "true"),  # ETF基金
+        ('180201.SZ', 10, "$all", "true"),  # 基金
+        ('399481.SZ', 10, "$all", "true"),  # 债券指数
+        ('399001.SZ', 10, "$all", "true"),  # 指数
+        ('000001.SZ', 10, "$all", "true"),  # 股票
+        ('204001.SH', 200, "$all", "true"),  # 国债逆回购
+        ('10003669.SH', 200, "$all", "true"),  # 期权 todo 股票代码有问题 NKHF-24
+        ('000001.SZ', 10, "deallots", "true"),  # 期权
     ])
     def test_split_the_deal(self, stock_code, limit, fields, isSubcrible):
         """
