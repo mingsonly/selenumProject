@@ -1,7 +1,8 @@
-#coding=utf-8
+# coding=utf-8
 import pytest
 import os
 import time
+
 
 # from util.environment import Environment
 # from util.shell import Shell
@@ -24,15 +25,16 @@ import time
 #     except:
 #         log.error("Html报告生成失败，确定已经安装了Allure-Commandline")
 
-def run(file):
-    args = ['-s', '-q']
-    pytest.main(args)
+def run(file="test_websdk.py"):
+    pytest.main(['--alluredir', './reports', file])
+
 
 if __name__ == '__main__':
-    # run()
-    path = os.path.dirname(__file__)
-    for _, _, files in os.walk(path):
-        for file in files:
-            if file.startswith("test_"):
-                run(file)
-    os.system("allure serve ../reports")
+    run()
+    # path = os.path.dirname(__file__)
+    # for _, _, files in os.walk(path):
+    #     for file in files:
+    #         if file.startswith("test_"):
+    #             run(file)
+    time.sleep(2)
+    os.system("allure serve ./reports")
