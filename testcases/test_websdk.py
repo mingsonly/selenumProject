@@ -449,17 +449,19 @@ class TestWebSDK:
         3,校验结果: 长度，字段显示，订阅后数据变化
         """
         self.webSDK.choice_busy_by_txt("分笔成交")
+        # 自定义js cmd变量
         cmd = self.webSDK.ticket_js(stock_code=stock_code, limit=limit, fields=fields, isSubcrible=isSubcrible)
+        # web端设置自定义的js命令字符串
         self.webSDK.set_cmd_display(cmd)
         self.webSDK.exec_js_cmd(cmd)
         record = self.webSDK.get_search_result()
         # 3.1 校验长度
         records = record.split("\n")
         assert len(records) <= limit
+
         # 3.2 校验字段显示
         expect_titles = "time,price,volume,amount,deallots" if fields == "$all" else fields
         real_titles = self.webSDK.get_result_title()
-
         processed_titles = self.webSDK.process_titles(real_titles)
         assert expect_titles == processed_titles
 

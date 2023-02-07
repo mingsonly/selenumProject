@@ -100,10 +100,12 @@ class WebSDKPage(BasePage):
         """
         self.select_option(self.ssl_loc, value)
 
+    @allure.step("选择业务类型（下标）")
     def choice_busy_by_index(self, index):
         select = self.get_select_obj(self.busy_type)
         select.select_by_index(index)
 
+    @allure.step("选择业务类型（文本）")
     def choice_busy_by_txt(self, txt):
         select = self.get_select_obj(self.busy_type)
         select.select_by_visible_text(txt)
@@ -120,12 +122,15 @@ class WebSDKPage(BasePage):
     def exec_js_cmd(self, cmd):
         self.exex_js(cmd)
 
+    @allure.step("设置JS命令")
     def set_cmd_display(self, cmd):
         self.exex_js(f"editor.setValue(`{cmd}`)")
 
+    @allure.step("获取JS命令")
     def get_cmd_display(self):
         self.exex_js("editor.getValue()")
 
+    @allure.step("处理查询结果集合字段（转小写-->空格替换成逗号）")
     def process_titles(self, titles):
         # 转小写并空格替换成逗号
         lower_titles = titles.lower()
