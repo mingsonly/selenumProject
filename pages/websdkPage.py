@@ -123,11 +123,11 @@ class WebSDKPage(BasePage):
         self.exex_js(cmd)
 
     @allure.step("设置JS命令")
-    def set_cmd_display(self, cmd):
+    def set_js_value(self, cmd):
         self.exex_js(f"editor.setValue(`{cmd}`)")
 
     @allure.step("获取JS命令")
-    def get_cmd_display(self):
+    def get_js_value(self):
         self.exex_js("editor.getValue()")
 
     @allure.step("处理查询结果集合字段（转小写-->空格替换成逗号）")
