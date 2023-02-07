@@ -358,14 +358,14 @@ class TestWebSDK:
         ("900901.SH", "20230110", "20230130", "$all", "true", 10, "SDK_KLINE_PERIOD_DAY"),  # 查看B股的默认日K线
         ("510010.SH", "20230110", "20230130", "$all", "true", 10, "SDK_KLINE_PERIOD_DAY"),  # 查看ETF的默认日K线
         ("010303.SH", "20230110", "20230130", "$all", "true", 10, "SDK_KLINE_PERIOD_DAY"),  # 查看债券的默认日K线
-        ("600000.SH", "20230110", "20230130", "$all", "true", 10, "SDK_KLINE_PERIOD_MONTH"),  # 查看A股的默认K线字段
-        ("900901.SH", "20230110", "20230130", "$all", "true", 10, "SDK_KLINE_PERIOD_MONTH"),  # 查看B股的默认K线字段
-        ("510010.SH", "20230110", "20230130", "$all", "true", 10, "SDK_KLINE_PERIOD_MONTH"),  # 查看ETF的默认K线字段
-        ("010303.SH", "20230110", "20230130", "$all", "true", 10, "SDK_KLINE_PERIOD_MONTH"),  # 查看债券的默认K线字段
-        ("600000.SH", "20230110", "20230130", "$all", "true", 10, "SDK_KLINE_PERIOD_YEAR"),  # 查看A股的默认K线字段
-        ("900901.SH", "20230110", "20230130", "$all", "true", 10, "SDK_KLINE_PERIOD_YEAR"),  # 查看B股的默认K线字段
-        ("510010.SH", "20230110", "20230130", "$all", "true", 10, "SDK_KLINE_PERIOD_YEAR"),  # 查看ETF的默认K线字段
-        ("010303.SH", "20230110", "20230130", "$all", "true", 10, "SDK_KLINE_PERIOD_YEAR"),  # 查看债券的默认K线字段
+        ("600000.SH", "20230110", "20230130", "$all", "true", 10, "SDK_KLINE_PERIOD_MONTH"),  # 查看A股的月K线字段
+        ("900901.SH", "20230110", "20230130", "$all", "true", 10, "SDK_KLINE_PERIOD_MONTH"),  # 查看B股的月K线字段
+        ("510010.SH", "20230110", "20230130", "$all", "true", 10, "SDK_KLINE_PERIOD_MONTH"),  # 查看ETF的月K线字段
+        ("010303.SH", "20230110", "20230130", "$all", "true", 10, "SDK_KLINE_PERIOD_MONTH"),  # 查看债券的月K线字段
+        ("600000.SH", "20230110", "20230130", "$all", "true", 10, "SDK_KLINE_PERIOD_YEAR"),  # 查看A股的年K线字段
+        ("900901.SH", "20230110", "20230130", "$all", "true", 10, "SDK_KLINE_PERIOD_YEAR"),  # 查看B股的年K线字段
+        ("510010.SH", "20230110", "20230130", "$all", "true", 10, "SDK_KLINE_PERIOD_YEAR"),  # 查看ETF的年K线字段
+        ("010303.SH", "20230110", "20230130", "$all", "true", 10, "SDK_KLINE_PERIOD_YEAR"),  # 查看债券的年K线字段
         # ("600000.SH", "20230110", "20230130", "$all", "true", 10,"SDK_KLINE_PERIOD_DAY"),
         # ("600000.SH", "20230110", "20230130", "date", "true", 10,"SDK_KLINE_PERIOD_DAY"),
         # ("600000.SH", "20230110", "20230130", "date,open", "true", 10,"SDK_KLINE_PERIOD_DAY"),
@@ -429,7 +429,6 @@ class TestWebSDK:
         ('399001.SZ', 10, "$all", "true"),  # 指数
         ('000001.SZ', 10, "$all", "true"),  # 股票
         ('204001.SH', 200, "$all", "true"),  # 国债逆回购
-        ('10003669.SH', 200, "$all", "true"),  # 期权 todo 股票代码有问题 NKHF-24
         ('000001.SZ', 10, "deallots", "true"),  # 期权
     ])
     def test_split_the_deal(self, stock_code, limit, fields, isSubcrible):
@@ -438,28 +437,22 @@ class TestWebSDK:
         2,编辑js脚本并执行
         3,校验结果: 长度，字段显示，订阅后数据变化
         """
-        # self.webSDK.choice_busy_by_index(1)
         self.webSDK.choice_busy_by_txt("分笔成交")
         cmd = self.webSDK.ticket_js(stock_code=stock_code, limit=limit, fields=fields, isSubcrible=isSubcrible)
         self.webSDK.exec_js_cmd(cmd)
         record = self.webSDK.get_search_result()
-        print(record)
         # 3.1 校验长度
         records = record.split("\n")
         assert len(records) <= limit
-
         # 3.2 校验字段显示
-        if fields == "$all":
-            pre_titles = "time,price,volume,amount,deallots"
-        else:
-            pre_titles = fields
+        expect_titles = "time,price,volume,amount,deallots" if fields == "$all" else fields
         real_titles = self.webSDK.get_result_title()
         # 转小写并空格替换成逗号
-        real_titles = real_titles.lower()
-        real_titles = real_titles.replace(" ", ",")
-        assert pre_titles == real_titles
-
-        # 3.3 校验订阅后字段更新
+        lower_titles = real_titles.lower()
+        processed_titles = lower_titles.replace(" ", ",")
+        assert expect_titles == processed_titles
+        # 3.3 校验订阅后字段更新数据，不订阅不更新数据
+        time.sleep(6)
         new_record = self.webSDK.get_search_result()
         if isSubcrible:
             assert new_record != records

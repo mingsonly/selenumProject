@@ -29,8 +29,6 @@ class WebSDKPage(BasePage):
     result_loc = (By.XPATH, '//*[@id="showTable"]/tbody')
     busy_type = (By.XPATH, '//*[@id="funcSelect"]')
     js_loc = (By.XPATH, '//*[@id="editor"]/div[2]/div')
-    run_loc = (By.XPATH, '//*[@id="run"]')
-
     func_str = """
             function onCallback (response){
                 //结果集
