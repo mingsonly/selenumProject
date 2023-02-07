@@ -120,6 +120,18 @@ class WebSDKPage(BasePage):
     def exec_js_cmd(self, cmd):
         self.exex_js(cmd)
 
+    def set_cmd_display(self, cmd):
+        self.exex_js(f"editor.setValue(`{cmd}`)")
+
+    def get_cmd_display(self):
+        self.exex_js("editor.getValue()")
+
+    def process_titles(self, titles):
+        # 转小写并空格替换成逗号
+        lower_titles = titles.lower()
+        processed_titles = lower_titles.replace(" ", ",")
+        return processed_titles
+
     def search_key_js(self, page_no, page_size, keyword, fields="sufSecuCode,secuAbbr",
                       category="SDK_KEYWIZARD_CATEGORY_ALL", market="SDK_KEYWIZARD_MARKET_SHSZHK"):
         cmd = self.func_str + """

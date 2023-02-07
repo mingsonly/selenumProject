@@ -155,6 +155,7 @@ class TestWebSDK:
         :return: No
         """
         seachKeyWord_cmd = self.webSDK.search_key_js(pageNo, pageSize, keyword, fields)
+        self.webSDK.set_cmd_display(seachKeyWord_cmd)
         self.webSDK.exec_js_cmd(seachKeyWord_cmd)
         time.sleep(6)
         titles = self.webSDK.get_result_title()
@@ -180,6 +181,7 @@ class TestWebSDK:
         :return: No
         """
         seachKeyWord_cmd = self.webSDK.search_key_js(pageNo, pageSize, keyword, fields)
+        self.webSDK.set_cmd_display(seachKeyWord_cmd)
         self.webSDK.exec_js_cmd(seachKeyWord_cmd)
         time.sleep(6)
         titles = self.webSDK.get_result_title()
@@ -205,6 +207,7 @@ class TestWebSDK:
         :return: No
         """
         seachKeyWord_cmd = self.webSDK.search_key_js(pageNo, pageSize, keyword, fields)
+        self.webSDK.set_cmd_display(seachKeyWord_cmd)
         self.webSDK.exec_js_cmd(seachKeyWord_cmd)
         time.sleep(6)
         titles = self.webSDK.get_result_title()
@@ -231,6 +234,7 @@ class TestWebSDK:
         :return: No
         """
         seachKeyWord_cmd = self.webSDK.search_key_js(pageNo, pageSize, keyword, fields)
+        self.webSDK.set_cmd_display(seachKeyWord_cmd)
         self.webSDK.exec_js_cmd(seachKeyWord_cmd)
         time.sleep(6)
         tbody = self.webSDK.get_search_result()
@@ -249,6 +253,7 @@ class TestWebSDK:
         :return: No
         """
         seachKeyWord_cmd = self.webSDK.search_key_js(pageNo, pageSize, keyword, fields)
+        self.webSDK.set_cmd_display(seachKeyWord_cmd)
         self.webSDK.exec_js_cmd(seachKeyWord_cmd)
         time.sleep(6)
         titles = self.webSDK.get_result_title()
@@ -287,6 +292,7 @@ class TestWebSDK:
         :return: No
         """
         seachKeyWord_cmd = self.webSDK.search_key_js(pageNo, pageSize, keyword, fields)
+        self.webSDK.set_cmd_display(seachKeyWord_cmd)
         self.webSDK.exec_js_cmd(seachKeyWord_cmd)
         time.sleep(6)
         titles = self.webSDK.get_result_title()
@@ -304,6 +310,7 @@ class TestWebSDK:
     ])
     def test_single_stock(self, stock, fields):
         single_stock_cmd = self.webSDK.singel_stock_js(stocks=stock, fields=fields)
+        self.webSDK.set_cmd_display(single_stock_cmd)
         self.webSDK.exec_js_cmd(single_stock_cmd)
         time.sleep(1)
         tbody = self.webSDK.get_search_result()
@@ -324,8 +331,9 @@ class TestWebSDK:
         ("600123.SH,600000.SH", ""),  # 个股信息查询字段为空
     ])
     def test_single_stock_err(self, stock, fields):
-        single_stock_cmd = self.webSDK.singel_stock_js(stocks=stock, fields=fields)
-        self.webSDK.exec_js_cmd(single_stock_cmd)
+        cmd = self.webSDK.singel_stock_js(stocks=stock, fields=fields)
+        self.webSDK.set_cmd_display(cmd)
+        self.webSDK.exec_js_cmd(cmd)
         time.sleep(1)
         tbody = self.webSDK.get_search_result()
         assert tbody == ""
@@ -335,6 +343,7 @@ class TestWebSDK:
     ])
     def test_snapshotUpdowns(self, stock):
         cmd = self.webSDK.snapshotUpdowns_js(stock_code=stock)
+        self.webSDK.set_cmd_display(cmd)
         self.webSDK.exec_js_cmd(cmd)
         time.sleep(1)
         tbody = self.webSDK.get_search_result()
@@ -348,6 +357,7 @@ class TestWebSDK:
     ])
     def test_snapshotUpdowns_err(self, stock):
         cmd = self.webSDK.snapshotUpdowns_js(stock_code=stock)
+        self.webSDK.set_cmd_display(cmd)
         self.webSDK.exec_js_cmd(cmd)
         time.sleep(1)
         tbody = self.webSDK.get_search_result()
@@ -378,6 +388,7 @@ class TestWebSDK:
         all_fields = "date open high low close volume amount deallots"
         cmd = self.webSDK.kLine_js(stock_code=stock_code, startDay=startDay, endDay=endDay, fields=fields,
                                    isSubcrible=isSubcrible, size=size, period=period)
+        self.webSDK.set_cmd_display(cmd)
         self.webSDK.exec_js_cmd(cmd)
         kline_result = self.webSDK.get_search_result()
         time.sleep(2)
@@ -439,6 +450,7 @@ class TestWebSDK:
         """
         self.webSDK.choice_busy_by_txt("分笔成交")
         cmd = self.webSDK.ticket_js(stock_code=stock_code, limit=limit, fields=fields, isSubcrible=isSubcrible)
+        self.webSDK.set_cmd_display(cmd)
         self.webSDK.exec_js_cmd(cmd)
         record = self.webSDK.get_search_result()
         # 3.1 校验长度
@@ -447,10 +459,10 @@ class TestWebSDK:
         # 3.2 校验字段显示
         expect_titles = "time,price,volume,amount,deallots" if fields == "$all" else fields
         real_titles = self.webSDK.get_result_title()
-        # 转小写并空格替换成逗号
-        lower_titles = real_titles.lower()
-        processed_titles = lower_titles.replace(" ", ",")
+
+        processed_titles = self.webSDK.process_titles(real_titles)
         assert expect_titles == processed_titles
+
         # 3.3 校验订阅后字段更新数据，不订阅不更新数据
         time.sleep(6)
         new_record = self.webSDK.get_search_result()
