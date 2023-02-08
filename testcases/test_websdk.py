@@ -472,3 +472,15 @@ class TestWebSDK:
             assert new_record != records
         else:
             assert new_record == records
+
+
+
+
+    def test_quota_subscribe(self):
+        self.webSDK.choice_busy_by_txt("分笔成交")
+        # 自定义js cmd变量
+        cmd = self.webSDK.ticket_js(stock_code=stock_code, limit=limit, fields=fields, isSubcrible=isSubcrible)
+        # web端设置自定义的js命令字符串
+        self.webSDK.set_js_value(cmd)
+        self.webSDK.exec_js_cmd(cmd)
+        record = self.webSDK.get_search_result()

@@ -168,6 +168,7 @@ class WebSDKPage(BasePage):
         return title
 
     def singel_stock_js(self, stocks: str, fields="Code,Name,SectorID,SectorName,MarginTrade,StockConnect"):
+        """个股信息"""
         cmd = self.func_str + """
             let stockInformation = NSDK.createRequestItem(SDK_REQUEST_NSTOCKINFO);
             stockInformation.setDataCallback(onCallback);""" + f"""
@@ -178,6 +179,7 @@ class WebSDKPage(BasePage):
         return cmd
 
     def snapshotUpdowns_js(self, stock_code):
+        """涨价跌数"""
         snap_cmd = self.func_str + """
         let snapshotUpdowns = NSDK.createRequestItem(SDK_REQUEST_UPDOWNDISTRIBUTION);
         //设置回调函数
@@ -191,6 +193,7 @@ class WebSDKPage(BasePage):
     def kLine_js(self, stock_code="600000.SH", period="SDK_KLINE_PERIOD_DAY", cqMode="SDK_KLINE_CQMODE_FORWARD",
                  orderType=-1, startDay="20201124", endDay="20210315", fields="$all",
                  isSubcrible="true", size=10):
+        """K线数据"""
         kline_cmd = self.func_str + """
             let kLine = NSDK.createRequestItem(SDK_REQUEST_KLINE);
             kLine.setDataCallback(onCallback);
@@ -208,6 +211,7 @@ class WebSDKPage(BasePage):
         return kline_cmd
 
     def order_js(self, stock_code="000001.SZ", limit=10, fields="all", isSubcrible=True):
+        """逐笔委托"""
         order_cmd = self.func_str + """
             let order  = NSDK.createRequestItem(SDK_REQUEST_ORDER);
             //设置回调函数
@@ -223,6 +227,7 @@ class WebSDKPage(BasePage):
         return order_cmd
 
     def step_order_js(self, stock_code='000001.SZ', limit=10, fields="all", isSubcrible=True):
+        """逐笔成交"""
         step_cmd = self.func_str + """
             let step  = NSDK.createRequestItem(SDK_REQUEST_STEP);
             //设置回调函数
@@ -254,6 +259,7 @@ class WebSDKPage(BasePage):
         return step_cmd
 
     def sort_js(self, stock_code='000001.SZ,600000.SH,688588.SH', limit=10, sortedFields="PercentChange"):
+        """板块排序"""
         sort_cmd = self.func_str + """
             let sort = NSDK.createRequestItem(SDK_REQUEST_SORT);
             //设置回调函数
@@ -267,7 +273,9 @@ class WebSDKPage(BasePage):
         """
         return sort_cmd
 
+
     def trend_js(self, stock_code='000001.SZ', days=1, fields="all", subcrible="true"):
+        """分时数据"""
         trend_cmd = self.func_str + f"""
             let trend  = NSDK.createRequestItem(SDK_REQUEST_TREND);
             //设置回调函数
@@ -282,6 +290,7 @@ class WebSDKPage(BasePage):
         return trend_cmd
 
     def hisTrend_js(self, stock_code='000001.SZ', date="20210524", fields="all"):
+        """历史分时"""
         hisTrend_cmd = self.func_str + f"""
             let hisTrend  = NSDK.createRequestItem(SDK_REQUEST_HISTREND);
             //设置回调函数
@@ -295,6 +304,7 @@ class WebSDKPage(BasePage):
         return hisTrend_cmd
 
     def callAution_js(self, stock_code='000001.SZ', fields="all", subcrible=True):
+        """集合竞价"""
         callAution_cmd = self.func_str + f"""
             let callAution  = NSDK.createRequestItem(SDK_REQUEST_CALLAUTION);
             //设置回调函数
@@ -308,6 +318,7 @@ class WebSDKPage(BasePage):
         return callAution_cmd
 
     def subscribe_js(self, stock_code='000001.SZ,000002.SZ', fields="code,last,change"):
+        """行情订阅"""
         subscribe_cmd = self.func_str + f"""
             let subscribe   = NSDK.createRequestItem(SDK_REQUEST_QUOTESUBSCRIBE);
             //设置回调函数
@@ -320,6 +331,7 @@ class WebSDKPage(BasePage):
         return subscribe_cmd
 
     def price_js(self, stock_code='000001.SZ,000002.SZ', limit=10, fields="all", subcrible=True):
+        """分价统计"""
         price_cmd = self.func_str + f"""
             let price   = NSDK.createRequestItem(SDK_REQUEST_PRICEDISTRIBUTION);
             //设置回调函数
@@ -334,6 +346,7 @@ class WebSDKPage(BasePage):
         return price_cmd
 
     def select_plate_js(self):
+        """查询板块"""
         sel_plate_cmd = self.func_str + """
             let requestCommon = NSDK.createRequestItem(SDK_REQUEST_REQUESTCOMMON);
             //设置回调函数
@@ -347,6 +360,7 @@ class WebSDKPage(BasePage):
         return sel_plate_cmd
 
     def add_plate_js(self, plate_name):
+        """添加板块"""
         add_plate_cmd = self.func_str + """
             let requestCommon = NSDK.createRequestItem(SDK_REQUEST_REQUESTCOMMON);
             //设置回调函数
@@ -361,6 +375,7 @@ class WebSDKPage(BasePage):
         return add_plate_cmd
 
     def del_plate_js(self, plate_id='1537874208340045824'):
+        """删除板块"""
         del_plate_cmd = self.func_str + """
             let requestCommon = NSDK.createRequestItem(SDK_REQUEST_REQUESTCOMMON);
             //设置回调函数
@@ -374,6 +389,7 @@ class WebSDKPage(BasePage):
         return del_plate_cmd
 
     def rename_plate_js(self, new_name, plate_id='1537874208340045824'):
+        """修改板块名称"""
         rename_plate_cmd = self.func_str + """
             let requestCommon = NSDK.createRequestItem(SDK_REQUEST_REQUESTCOMMON);
             //设置回调函数
@@ -388,6 +404,7 @@ class WebSDKPage(BasePage):
         return rename_plate_cmd
 
     def move_plate_js(self, index=0, plate_id='1537874208340045824'):
+        """移动板块位置"""
         move_plate_cmd = self.func_str + """
             let requestCommon = NSDK.createRequestItem(SDK_REQUEST_REQUESTCOMMON);
             //设置回调函数
@@ -402,6 +419,7 @@ class WebSDKPage(BasePage):
         return move_plate_cmd
 
     def search_mystock_js(self, plate_id='1537874208340045824', fields='secucode'):
+        """查询自选股"""
         search_mystock_cmd = self.func_str + """
             let requestCommon = NSDK.createRequestItem(SDK_REQUEST_REQUESTCOMMON);
             //设置回调函数
@@ -416,6 +434,7 @@ class WebSDKPage(BasePage):
         return search_mystock_cmd
 
     def add_mystock_js(self, plate_id='1537874208340045824', stock='600000.SH'):
+        """添加自选股"""
         add_mystock_cmd = self.func_str + """
             let requestCommon = NSDK.createRequestItem(SDK_REQUEST_REQUESTCOMMON);
             requestCommon.setDataCallback(onCallback);
