@@ -226,7 +226,7 @@ class WebSDKPage(BasePage):
         """
         return order_cmd
 
-    def step_order_js(self, stock_code='000001.SZ', limit=10, fields="all", isWithdrawal="false", isSubcrible=True):
+    def step_order_js(self, stock_code='000001.SZ', limit=10, fields="$all", isWithdrawal="false", isSubcrible=True):
         """逐笔成交"""
         step_cmd = self.func_str + """
             let step  = NSDK.createRequestItem(SDK_REQUEST_STEP);
@@ -236,7 +236,7 @@ class WebSDKPage(BasePage):
             step.setCode("{stock_code}");
             step.setWithdrawal({isWithdrawal});
             step.setLimit(-1,{limit});
-            step.setFields("${fields}");
+            step.setFields("{fields}");
             step.setSubscribe({isSubcrible});
             //开始查询
             step.request();

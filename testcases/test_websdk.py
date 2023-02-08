@@ -474,7 +474,12 @@ class TestWebSDK:
             assert new_record == records
 
     @pytest.mark.parametrize("stock_code,limit,fields,isWithdrawal,isSubcrible", [
-        ('000001.SZ', 10, "all", "false", "true"),
+        # ('000001.SZ', 10, "$all", "false", "true"),
+        ('000001.SZ', 10, "time", "false", "true"),
+        ('000001.SZ', 10, "time,dealnumber", "false", "true"),
+        ('000001.SZ', 10, "time,dealtype", "false", "true"),
+        ('000001.SZ', 10, "time,dealtype", "false", "false"),
+        ('000001.SZ', 10, "time,dealtype,bidordernumber,askordernumber,price,volume,dealtype", "false", "false"),
     ])
     def test_trade_by_settlement(self, stock_code, limit, fields, isWithdrawal, isSubcrible):
         """
