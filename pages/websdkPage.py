@@ -226,7 +226,7 @@ class WebSDKPage(BasePage):
         """
         return order_cmd
 
-    def step_order_js(self, stock_code='000001.SZ', limit=10, fields="all", isSubcrible=True):
+    def step_order_js(self, stock_code='000001.SZ', limit=10, fields="all", isWithdrawal="false", isSubcrible=True):
         """逐笔成交"""
         step_cmd = self.func_str + """
             let step  = NSDK.createRequestItem(SDK_REQUEST_STEP);
@@ -234,7 +234,7 @@ class WebSDKPage(BasePage):
             step.setDataCallback(onCallback);
         """ + f"""
             step.setCode("{stock_code}");
-            step.setWithdrawal(false);
+            step.setWithdrawal({isWithdrawal});
             step.setLimit(-1,{limit});
             step.setFields("${fields}");
             step.setSubscribe({isSubcrible});
@@ -272,7 +272,6 @@ class WebSDKPage(BasePage):
             sort.request();
         """
         return sort_cmd
-
 
     def trend_js(self, stock_code='000001.SZ', days=1, fields="all", subcrible="true"):
         """分时数据"""

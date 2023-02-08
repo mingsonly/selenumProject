@@ -377,8 +377,8 @@ class TestWebSDK:
         ("510010.SH", "20230110", "20230130", "$all", "true", 10, "SDK_KLINE_PERIOD_YEAR"),  # 查看ETF的年K线字段
         ("010303.SH", "20230110", "20230130", "$all", "true", 10, "SDK_KLINE_PERIOD_YEAR"),  # 查看债券的年K线字段
         # ("600000.SH", "20230110", "20230130", "$all", "true", 10,"SDK_KLINE_PERIOD_DAY"),
-        # ("600000.SH", "20230110", "20230130", "date", "true", 10,"SDK_KLINE_PERIOD_DAY"),
-        # ("600000.SH", "20230110", "20230130", "date,open", "true", 10,"SDK_KLINE_PERIOD_DAY"),
+        ("600000.SH", "20230110", "20230130", "date", "true", 10, "SDK_KLINE_PERIOD_DAY"),
+        ("600000.SH", "20230110", "20230130", "date,open", "true", 10, "SDK_KLINE_PERIOD_DAY"),
         # ("600000.SH", "20201124", "20210315", "$all", "true", 10,"SDK_KLINE_PERIOD_DAY"),  #
     ])
     def test_kline_normal(self, stock_code, startDay, endDay, fields, isSubcrible, size, period):
@@ -466,6 +466,46 @@ class TestWebSDK:
         assert expect_titles == processed_titles
 
         # 3.3 校验订阅后字段更新数据，不订阅不更新数据
+        time.sleep(6)
+        new_record = self.webSDK.get_search_result()
+        if isSubcrible:
+            assert new_record != records
+        else:
+            assert new_record == records
+
+    @pytest.mark.parametrize("stock_code,limit,fields,isWithdrawal,isSubcrible", [
+        ('000001.SZ', 10, "all", "false", "true"),
+    ])
+    def test_trade_by_settlement(self, stock_code, limit, fields, isWithdrawal, isSubcrible):
+        """
+        逐笔成交
+        :param stock_code: 股票代码
+        :param limit: 查询条数
+        :param fields: 查询字段
+        :param isWithdrawal:是否包含撤单数据
+        :param isSubcrible: 是否订阅数据
+        :check 长度，字段，是否包含撤单数据，是否订阅数据
+        """
+        self.webSDK.choice_busy_by_txt("逐笔成交")
+        # 自定义js cmd变量
+        cmd = self.webSDK.step_order_js(stock_code=stock_code, limit=limit, fields=fields, isWithdrawal=isWithdrawal,
+                                        isSubcrible=isSubcrible)
+        # web端设置自定义的js命令字符串
+        self.webSDK.set_js_value(cmd)
+        self.webSDK.exec_js_cmd(cmd)
+
+        # 3.1 校验长度
+        result = self.webSDK.get_search_result()
+        records = result.split("\n")
+        assert len(records) <= limit
+
+        # 校验字段显示
+        expect_titles = "time,dealnumber,bidordernumber,askordernumber,price,volume,dealtype" if fields == "all" else fields
+        real_titles = self.webSDK.get_result_title()
+        processed_titles = self.webSDK.process_titles(real_titles)
+        assert expect_titles == processed_titles
+
+        # 校验订阅后字段更新数据，不订阅不更新数据
         time.sleep(6)
         new_record = self.webSDK.get_search_result()
         if isSubcrible:
