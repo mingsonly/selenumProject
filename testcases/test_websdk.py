@@ -494,7 +494,7 @@ class TestWebSDK:
         self.webSDK.exec_js_cmd(cmd)
 
         # 校验字段显示
-        expect_titles = "code,last,change"
+        expect_titles = fields
         real_titles = self.webSDK.get_result_title()
         processed_titles = self.webSDK.process_titles(real_titles)
         assert expect_titles == processed_titles
