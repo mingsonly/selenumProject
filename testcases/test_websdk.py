@@ -473,14 +473,39 @@ class TestWebSDK:
         else:
             assert new_record == records
 
-
-
-
-    def test_quota_subscribe(self):
-        self.webSDK.choice_busy_by_txt("分笔成交")
+    @pytest.mark.parametrize("stock_code,fields", [
+        ('000001.SZ,000002.SZ', "code,last,change"),
+        ('000001.SZ', "code,last,change"),
+        ('000001.SZ', "code,last"),
+        ('000001.SZ', "code,change"),
+    ])
+    def test_quota_subscribe(self, stock_code, fields):
+        """
+        行情订阅
+        :param stock_code: 股票代码
+        :param fields: 查询字段，可以多个用逗号隔开
+        :check: 字段显示，股票代码
+        """
+        self.webSDK.choice_busy_by_txt("行情订阅")
         # 自定义js cmd变量
-        cmd = self.webSDK.ticket_js(stock_code=stock_code, limit=limit, fields=fields, isSubcrible=isSubcrible)
+        cmd = self.webSDK.subscribe_js(stock_code=stock_code, fields=fields)
         # web端设置自定义的js命令字符串
         self.webSDK.set_js_value(cmd)
         self.webSDK.exec_js_cmd(cmd)
-        record = self.webSDK.get_search_result()
+
+        # 校验字段显示
+        expect_titles = "code,last,change"
+        real_titles = self.webSDK.get_result_title()
+        processed_titles = self.webSDK.process_titles(real_titles)
+        assert expect_titles == processed_titles
+
+        # 校验股票代码
+        result = self.webSDK.get_search_result()
+        if stock_code.split(","):
+            real_stocks = result.split("\n")
+            real_stocks = list(map(lambda x: x.split()[0], real_stocks))
+            pre_stocks = list(stock_code.split(","))
+        else:
+            real_stocks = result.split()
+            pre_stocks = stock_code
+        assert real_stocks == pre_stocks
