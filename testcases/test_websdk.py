@@ -474,7 +474,7 @@ class TestWebSDK:
             assert new_record == records
 
     @pytest.mark.parametrize("stock_code,limit,fields,isWithdrawal,isSubcrible", [
-        # ('000001.SZ', 10, "$all", "false", "true"),
+        ('000001.SZ', 10, "$all", "false", "true"),
         ('000001.SZ', 10, "time", "false", "true"),
         ('000001.SZ', 10, "time,dealnumber", "false", "true"),
         ('000001.SZ', 10, "time,dealtype", "false", "true"),
@@ -554,3 +554,21 @@ class TestWebSDK:
             real_stocks = result.split()
             pre_stocks = stock_code
         assert real_stocks == pre_stocks
+
+    def test_query_plates(self):
+        self.webSDK.choice_busy_by_txt("查询板块")
+        # 自定义js cmd变量
+        plate_name = "my_plate_" + str(time.time())
+        add_cmd = self.webSDK.add_plate_js(plate_name)
+        query_cmd = self.webSDK.select_plate_js()
+        # web端设置自定义的js命令字符串
+        self.webSDK.set_js_value(add_cmd)
+        self.webSDK.exec_js_cmd(add_cmd)
+        sectorid = self.webSDK.get_search_result()
+        self.webSDK.set_js_value(query_cmd)
+        self.webSDK.exec_js_cmd(query_cmd)
+        self.webSDK.get_search_result()
+        result = self.webSDK.get_search_result()
+        sectors = result.split("\n")
+        sectorids = list(map(lambda x: x.split()[0], sectors))
+        assert sectorid in sectorids
